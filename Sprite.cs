@@ -56,7 +56,7 @@ namespace Game2Test
             this.position = position;
             this.texture = texture;
             this.rotation = rotation;
-            this.origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
         }
         public void SetPos(float x, float y)
         {

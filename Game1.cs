@@ -225,7 +225,6 @@ namespace Game2Test
                     {
                         shots.RemoveAt(i);
                         rocks.RemoveAt(j);
-                        shotRotation.RemoveAt(i);
                         score++;
                         break;
                     }
@@ -308,12 +307,10 @@ namespace Game2Test
                 tempPos2.Y += (float)(System.Math.Sin(shots[i].rotation)) * 15;
                 shots[i].SetPos(tempPos2);
 
-                shotDuration[i]++;
-                if(shotDuration[i] > 60)
+                shots[i].duration++;
+                if(shots[i].duration > 60)
                 {
                     shots.RemoveAt(i);
-                    shotRotation.RemoveAt(i);
-                    shotDuration.RemoveAt(i);
                 }
             }
             for (int i = 0; i < rocks.Count; i++)
@@ -482,7 +479,6 @@ namespace Game2Test
         }
         void ResetGame()
         {
-            shotRotation.Clear();
             shots.Clear();
             lives = defaultLives;
             score = defaultScore;

@@ -6,11 +6,12 @@ using System;
 
 namespace Game2Test
 {
-    class Turret : Sprite
+    public class Turret : Sprite
     {
-        public Turret(Texture2D texture, Vector2 position, Rectangle rectangle) : base(texture, position, rectangle)
+        public duration;
+        public Turret(Texture2D texture, Vector2 position, float rotation, int duration) : base(texture, position, rotation)
         {
-            //eks dee
+            this.duration = duration;
         }
     }
 }

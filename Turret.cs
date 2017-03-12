@@ -8,10 +8,14 @@ namespace Game2Test
 {
     public class Turret : Sprite
     {
-        public duration;
+        public int duration;
         public Turret(Texture2D texture, Vector2 position, float rotation, int duration) : base(texture, position, rotation)
         {
             this.duration = duration;
+        }
+        public int GetDuration()
+        {
+            return duration;
         }
     }
 }

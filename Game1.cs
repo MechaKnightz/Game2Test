@@ -16,7 +16,7 @@ namespace Game2Test
         SpriteBatch spriteBatch;
         Texture2D rockTexture, shotTexture, aimTexture;
         KeyboardState keyState, oldState;
-        List<Sprite> shots = new List<Sprite>();
+        List<Shot> shots = new List<Shot>();
         int sida = 21;
         SpriteFont font;
         int maxShotCount = 1;

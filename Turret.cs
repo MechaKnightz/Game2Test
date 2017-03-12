@@ -9,8 +9,10 @@ namespace Game2Test
     public class Turret : Sprite
     {
         //offset == turret position compared to ship position
-        public Turret(Texture2D texture, Vector2 offset, float rotation) : base(texture, offset, rotation)
+        public Vector2 offset;
+        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation) : base(texture, position, rotation)
         {
+            this.offset = offset;
         }
     }
 }

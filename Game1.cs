@@ -100,7 +100,7 @@ namespace Game2Test
             defaultShipPos = new Vector2(0, 0);
 
             turret1Texture = Content.Load<Texture2D>("turret1");
-            turrets1[0] = new Turret(turret1Texture, new Vector2(0,0), 0);
+            turrets1[0] = new Turret(turret1Texture, new Vector2(40,0), new Vector2(40,0), 0);
             ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
             selectedShip = ship1;
 
@@ -289,8 +289,16 @@ namespace Game2Test
                 moving = true;
             }
 
-            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A)) selectedShip.rotation -= 0.05f;
-            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D)) selectedShip.rotation += 0.05f;
+            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
+            {
+                selectedShip.rotation -= 0.05f;
+                selectedShip.Update();
+            }
+            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
+            {
+                selectedShip.rotation += 0.05f;
+                selectedShip.Update();
+            }
 
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
@@ -357,8 +365,6 @@ namespace Game2Test
 
             //    rocks[i].SetPos(tempPos3);
             //}
-
-            if (selectedShip.rotation < 2 * System.Math.PI) selectedShip.rotation -= 2 * (float)System.Math.PI;
 
             //particleEngine.EmitterLocation = ship.position;
 
@@ -445,6 +451,7 @@ namespace Game2Test
 
             //ship.rotationRender = (float)(Math.Round(ship.rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
+
             selectedShip.Draw(spriteBatch);
             
             for(int i = 0; i < selectedShip.turrets.Count; i++)
@@ -468,7 +475,8 @@ namespace Game2Test
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
             spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.X.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.Black);
-            spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.Black);
+            //spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.Black);
+            spriteBatch.DrawString(font, selectedShip.rotation.ToString(), camera.ScreenToWorld(viewYPos), Color.Black);
 
             aimSprite.Draw(spriteBatch);
 

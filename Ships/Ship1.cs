@@ -23,14 +23,8 @@ namespace Game2Test.Ships
             rectangle.Y = (int)position.Y;
             for(int i = 0; i < turrets.Count; i++)
             {
-                turrets[i].position = position;
-            }
-        }
-        public void Update(float rotation)
-        {
-            for (int i = 0; i < turrets.Count; i++)
-            {
-                turrets[i].rotation = rotation;
+                turrets[i].position.X = position.X + (float)(turrets[i].offset.X * Math.Cos(rotation - Math.PI));
+                turrets[i].position.Y = position.Y + (float)(turrets[i].offset.Y * Math.Sin(rotation - Math.PI));
             }
         }
         /// <summary>
@@ -48,6 +42,7 @@ namespace Game2Test.Ships
         /// same as above but with vector
         /// </summary>
         /// <param name="vector">amount to move ship with</param>
+        /// <param name="rotation">adjust turret position for rotation</param>
         public void SetPos(Vector2 vector)
         {
             position = vector;

@@ -47,6 +47,17 @@ namespace Game2Test
             this.rotation = 0f;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
         }
+        public Sprite(Texture2D texture, Vector2 position, float rotation)
+        {
+            this.rectangle.X = (int)position.X;
+            this.rectangle.Y = (int)position.Y;
+            this.rectangle.Width = texture.Width;
+            this.rectangle.Height = texture.Height;
+            this.position = position;
+            this.texture = texture;
+            this.rotation = rotation;
+            this.origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+        }
         public void SetPos(float x, float y)
         {
             rectangle.X = (int)position.X;

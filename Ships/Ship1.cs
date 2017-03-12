@@ -25,7 +25,13 @@ namespace Game2Test.Ships
             {
                 turrets[i].position = position;
             }
-
+        }
+        public void Update(float rotation)
+        {
+            for (int i = 0; i < turrets.Count; i++)
+            {
+                turrets[i].rotation = rotation;
+            }
         }
         /// <summary>
         /// moves the ship and then updates 

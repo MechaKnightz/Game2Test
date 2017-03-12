@@ -56,6 +56,7 @@ namespace Game2Test
         List<Texture2D> rockTextures = new List<Texture2D>();
         int asteroidTextureAmount = 8;
         Turret[] turrets1 = new Turret[1];
+        float turretRotation;
 
         public Game1()
         {
@@ -298,11 +299,12 @@ namespace Game2Test
 
             aimSprite.SetPos(mouseState.Position.ToVector2() + camera.Position);
 
+            turretRotation = (float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X); //aim rotation compared to ship
+            ship.Update(turretRotation);
+
             if (mouseState.LeftButton == ButtonState.Pressed && !(oldMouseState.LeftButton == ButtonState.Pressed) && shots.Count < maxShotCount)
             {
-                var shotRotation = (float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X);
-                shots.Add(new Shot(shotTexture, new Vector2(ship.position.X,ship.position.Y), shotRotation, 0));
-                ship.turrets[0].rotation = shotRotation;
+                shots.Add(new Shot(shotTexture, new Vector2(ship.position.X,ship.position.Y), turretRotation, 0));
 
             }
             for (int i = 0; i < shots.Count; i++)

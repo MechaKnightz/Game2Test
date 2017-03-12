@@ -10,9 +10,9 @@ namespace Game2Test.Ships
     public class Ship1 : Ship
     {
         public List<Turret> turrets = new List<Turret>();
-        public Ship1(Texture2D texture, Vector2 position, Turret[] turrets) : base(texture, position)
+        public Ship1(Texture2D texture, Vector2 position, List<Turret> turrets) : base(texture, position)
         {
-            for(int i = 0; i < turrets.Length; i++)
+            for(int i = 0; i < turrets.Count; i++)
             {
                 this.turrets.Add(turrets[i]);
             }
@@ -23,14 +23,15 @@ namespace Game2Test.Ships
             rectangle.Y = (int)position.Y;
             for(int i = 0; i < turrets.Count; i++)
             {
+                //sets the turrets at the position of the ship
                 turrets[i].position.X = position.X;
                 turrets[i].position.Y = position.Y;
 
-                //x offset
+                //x turret offset
                 turrets[i].position.X -= (float)(turrets[i].offset.X * Math.Cos(rotation - Math.PI)); 
                 turrets[i].position.Y -= (float)(turrets[i].offset.X * Math.Sin(rotation - Math.PI));
 
-                //y offset
+                //y turret offset
                 turrets[i].position.X -= (float)(turrets[i].offset.Y * Math.Cos(rotation - (Math.PI/2)));
                 turrets[i].position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI/2)));
             }

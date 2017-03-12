@@ -31,7 +31,7 @@ namespace Game2Test
 
         int sida = 21;
         SpriteFont font;
-        int maxShotCount = 1;
+        int maxShotCount = 2;
         System.Random rnd;
         int score, lives, speed;
         Color[] menuColor = new Color[3];
@@ -58,7 +58,7 @@ namespace Game2Test
         Color clearColor;
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
-        Turret[] turrets1 = new Turret[1];
+        List<Turret> turrets1 = new List<Turret>();
         float turretRotation;
 
         public Game1()
@@ -100,7 +100,8 @@ namespace Game2Test
             defaultShipPos = new Vector2(0, 0);
 
             turret1Texture = Content.Load<Texture2D>("turret1");
-            turrets1[0] = new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0);
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
             ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
             selectedShip = ship1;
 

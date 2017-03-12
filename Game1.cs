@@ -15,22 +15,29 @@ namespace Game2Test
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D rockTexture, shotTexture, aimTexture, turret1Texture;
+
+        MouseState mouseState, oldMouseState;
         KeyboardState keyState, oldState;
+
+        //lists
         List<Shot> shots = new List<Shot>();
+        List<Sprite> rocks = new List<Sprite>();
+        List<Texture2D> rockTextures = new List<Texture2D>();
+        List<Texture2D> backgrounds = new List<Texture2D>();
+
+        Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
+        Rectangle speedbarRectangle, speedbarRectangle2;
+        Texture2D rockTexture, shotTexture, aimTexture, turret1Texture;
+
         int sida = 21;
         SpriteFont font;
         int maxShotCount = 1;
-        List<Sprite> rocks = new List<Sprite>();
         System.Random rnd;
-        int score, lives;
+        int score, lives, speed;
         Color[] menuColor = new Color[3];
         int selected = 0;
         int defaultScore = 0;
         int defaultLives = 5;
-        Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4;
-        Rectangle speedbarRectangle, speedbarRectangle2;
-        int speed;
         int defaultSpeed = 10;
         int menuLength = 3;
         int settingsMenuLength = 2;
@@ -39,21 +46,17 @@ namespace Game2Test
         bool drawParticles = false;
         int movingDelayCounter = 0;
         List<int> highscores = new List<int>();
-        List<Texture2D> backgrounds = new List<Texture2D>();
         GameState gameState = (GameState)2;
-        Vector2 shotOrigin, halfScreenPos, halfScreen;
-        Ship1 ship;
+        Ship1 selectedShip, ship1;
         Sprite aimSprite;
         Camera2D camera;
-        MouseState mouseState, oldMouseState;
         string xPosString, yPosString;
         Vector2 viewXPos, viewYPos, viewLivesPos, viewScorePos;
-        int mapSize = 3; //1920x1920
+        int mapSize = 3; //times 1920x1920
         Vector2 backgroundSize = new Vector2(1920, 1920);
         int rocksPerBackground = 20;
         Color clearColor;
         const float speedBoostConst = 1.5f;
-        List<Texture2D> rockTextures = new List<Texture2D>();
         int asteroidTextureAmount = 8;
         Turret[] turrets1 = new Turret[1];
         float turretRotation;
@@ -98,7 +101,8 @@ namespace Game2Test
 
             turret1Texture = Content.Load<Texture2D>("turret1");
             turrets1[0] = new Turret(turret1Texture, new Vector2(0,0), 0);
-            ship = new Ship1(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets1);
+            ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
+            selectedShip = ship1;
 
             shotTexture = Content.Load<Texture2D>("shot");
             aimTexture = Content.Load<Texture2D>("aimWhite");
@@ -241,7 +245,7 @@ namespace Game2Test
             {
                 if (IsInView(rocks[i]))
                 {
-                    if (rocks[i].rectangle.Intersects(ship.rectangle))
+                    if (rocks[i].rectangle.Intersects(selectedShip.rectangle))
                     {
                         lives--;
                         rocks.RemoveAt(i);
@@ -261,51 +265,54 @@ namespace Game2Test
 
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
-                tempPos = ship.position;
-                tempPos.X += (float)(System.Math.Cos(ship.rotation)) * (speed * speedBoostConst);
-                tempPos.Y += (float)(System.Math.Sin(ship.rotation)) * (speed * speedBoostConst);
-                ship.SetPos(tempPos);
+                tempPos = selectedShip.position;
+                tempPos.X += (float)(System.Math.Cos(selectedShip.rotation)) * (speed * speedBoostConst);
+                tempPos.Y += (float)(System.Math.Sin(selectedShip.rotation)) * (speed * speedBoostConst);
+                selectedShip.SetPos(tempPos);
                 moving = true;
             }
             else if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
             {
-                tempPos = ship.position;
-                tempPos.X += (float)(System.Math.Cos(ship.rotation)) * speed;
-                tempPos.Y += (float)(System.Math.Sin(ship.rotation)) * speed;
-                ship.SetPos(tempPos);
+                tempPos = selectedShip.position;
+                tempPos.X += (float)(System.Math.Cos(selectedShip.rotation)) * speed;
+                tempPos.Y += (float)(System.Math.Sin(selectedShip.rotation)) * speed;
+                selectedShip.SetPos(tempPos);
                 moving = true;
             }
 
             if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
             {
-                tempPos = ship.position;
-                tempPos.X -= (float)(System.Math.Cos(ship.rotation))*(speed/5);
-                tempPos.Y -= (float)(System.Math.Sin(ship.rotation))*(speed/5);
-                ship.SetPos(tempPos);
+                tempPos = selectedShip.position;
+                tempPos.X -= (float)(System.Math.Cos(selectedShip.rotation))*(speed/5);
+                tempPos.Y -= (float)(System.Math.Sin(selectedShip.rotation))*(speed/5);
+                selectedShip.SetPos(tempPos);
                 moving = true;
             }
 
-            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A)) ship.rotation -= 0.05f;
-            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D)) ship.rotation += 0.05f;
+            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A)) selectedShip.rotation -= 0.05f;
+            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D)) selectedShip.rotation += 0.05f;
 
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
-                ship.SetPos(defaultShipPos);
+                selectedShip.SetPos(defaultShipPos);
             }
 
             tempPos4 = camera.Position;
-            tempPos4 = ship.position - halfScreen;
+            tempPos4 = selectedShip.position - halfScreen;
             camera.Position = tempPos4;
 
             aimSprite.SetPos(mouseState.Position.ToVector2() + camera.Position);
 
-            turretRotation = (float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X); //aim rotation compared to ship
-            ship.Update(turretRotation);
-
+            for (int i = 0; i < selectedShip.turrets.Count; i++)
+            {
+                selectedShip.turrets[i].rotation = RotationToMouse(selectedShip.turrets[i].position);
+            }
             if (mouseState.LeftButton == ButtonState.Pressed && !(oldMouseState.LeftButton == ButtonState.Pressed) && shots.Count < maxShotCount)
             {
-                shots.Add(new Shot(shotTexture, new Vector2(ship.position.X,ship.position.Y), turretRotation, 0));
-
+                for(int i = 0; i < selectedShip.turrets.Count; i++)
+                {
+                    shots.Add(new Shot(shotTexture, new Vector2(selectedShip.turrets[i].position.X, selectedShip.turrets[i].position.Y), selectedShip.turrets[i].rotation , 0));
+                }
             }
             for (int i = 0; i < shots.Count; i++)
             {
@@ -322,14 +329,14 @@ namespace Game2Test
             }
             for (int i = 0; i < rocks.Count; i++)
             {
-                if (Vector2.Distance(rocks[i].position, ship.position) < 1000)
+                if (Vector2.Distance(rocks[i].position, selectedShip.position) < 1000)
                 {
                     tempPos3 = rocks[i].position;
-                    if (tempPos3.X < ship.position.X) tempPos3.X += 3;
-                    else if (tempPos3.X > ship.position.X) tempPos3.X -= 3;
+                    if (tempPos3.X < selectedShip.position.X) tempPos3.X += 3;
+                    else if (tempPos3.X > selectedShip.position.X) tempPos3.X -= 3;
 
-                    if (tempPos3.Y < ship.position.Y) tempPos3.Y += 3;
-                    else if (tempPos3.Y > ship.position.Y) tempPos3.Y -= 3;
+                    if (tempPos3.Y < selectedShip.position.Y) tempPos3.Y += 3;
+                    else if (tempPos3.Y > selectedShip.position.Y) tempPos3.Y -= 3;
                     rocks[i].SetPos(tempPos3);
                 }
             }
@@ -351,11 +358,11 @@ namespace Game2Test
             //    rocks[i].SetPos(tempPos3);
             //}
 
-            if (ship.rotation < 2 * System.Math.PI) ship.rotation -= 2 * (float)System.Math.PI;
+            if (selectedShip.rotation < 2 * System.Math.PI) selectedShip.rotation -= 2 * (float)System.Math.PI;
 
             //particleEngine.EmitterLocation = ship.position;
 
-            particleEngine.EmitterLocation = camera.WorldToScreen(ship.position);
+            particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
             particleEngine.Update();
 
             CollisionTest();
@@ -438,11 +445,11 @@ namespace Game2Test
 
             //ship.rotationRender = (float)(Math.Round(ship.rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
-            ship.Draw(spriteBatch);
+            selectedShip.Draw(spriteBatch);
             
-            for(int i = 0; i < ship.turrets.Count; i++)
+            for(int i = 0; i < selectedShip.turrets.Count; i++)
             {
-                ship.turrets[i].Draw(spriteBatch);
+                selectedShip.turrets[i].Draw(spriteBatch);
             }
             for (int i = 0; i < shots.Count; i++)
             {
@@ -456,12 +463,12 @@ namespace Game2Test
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.Black);
             spriteBatch.DrawString(font, "Lives: " + lives, camera.ScreenToWorld(viewLivesPos), Color.Black);
 
-            xPosString = "Xpos: " + ship.position.X.ToString("F0");
-            yPosString = "Ypos: " + ship.position.Y.ToString("F0");
+            xPosString = "Xpos: " + selectedShip.position.X.ToString("F0");
+            yPosString = "Ypos: " + selectedShip.position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
-            spriteBatch.DrawString(font, "Xpos: " + ship.position.X.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.Black);
-            spriteBatch.DrawString(font, "Ypos: " + ship.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.Black);
+            spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.X.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.Black);
+            spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.Black);
 
             aimSprite.Draw(spriteBatch);
 
@@ -476,7 +483,7 @@ namespace Game2Test
         {
             spriteBatch.DrawString(font, "Back", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Back").X / 2), (graphics.PreferredBackBufferHeight / 2) - font.MeasureString("Speed").Y), menuColor[0]);
             spriteBatch.DrawString(font, "Speed", new Vector2(graphics.PreferredBackBufferWidth / 2 -(font.MeasureString("Speed").X / 2), (graphics.PreferredBackBufferHeight  /2)), menuColor[1]);
-            spriteBatch.Draw(ship.texture, speedbarRectangle2, Color.White);
+            spriteBatch.Draw(selectedShip.texture, speedbarRectangle2, Color.White);
             spriteBatch.Draw(rockTexture, speedbarRectangle, Color.White);
             spriteBatch.DrawString(font, speed.ToString(), new Vector2((graphics.PreferredBackBufferWidth / 2) - (font.MeasureString(speed.ToString()).X / 2), (graphics.PreferredBackBufferHeight / 2) + 20 +(font.MeasureString("Speed").Y)), Color.Black);
         }
@@ -493,8 +500,8 @@ namespace Game2Test
             shots.Clear();
             lives = defaultLives;
             score = defaultScore;
-            ship.position = defaultShipPos;
-            ship.rotation = 0;
+            selectedShip.position = defaultShipPos;
+            selectedShip.rotation = 0;
             rocks.Clear();
             GenerateRocks();
 
@@ -556,7 +563,6 @@ namespace Game2Test
         public bool IsInView(Sprite sprite)
         {
             // if the object is not within the horizontal bounds of the screen
-
             if (sprite.position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.position.X + sprite.texture.Width  < camera.Position.X)
                 return false;
 
@@ -566,6 +572,10 @@ namespace Game2Test
 
             // if in view
             return true;
+        }
+        public float RotationToMouse(Vector2 position)
+        {
+            return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
         }
     }
 }

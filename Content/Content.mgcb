@@ -68,18 +68,6 @@
 /processorParam:TextureFormat=Color
 /build:blue.png
 
-#begin ship.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:ship.png
-
 #begin shot.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -91,18 +79,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:shot.png
-
-#begin ship2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:ship2.png
 
 #begin orange.png
 /importer:TextureImporter
@@ -307,4 +283,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:turret1.png
+
+#begin ship1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ship1.png
 

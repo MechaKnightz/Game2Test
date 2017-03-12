@@ -10,6 +10,7 @@ namespace Game2Test
     {
         public Turret(Texture2D texture, Vector2 position, Rectangle rectangle) : base(texture, position, rectangle)
         {
+            //eks dee
         }
     }
 }

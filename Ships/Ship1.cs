@@ -34,7 +34,7 @@ namespace Game2Test.Ships
             }
         }
         /// <summary>
-        /// moves the ship and then updates 
+        /// moves the ship and then updates
         /// </summary>
         /// <param name="x"> move along x-axis by this amount</param>
         /// <param name="y">move along y-axis by this amount</param>

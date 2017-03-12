@@ -48,7 +48,9 @@ namespace Game2Test
         bool drawParticles = false;
         int movingDelayCounter = 0;
         GameState gameState = (GameState)2;
-        Ship1 selectedShip, ship1;
+        Ship1 ship1;
+        Ship2 ship2;
+        Ship selectedShip;
         Sprite aimSprite;
         Camera2D camera;
         string xPosString, yPosString;
@@ -60,6 +62,7 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
+        int selectedIndex = 0;
 
         public Game1()
         {
@@ -103,6 +106,7 @@ namespace Game2Test
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
             ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
+            ship2 = new Ship2(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets1);
             selectedShip = ship1;
 
             shotTexture = Content.Load<Texture2D>("shot");
@@ -305,6 +309,23 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
                 selectedShip.SetPos(defaultShipPos);
+            }
+            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G)) // TODO: fix this awful code xdxdxd
+            {
+                if(selectedIndex == 0)
+                {
+                    ship2.position = selectedShip.position;
+                    ship2.rotation = selectedShip.rotation;
+                    selectedShip = ship2;
+                    selectedIndex++;
+                }
+                else
+                {
+                    ship1.position = selectedShip.position;
+                    ship1.rotation = selectedShip.rotation;
+                    selectedShip = ship1;
+                    selectedIndex--;
+                }
             }
 
             tempPos4 = camera.Position;

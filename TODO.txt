@@ -2,6 +2,7 @@
 
 health and extra shots pickup
 stone movement
+ship index class holding rotation, position et.c
 
 DONE:
 

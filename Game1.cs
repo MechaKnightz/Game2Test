@@ -282,7 +282,6 @@ namespace Game2Test
                 ship.SetPos(tempPos);
                 moving = true;
             }
-            //hello
 
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A)) ship.rotation -= 0.05f;
             if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D)) ship.rotation += 0.05f;

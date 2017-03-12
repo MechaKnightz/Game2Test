@@ -23,8 +23,16 @@ namespace Game2Test.Ships
             rectangle.Y = (int)position.Y;
             for(int i = 0; i < turrets.Count; i++)
             {
-                turrets[i].position.X = position.X - (float)(turrets[i].offset.X * Math.Cos(rotation - Math.PI));
-                turrets[i].position.Y = position.Y - (float)(turrets[i].offset.X * Math.Sin(rotation - Math.PI));
+                turrets[i].position.X = position.X;
+                turrets[i].position.Y = position.Y;
+
+                //x offset
+                turrets[i].position.X -= (float)(turrets[i].offset.X * Math.Cos(rotation - Math.PI)); 
+                turrets[i].position.Y -= (float)(turrets[i].offset.X * Math.Sin(rotation - Math.PI));
+
+                //y offset
+                turrets[i].position.X -= (float)(turrets[i].offset.Y * Math.Cos(rotation - (Math.PI/2)));
+                turrets[i].position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI/2)));
             }
         }
         /// <summary>

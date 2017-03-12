@@ -100,7 +100,7 @@ namespace Game2Test
             defaultShipPos = new Vector2(0, 0);
 
             turret1Texture = Content.Load<Texture2D>("turret1");
-            turrets1[0] = new Turret(turret1Texture, new Vector2(-15, 0), new Vector2(-15, 0), 0);
+            turrets1[0] = new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0);
             ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
             selectedShip = ship1;
 

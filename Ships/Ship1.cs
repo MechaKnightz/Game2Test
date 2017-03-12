@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 
-namespace Game2Test
+
+namespace Game2Test.Ships
 {
-    public class Turret : Sprite
+    class Ship1 : Ship
     {
-        public Turret(Texture2D texture, Vector2 position, float rotation) : base(texture, position, rotation)
+        Turret[] turrets = new Turret[1];
+        Ship1(Texture2D texture, Vector2 position, Turret turret) : base(texture, position)
         {
+
         }
     }
 }

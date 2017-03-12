@@ -9,7 +9,7 @@ namespace Game2Test
     class Ship : Sprite
     {
 
-        public Ship(Texture2D texture, Vector2 position, Rectangle rectangle) : base(texture, position, rectangle)
+        public Ship(Texture2D texture, Vector2 position) : base(texture, position)
         {
         }
     }

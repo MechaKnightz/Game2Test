@@ -94,7 +94,7 @@ namespace Game2Test
 
             defaultShipPos = new Vector2(0, 0);
 
-            ship = new Ship(Content.Load<Texture2D>("ship2"), defaultShipPos, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2, shipSize, shipSize));
+            ship = new Ship(Content.Load<Texture2D>("ship2"), defaultShipPos);
 
             shotTexture = Content.Load<Texture2D>("shot");
             aimTexture = Content.Load<Texture2D>("aimWhite");

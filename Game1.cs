@@ -16,7 +16,6 @@ namespace Game2Test
         SpriteBatch spriteBatch;
         Texture2D rockTexture, shotTexture, aimTexture;
         KeyboardState keyState, oldState;
-        List<float> shotRotation = new List<float>();
         List<Sprite> shots = new List<Sprite>();
         int sida = 21;
         SpriteFont font;
@@ -39,7 +38,6 @@ namespace Game2Test
         bool drawParticles = false;
         int movingDelayCounter = 0;
         List<int> highscores = new List<int>();
-        List<int> shotDuration = new List<int>();
         List<Texture2D> backgrounds = new List<Texture2D>();
         GameState gameState = (GameState)2;
         int shipSize = 41;
@@ -300,16 +298,14 @@ namespace Game2Test
 
             if (mouseState.LeftButton == ButtonState.Pressed && !(oldMouseState.LeftButton == ButtonState.Pressed) && shots.Count < maxShotCount)
             {
-                shots.Add(new Sprite(shotTexture, new Vector2(ship.position.X,ship.position.Y), new Rectangle(0,0,sida, sida)));
-                shotRotation.Add((float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X));
-                shotDuration.Add(0);
+                shots.Add(new Shot(shotTexture, new Vector2(ship.position.X,ship.position.Y), (float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X), 0));
 
             }
             for (int i = 0; i < shots.Count; i++)
             {
                 tempPos2 = shots[i].position;
-                tempPos2.X += (float)(System.Math.Cos(shotRotation[i])) * 15;
-                tempPos2.Y += (float)(System.Math.Sin(shotRotation[i])) * 15;
+                tempPos2.X += (float)(System.Math.Cos(shots[i].rotation)) * 15;
+                tempPos2.Y += (float)(System.Math.Sin(shots[i].rotation)) * 15;
                 shots[i].SetPos(tempPos2);
 
                 shotDuration[i]++;

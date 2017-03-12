@@ -1,4 +1,12 @@
-﻿turrets rotation with ship rotation
+﻿TODO:
+
 fix particle engine
 health and extra shots pickup
 stone movement
+
+DONE:
+
+turrets rotation with ship rotation
+refactored shots to class
+turretrotation
+random gem asteroids

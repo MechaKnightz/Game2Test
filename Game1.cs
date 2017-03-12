@@ -24,6 +24,8 @@ namespace Game2Test
         List<Sprite> rocks = new List<Sprite>();
         List<Texture2D> rockTextures = new List<Texture2D>();
         List<Texture2D> backgrounds = new List<Texture2D>();
+        List<int> highscores = new List<int>();
+        List<Turret> turrets1 = new List<Turret>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
@@ -45,7 +47,6 @@ namespace Game2Test
         bool moving = false;
         bool drawParticles = false;
         int movingDelayCounter = 0;
-        List<int> highscores = new List<int>();
         GameState gameState = (GameState)2;
         Ship1 selectedShip, ship1;
         Sprite aimSprite;
@@ -58,8 +59,6 @@ namespace Game2Test
         Color clearColor;
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
-        List<Turret> turrets1 = new List<Turret>();
-        float turretRotation;
 
         public Game1()
         {

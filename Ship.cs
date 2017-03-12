@@ -35,6 +35,22 @@ namespace Game2Test
                 turrets[i].position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI / 2)));
             }
         }
+        public Vector2 ReturnBackOfShip()
+        {
+            Vector2 position;
+            position.X = this.position.X;
+            position.Y = this.position.Y;
+
+            //x turret offset
+            position.X += (float)((texture.Width / 2) * Math.Cos(rotation - Math.PI));
+            position.Y += (float)((texture.Width / 2) * Math.Sin(rotation - Math.PI));
+
+            //y turret offset
+            //position.X -= (float)(turrets[i].offset.Y * Math.Cos(rotation - (Math.PI / 2)));
+            //position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+
+            return position;
+        }
         /// <summary>
         /// moves the ship and then updates
         /// </summary>

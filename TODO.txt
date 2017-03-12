@@ -1,11 +1,11 @@
 ﻿TODO:
 
-fix particle engine
 health and extra shots pickup
 stone movement
 
 DONE:
 
+fix particle engine
 turrets rotation with ship rotation
 refactored shots to class
 turretrotation

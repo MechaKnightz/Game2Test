@@ -61,9 +61,9 @@ namespace Game2Test
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Matrix viewMatrix)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, transformMatrix: viewMatrix);
             for (int index = 0; index < particles.Count; index++)
             {
                 particles[index].Draw(spriteBatch);

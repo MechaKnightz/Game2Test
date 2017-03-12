@@ -59,6 +59,7 @@ namespace Game2Test
         Color clearColor;
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
+        Matrix viewMatrix;
 
         public Game1()
         {
@@ -122,6 +123,7 @@ namespace Game2Test
             viewYPos = new Vector2(0, 40);
 
             clearColor = Color.FromNonPremultiplied(22, 68, 39, 252);
+            viewMatrix = camera.GetViewMatrix();
 
             //rock textures
             for (int i = 1; i < asteroidTextureAmount+1; i++)
@@ -144,7 +146,7 @@ namespace Game2Test
             textures.Add(Content.Load<Texture2D>("red"));
             textures.Add(Content.Load<Texture2D>("orange"));
             textures.Add(Content.Load<Texture2D>("yellow"));
-            particleEngine = new ParticleEngine(textures, new Vector2(400, 240));
+            particleEngine = new ParticleEngine(textures, new Vector2(0,0));
         }
 
         /// <summary>
@@ -366,9 +368,8 @@ namespace Game2Test
             //    rocks[i].SetPos(tempPos3);
             //}
 
-            //particleEngine.EmitterLocation = ship.position;
-
-            particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
+            //particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
+            particleEngine.EmitterLocation = selectedShip.position;
             particleEngine.Update();
 
             CollisionTest();
@@ -445,7 +446,7 @@ namespace Game2Test
 
             //backgrounds end
 
-            if (drawParticles) particleEngine.Draw(spriteBatch);
+            if (drawParticles) particleEngine.Draw(spriteBatch, camera.GetViewMatrix());
 
             BeginSpriteBatchCamera(spriteBatch);
 
@@ -474,7 +475,7 @@ namespace Game2Test
             yPosString = "Ypos: " + selectedShip.position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
-            spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.X.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.White);
+            spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.White);
             spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White);
 
             aimSprite.Draw(spriteBatch);
@@ -521,7 +522,7 @@ namespace Game2Test
         }
         void BeginSpriteBatchCamera(SpriteBatch spriteBatch)
         {
-            var viewMatrix = camera.GetViewMatrix();
+            viewMatrix = camera.GetViewMatrix();
             spriteBatch.Begin(transformMatrix: viewMatrix);
         }
         void GenerateRocks()
@@ -547,7 +548,7 @@ namespace Game2Test
             for (var layerIndex = 0; layerIndex < backgrounds.Count; layerIndex++)
             {
                 var parallaxFactor = Vector2.One * (0.25f * layerIndex);
-                var viewMatrix = camera.GetViewMatrix(parallaxFactor);
+                viewMatrix = camera.GetViewMatrix(parallaxFactor);
                 spriteBatch.Begin(transformMatrix: viewMatrix);
 
                 for (var repeatIndex2 = -mapSize*3; repeatIndex2 <= mapSize*3; repeatIndex2++)

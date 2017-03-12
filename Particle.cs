@@ -16,7 +16,7 @@ namespace Game2Test
         public float AngularVelocity { get; set; }
         public Color Color { get; set; }
         public float Size { get; set; }
-        public int TTL { get; set; }
+        public int TTL { get; set; } //time to live
 
         public Particle(Texture2D texture, Vector2 position, Vector2 velocity,
             float angle, float angularVelocity, Color color, float size, int ttl)

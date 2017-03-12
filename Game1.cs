@@ -300,7 +300,9 @@ namespace Game2Test
 
             if (mouseState.LeftButton == ButtonState.Pressed && !(oldMouseState.LeftButton == ButtonState.Pressed) && shots.Count < maxShotCount)
             {
-                shots.Add(new Shot(shotTexture, new Vector2(ship.position.X,ship.position.Y), (float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X), 0));
+                var shotRotation = (float)Math.Atan2(aimSprite.position.Y - ship.position.Y, aimSprite.position.X - ship.position.X);
+                shots.Add(new Shot(shotTexture, new Vector2(ship.position.X,ship.position.Y), shotRotation, 0));
+                ship.turrets[0].rotation = shotRotation;
 
             }
             for (int i = 0; i < shots.Count; i++)

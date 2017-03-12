@@ -100,7 +100,7 @@ namespace Game2Test
             defaultShipPos = new Vector2(0, 0);
 
             turret1Texture = Content.Load<Texture2D>("turret1");
-            turrets1[0] = new Turret(turret1Texture, new Vector2(40,0), new Vector2(40,0), 0);
+            turrets1[0] = new Turret(turret1Texture, new Vector2(-15, 0), new Vector2(-15, 0), 0);
             ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
             selectedShip = ship1;
 
@@ -467,16 +467,15 @@ namespace Game2Test
                 if(IsInView(rocks[i])) rocks[i].Draw(spriteBatch);
             }
 
-            spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.Black);
-            spriteBatch.DrawString(font, "Lives: " + lives, camera.ScreenToWorld(viewLivesPos), Color.Black);
+            spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
+            spriteBatch.DrawString(font, "Lives: " + lives, camera.ScreenToWorld(viewLivesPos), Color.White);
 
             xPosString = "Xpos: " + selectedShip.position.X.ToString("F0");
             yPosString = "Ypos: " + selectedShip.position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
-            spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.X.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.Black);
-            //spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.Black);
-            spriteBatch.DrawString(font, selectedShip.rotation.ToString(), camera.ScreenToWorld(viewYPos), Color.Black);
+            spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.X.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.White);
+            spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White);
 
             aimSprite.Draw(spriteBatch);
 

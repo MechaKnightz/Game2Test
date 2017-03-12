@@ -26,10 +26,11 @@ namespace Game2Test
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
         List<Turret> turrets1 = new List<Turret>();
+        List<Turret> turrets2 = new List<Turret>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D rockTexture, shotTexture, aimTexture, turret1Texture;
+        Texture2D rockTexture, shotTexture, aimTexture, turret1Texture, turret2Texture;
 
         int sida = 21;
         SpriteFont font;
@@ -105,8 +106,11 @@ namespace Game2Test
             turret1Texture = Content.Load<Texture2D>("turret1");
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+            turret2Texture = Content.Load<Texture2D>("turret2");
+            turrets2.Add(new Turret(turret2Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
+            turrets2.Add(new Turret(turret2Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
             ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
-            ship2 = new Ship2(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets1);
+            ship2 = new Ship2(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets2);
             selectedShip = ship1;
 
             shotTexture = Content.Load<Texture2D>("shot");

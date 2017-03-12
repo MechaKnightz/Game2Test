@@ -6,7 +6,7 @@ using System;
 
 namespace Game2Test
 {
-    class Ship : Sprite
+    public class Ship : Sprite
     {
 
         public Ship(Texture2D texture, Vector2 position) : base(texture, position)

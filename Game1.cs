@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using MonoGame.Extended;
+using Game2Test.Ships;
 
 namespace Game2Test
 {
@@ -14,7 +15,7 @@ namespace Game2Test
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D rockTexture, shotTexture, aimTexture;
+        Texture2D rockTexture, shotTexture, aimTexture, turret1Texture;
         KeyboardState keyState, oldState;
         List<Shot> shots = new List<Shot>();
         int sida = 21;
@@ -40,9 +41,8 @@ namespace Game2Test
         List<int> highscores = new List<int>();
         List<Texture2D> backgrounds = new List<Texture2D>();
         GameState gameState = (GameState)2;
-        int shipSize = 41;
         Vector2 shotOrigin, halfScreenPos, halfScreen;
-        Ship ship;
+        Ship1 ship;
         Sprite aimSprite;
         Camera2D camera;
         MouseState mouseState, oldMouseState;
@@ -55,6 +55,7 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         List<Texture2D> rockTextures = new List<Texture2D>();
         int asteroidTextureAmount = 8;
+        Turret[] turrets1 = new Turret[1];
 
         public Game1()
         {
@@ -94,7 +95,9 @@ namespace Game2Test
 
             defaultShipPos = new Vector2(0, 0);
 
-            ship = new Ship(Content.Load<Texture2D>("ship2"), defaultShipPos);
+            turret1Texture = Content.Load<Texture2D>("turret1");
+            turrets1[0] = new Turret(turret1Texture, new Vector2(0,0), 0);
+            ship = new Ship1(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets1);
 
             shotTexture = Content.Load<Texture2D>("shot");
             aimTexture = Content.Load<Texture2D>("aimWhite");
@@ -235,14 +238,17 @@ namespace Game2Test
         {
             for(int i = 0; i < rocks.Count; i++)
             {
-                if(rocks[i].rectangle.Intersects(ship.rectangle))
+                if (IsInView(rocks[i]))
                 {
-                    lives--;
-                    rocks.RemoveAt(i);
-                    if (lives <= 0)
+                    if (rocks[i].rectangle.Intersects(ship.rectangle))
                     {
-                        ChangeState(1);
-                        highscores.Add(score);//add fixerino LEjalkafsdbd
+                        lives--;
+                        rocks.RemoveAt(i);
+                        if (lives <= 0)
+                        {
+                            ChangeState(1);
+                            highscores.Add(score);// TODO: add fixerino LEjalkafsdbd
+                        }
                     }
                 }
             }
@@ -254,13 +260,11 @@ namespace Game2Test
 
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
-                {
-                    tempPos = ship.position;
-                    tempPos.X += (float)(System.Math.Cos(ship.rotation)) * (speed * speedBoostConst);
-                    tempPos.Y += (float)(System.Math.Sin(ship.rotation)) * (speed * speedBoostConst);
-                    ship.SetPos(tempPos);
-                    moving = true;
-                }
+                tempPos = ship.position;
+                tempPos.X += (float)(System.Math.Cos(ship.rotation)) * (speed * speedBoostConst);
+                tempPos.Y += (float)(System.Math.Sin(ship.rotation)) * (speed * speedBoostConst);
+                ship.SetPos(tempPos);
+                moving = true;
             }
             else if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
             {
@@ -289,8 +293,7 @@ namespace Game2Test
             }
 
             tempPos4 = camera.Position;
-            tempPos4.X = ship.position.X - halfScreen.X;
-            tempPos4.Y = ship.position.Y - halfScreen.Y;
+            tempPos4 = ship.position - halfScreen;
             camera.Position = tempPos4;
 
             aimSprite.SetPos(mouseState.Position.ToVector2() + camera.Position);
@@ -432,14 +435,18 @@ namespace Game2Test
             //ship.rotationRender = (float)(Math.Round(ship.rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
             ship.Draw(spriteBatch);
-
+            
+            for(int i = 0; i < ship.turrets.Count; i++)
+            {
+                ship.turrets[i].Draw(spriteBatch);
+            }
             for (int i = 0; i < shots.Count; i++)
             {
                 shots[i].Draw(spriteBatch);
             }
             for (int i = 0; i < rocks.Count; i++)
             {
-                if(IsInView(rocks[i]))rocks[i].Draw(spriteBatch);
+                if(IsInView(rocks[i])) rocks[i].Draw(spriteBatch);
             }
 
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.Black);

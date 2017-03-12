@@ -8,7 +8,8 @@ namespace Game2Test
 {
     public class Turret : Sprite
     {
-        public Turret(Texture2D texture, Vector2 position, float rotation) : base(texture, position, rotation)
+        //offset == turret position compared to ship position
+        public Turret(Texture2D texture, Vector2 offset, float rotation) : base(texture, offset, rotation)
         {
         }
     }

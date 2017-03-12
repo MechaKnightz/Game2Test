@@ -35,6 +35,10 @@ namespace Game2Test
                 turrets[i].position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI / 2)));
             }
         }
+        /// <summary>
+        /// returns vector at the back of the ship, based off of the back of the texture
+        /// </summary>
+        /// <returns></returns>
         public Vector2 ReturnBackOfShip()
         {
             Vector2 position;

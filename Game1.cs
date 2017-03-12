@@ -321,7 +321,7 @@ namespace Game2Test
             {
                 for(int i = 0; i < selectedShip.turrets.Count; i++)
                 {
-                    shots.Add(new Shot(shotTexture, new Vector2(selectedShip.turrets[i].position.X, selectedShip.turrets[i].position.Y), selectedShip.turrets[i].rotation , 0));
+                    if(shots.Count < maxShotCount) shots.Add(new Shot(shotTexture, new Vector2(selectedShip.turrets[i].position.X, selectedShip.turrets[i].position.Y), selectedShip.turrets[i].rotation , 0));
                 }
             }
             for (int i = 0; i < shots.Count; i++)

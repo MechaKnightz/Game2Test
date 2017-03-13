@@ -9,15 +9,10 @@ namespace Game2Test
 {
     public class Ship : Sprite
     {
-        public enum TextureIndex
-        {
-            Default,
-            Left,
-            Right,
-        }
-        public TextureIndex textureIndex;
         public List<Turret> turrets = new List<Turret>();
         public List<Texture2D> textures = new List<Texture2D>();
+        public List<string> textureIndex = new List<string>();
+        public int textureIndexCounter = 0;
         public string description;
         public Ship(List<Texture2D> textures, Vector2 position) : base(textures[0], position)
         {
@@ -28,6 +23,10 @@ namespace Game2Test
             for (int i = 0; i < textures.Count; i++)
             {
                 this.textures.Add(textures[i]);
+            }
+            for (int i = 0; i < textureIndex.Count; i++)
+            {
+                this.textureIndex.Add(textureIndex[i]);
             }
         }
         public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets) : base(textures[0], position)
@@ -103,9 +102,7 @@ namespace Game2Test
         }
         new public void Draw(SpriteBatch spriteBatch)
         {
-            texture = textures[(int)textureIndex];
             spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
-            textureIndex = TextureIndex.Default;
         }
     }
 }

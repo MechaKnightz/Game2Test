@@ -320,20 +320,19 @@ namespace Game2Test
             {
                 selectedShip.rotation -= 0.05f;
                 selectedShip.Update();
-                selectedShip.textureIndex = Ship.TextureIndex.Left;
+
             }
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
                 selectedShip.rotation += 0.05f;
                 selectedShip.Update();
-                selectedShip.textureIndex = Ship.TextureIndex.Right;
             }
 
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
                 selectedShip.SetPos(defaultShipPos);
             }
-            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G)) // TODO: fix this awful code xdxdxd
+            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G)) // TODO: fix this awful code
             {
                 if(selectedIndex == 0)
                 {
@@ -341,6 +340,7 @@ namespace Game2Test
                     ships[1].rotation = selectedShip.rotation;
                     selectedShip = ships[1];
                     selectedIndex++;
+                    selectedShip.Update();
                 }
                 else
                 {
@@ -348,6 +348,7 @@ namespace Game2Test
                     ships[0].rotation = selectedShip.rotation;
                     selectedShip = ships[0];
                     selectedIndex--;
+                    selectedShip.Update();
                 }
             }
 

@@ -39,7 +39,7 @@ namespace Game2Test
         /// returns vector at the back of the ship, based off of the back of the texture
         /// </summary>
         /// <returns></returns>
-        public Vector2 ReturnBackOfShip()
+        public Vector2 GetBackOfShip()
         {
             Vector2 position;
             position.X = this.position.X;

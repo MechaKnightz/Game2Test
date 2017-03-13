@@ -394,7 +394,7 @@ namespace Game2Test
             //}
 
             //particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
-            particleEngine.EmitterLocation = selectedShip.ReturnBackOfShip();
+            particleEngine.EmitterLocation = selectedShip.GetBackOfShip();
             particleEngine.Update();
 
             CollisionTest();

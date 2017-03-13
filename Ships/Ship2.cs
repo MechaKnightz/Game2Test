@@ -9,7 +9,7 @@ namespace Game2Test.Ships
 {
     public class Ship2 : Ship
     {
-        public Ship2(Texture2D texture, Vector2 position, List<Turret> turrets) : base(texture, position, turrets)
+        public Ship2(Texture2D texture, Vector2 position, List<Turret> turrets, string description) : base(texture, position, turrets, description)
         {
         }
     }

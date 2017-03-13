@@ -25,8 +25,8 @@ namespace Game2Test
         List<Texture2D> rockTextures = new List<Texture2D>();
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
+        List<Turret> turrets0 = new List<Turret>();
         List<Turret> turrets1 = new List<Turret>();
-        List<Turret> turrets2 = new List<Turret>();
         List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
@@ -103,13 +103,13 @@ namespace Game2Test
             defaultShipPos = new Vector2(0, 0);
 
             turret1Texture = Content.Load<Texture2D>("turret1");
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
             turret2Texture = Content.Load<Texture2D>("turret2");
-            turrets2.Add(new Turret(turret2Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
-            turrets2.Add(new Turret(turret2Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
-            ships.Add(new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1));
-            ships.Add(new Ship2(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets2));
+            turrets1.Add(new Turret(turret2Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
+            turrets1.Add(new Turret(turret2Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+            ships.Add(new Ship1(Content.Load<Texture2D>("ship0"), defaultShipPos, turrets0, "none"));
+            ships.Add(new Ship2(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1, "none"));
             selectedShip = ships[0];
 
             shotTexture = Content.Load<Texture2D>("shot");

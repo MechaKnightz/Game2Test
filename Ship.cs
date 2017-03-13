@@ -9,6 +9,15 @@ namespace Game2Test
     public class Ship : Sprite
     {
         public List<Turret> turrets = new List<Turret>();
+        public string description;
+        public Ship(Texture2D texture, Vector2 position, List<Turret> turrets, string description) : base(texture, position)
+        {
+            for (int i = 0; i < turrets.Count; i++)
+            {
+                this.turrets.Add(turrets[i]);
+            }
+            this.description = description;
+        }
         public Ship(Texture2D texture, Vector2 position, List<Turret> turrets) : base(texture, position)
         {
             for (int i = 0; i < turrets.Count; i++)

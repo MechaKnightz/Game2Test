@@ -1,5 +1,7 @@
 ﻿TODO:
 
+if rot > 2pi, rot -= 2pi
+ship texture list when turning
 health and extra shots pickup
 stone movement
 ship index class holding rotation, position et.c

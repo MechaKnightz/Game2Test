@@ -549,6 +549,9 @@ namespace Game2Test
             viewMatrix = camera.GetViewMatrix();
             spriteBatch.Begin(transformMatrix: viewMatrix);
         }
+        /// <summary>
+        /// Generate all the astroids
+        /// </summary>
         void GenerateRocks()
         {
             for (int repeatIndex2 = -mapSize; repeatIndex2 <= mapSize; repeatIndex2++)

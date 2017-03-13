@@ -31,6 +31,10 @@ namespace Game2Test
 
         List<Texture2D> ship0Textures = new List<Texture2D>();
         List<Texture2D> ship1Textures = new List<Texture2D>();
+
+        List<string> ship0TextureIndex = new List<string>();
+        List<string> ship1TextureIndex = new List<string>();
+
         List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
@@ -116,16 +120,21 @@ namespace Game2Test
 
             //ship0
             ship0Textures.Add(Content.Load<Texture2D>("ship0Texture0"));
-            //ship0 end
+            ship0TextureIndex.Add("default");
 
-            ships.Add(new Ship0(ship0Textures, defaultShipPos, turrets0));
+            ships.Add(new Ship0(ship0Textures, defaultShipPos, turrets0, ship0TextureIndex));
+            //ship0 end
 
             //ship1
             ship1Textures.Add(Content.Load<Texture2D>("ship1Texture0"));
             ship1Textures.Add(Content.Load<Texture2D>("ship1Texture1"));
             ship1Textures.Add(Content.Load<Texture2D>("ship1Texture2"));
 
-            ships.Add(new Ship1(ship1Textures, defaultShipPos, turrets1));
+            ship1TextureIndex.Add("default");
+            ship1TextureIndex.Add("left");
+            ship1TextureIndex.Add("right");
+
+            ships.Add(new Ship1(ship1Textures, defaultShipPos, turrets1, ship1TextureIndex));
             //ship1 end
 
             selectedShip = ships[0];
@@ -319,12 +328,14 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
                 selectedShip.rotation -= 0.05f;
+                selectedShip.textureIndexCounter = FindIndex("left", selectedShip.textureIndex);
                 selectedShip.Update();
 
             }
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
                 selectedShip.rotation += 0.05f;
+                selectedShip.textureIndexCounter = FindIndex("right", selectedShip.textureIndex);
                 selectedShip.Update();
             }
 
@@ -647,6 +658,10 @@ namespace Game2Test
         public float RotationToMouse(Vector2 position)
         {
             return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
+        }
+        public int FindIndex(string queryString, List<string> list)
+        {
+            return list.FindIndex(x => x == queryString);
         }
     }
 }

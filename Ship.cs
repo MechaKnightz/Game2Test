@@ -16,12 +16,7 @@ namespace Game2Test
         public int textureIndexCounter = 0;
         public string description;
 
-        public int FindIndex(string queryString, List<string> list)
-        {
-            return list.FindIndex(x => x == queryString);
-        }
-
-        public Ship(List<Texture2D> textures, Vector2 position) : base(textures[0], position)
+        public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets, List<string> textureIndex) : base(textures[0], position)
         {
             for (int i = 0; i < turrets.Count; i++)
             {
@@ -109,7 +104,8 @@ namespace Game2Test
         }
         new public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(textures[textureIndexCounter], position, origin: origin, rotation: rotation);
+            textureIndexCounter = 0;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Game2Test
             {
                 this.turrets.Add(turrets[i]);
             }
-            for (int i = 0; i < textureDictionary.Count; i++)
+            for (int i = 0; i < textures.Count; i++)
             {
                 textureDictionary.Add(textureIndex[i], textures[i]);
             }

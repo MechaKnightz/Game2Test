@@ -334,7 +334,7 @@ namespace Game2Test
                     case 0:
                         break;
                     case 1:
-                        selectedShip.textureIndexCounter = GetIndex("left", selectedShip.textureDictionary);
+                        selectedShip.textureIndexCounter = "left";
                         break;
                 }
                 selectedShip.Update();
@@ -348,7 +348,7 @@ namespace Game2Test
                     case 0:
                         break;
                     case 1:
-                        selectedShip.textureIndexCounter = GetIndex("right", selectedShip.textureDictionary);
+                        selectedShip.textureIndexCounter = "right";
                         break;
                 }
                 selectedShip.Update();
@@ -675,7 +675,7 @@ namespace Game2Test
         {
             return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
         }
-        //public int FindIndex(string queryString, Dictionary<Texture2D, string> list)
+        //public string FindIndex(string queryString, Dictionary<string, Texture2D> list)
         //{
         //    return list.FindIndex(x => x == queryString);
         //}
@@ -684,17 +684,17 @@ namespace Game2Test
             selectedShip = ships[selectedShip.currentShipIndex];
         }
 
-        public int GetIndex(string queryString, OrderedDictionary dictionary)
-        {
-            int i = 0;
+        //public int GetIndex(string queryString, OrderedDictionary dictionary)
+        //{
+        //    int i = 0;
 
-            foreach (var key in dictionary.Keys)
-            {
-                i++;
-                if (key.Equals(queryString))
-                    return i;
-            }
-            return -1;
-        }
+        //    foreach (var key in dictionary.Keys)
+        //    {
+        //        i++;
+        //        if (key.Equals(queryString))
+        //            return i;
+        //    }
+        //    return -1;
+        //}
     }
 }

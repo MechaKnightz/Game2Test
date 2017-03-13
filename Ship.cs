@@ -12,9 +12,8 @@ namespace Game2Test
     public class Ship : Sprite
     {
         public List<Turret> turrets = new List<Turret>();
-        public Dictionary<Texture2D, string> textureDictionary = new Dictionary<Texture2D, string>();
-        public OrderedDictionary textureOrderedDictionary = new OrderedDictionary();
-        public int textureIndexCounter = 0;
+        public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
+        public string textureIndexCounter = "default";
         public int currentShipIndex = 0;
         public string description;
 
@@ -26,7 +25,7 @@ namespace Game2Test
             }
             for (int i = 0; i < textureDictionary.Count; i++)
             {
-                textureDictionary.Add(textures[i], textureIndex[i]);
+                textureDictionary.Add(textureIndex[i], textures[i]);
             }
         }
         new public void Update()
@@ -91,8 +90,8 @@ namespace Game2Test
         }
         new public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(textureDictionary[textureIndexCounte], position, origin: origin, rotation: rotation);
-            textureIndexCounter = 0;
+            spriteBatch.Draw(textureDictionary[textureIndexCounter], position, origin: origin, rotation: rotation);
+            textureIndexCounter = "default";
         }
     }
 }

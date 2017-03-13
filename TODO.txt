@@ -1,10 +1,8 @@
 ﻿TODO:
 
 if rot > 2pi, rot -= 2pi
-ship texture list when turning
 health and extra shots pickup
 stone movement
-ship index class holding rotation, position et.c
 
 DONE:
 
@@ -13,3 +11,5 @@ turrets rotation with ship rotation
 refactored shots to class
 turretrotation
 random gem asteroids
+ship index class holding rotation, position et.c
+ship texture list when turning

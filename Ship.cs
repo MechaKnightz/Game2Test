@@ -5,14 +5,15 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Game2Test.Ships;
+using System.Collections.Specialized;
 
 namespace Game2Test
 {
     public class Ship : Sprite
     {
         public List<Turret> turrets = new List<Turret>();
-        public List<Texture2D> textures = new List<Texture2D>();
-        public List<string> textureIndex = new List<string>();
+        public Dictionary<Texture2D, string> textureDictionary = new Dictionary<Texture2D, string>();
+        public OrderedDictionary textureOrderedDictionary = new OrderedDictionary();
         public int textureIndexCounter = 0;
         public int currentShipIndex = 0;
         public string description;
@@ -23,24 +24,9 @@ namespace Game2Test
             {
                 this.turrets.Add(turrets[i]);
             }
-            for (int i = 0; i < textures.Count; i++)
+            for (int i = 0; i < textureDictionary.Count; i++)
             {
-                this.textures.Add(textures[i]);
-            }
-            for (int i = 0; i < textureIndex.Count; i++)
-            {
-                this.textureIndex.Add(textureIndex[i]);
-            }
-        }
-        public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets) : base(textures[0], position)
-        {
-            for (int i = 0; i < turrets.Count; i++)
-            {
-                this.turrets.Add(turrets[i]);
-            }
-            for (int i = 0; i < textures.Count; i++)
-            {
-                this.textures.Add(textures[i]);
+                textureDictionary.Add(textures[i], textureIndex[i]);
             }
         }
         new public void Update()
@@ -105,7 +91,7 @@ namespace Game2Test
         }
         new public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(textures[textureIndexCounter], position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(textureDictionary[textureIndexCounte], position, origin: origin, rotation: rotation);
             textureIndexCounter = 0;
         }
     }

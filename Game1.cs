@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using MonoGame.Extended;
 using Game2Test.Ships;
+using System.Collections.Specialized;
 
 namespace Game2Test
 {
@@ -332,7 +333,7 @@ namespace Game2Test
                     case 0:
                         break;
                     case 1:
-                        selectedShip.textureIndexCounter = FindIndex("left", selectedShip.textureIndex);
+                        selectedShip.textureIndexCounter = FindIndex("left", selectedShip.textureDictionary);
                         break;
                 }
                 selectedShip.Update();
@@ -346,7 +347,7 @@ namespace Game2Test
                     case 0:
                         break;
                     case 1:
-                        selectedShip.textureIndexCounter = FindIndex("right", selectedShip.textureIndex);
+                        selectedShip.textureIndexCounter = FindIndex("right", selectedShip.textureDictionary);
                         break;
                 }
                 selectedShip.Update();
@@ -673,13 +674,21 @@ namespace Game2Test
         {
             return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
         }
-        public int FindIndex(string queryString, List<string> list)
+        public int FindIndex(string queryString, Dictionary<Texture2D, string> list)
         {
             return list.FindIndex(x => x == queryString);
         }
         public void ChangeShip()
         {
             selectedShip = ships[selectedShip.currentShipIndex];
+        }
+        public int GetIndex(OrderedDictionary dictionary, string queryString)
+        {
+            for (int index = 0; index < dictionary.Count; index++)
+            {
+                if (dictionary[index] == dictionary[key]) return index;
+            }
+            return -1;
         }
     }
 }

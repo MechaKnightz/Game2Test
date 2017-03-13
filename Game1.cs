@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using MonoGame.Extended;
 using Game2Test.Ships;
 using System.Collections.Specialized;
@@ -101,7 +102,7 @@ namespace Game2Test
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             graphics.PreferredBackBufferWidth = 801;  // window width
             graphics.PreferredBackBufferHeight = 701;   // window height
             graphics.ApplyChanges();
@@ -145,8 +146,8 @@ namespace Game2Test
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
             font = Content.Load<SpriteFont>("font");
             rnd = new System.Random();
-            speedbarRectangle = new Rectangle((graphics.PreferredBackBufferWidth/2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301,20);
-            speedbarRectangle2 = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301,20);
+            speedbarRectangle = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
+            speedbarRectangle2 = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
             speed = defaultSpeed;
             shotOrigin = new Vector2(sida / 2, sida / 2);
             halfScreenPos = new Vector2(halfScreen.X, halfScreen.Y);
@@ -160,7 +161,7 @@ namespace Game2Test
             viewMatrix = camera.GetViewMatrix();
 
             //rock textures
-            for (int i = 1; i < asteroidTextureAmount+1; i++)
+            for (int i = 1; i < asteroidTextureAmount + 1; i++)
             {
                 rockTextures.Add(Content.Load<Texture2D>("asteroid" + i));
             }
@@ -180,7 +181,7 @@ namespace Game2Test
             textures.Add(Content.Load<Texture2D>("red"));
             textures.Add(Content.Load<Texture2D>("orange"));
             textures.Add(Content.Load<Texture2D>("yellow"));
-            particleEngine = new ParticleEngine(textures, new Vector2(0,0));
+            particleEngine = new ParticleEngine(textures, new Vector2(0, 0));
         }
 
         /// <summary>
@@ -255,7 +256,7 @@ namespace Game2Test
             if (movingDelayCounter <= 0) drawParticles = false;
             else drawParticles = true;
             moving = false;
-            
+
             oldState = Keyboard.GetState();
             base.Draw(gameTime);
         }
@@ -277,7 +278,7 @@ namespace Game2Test
         }
         void CollisionTest2() //kollar om rocks intersects med ship.rectangle
         {
-            for(int i = 0; i < rocks.Count; i++)
+            for (int i = 0; i < rocks.Count; i++)
             {
                 if (IsInView(rocks[i]))
                 {
@@ -319,8 +320,8 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
             {
                 tempPos = selectedShip.position;
-                tempPos.X -= (float)(System.Math.Cos(selectedShip.rotation))*(speed/5);
-                tempPos.Y -= (float)(System.Math.Sin(selectedShip.rotation))*(speed/5);
+                tempPos.X -= (float)(System.Math.Cos(selectedShip.rotation)) * (speed / 5);
+                tempPos.Y -= (float)(System.Math.Sin(selectedShip.rotation)) * (speed / 5);
                 selectedShip.SetPos(tempPos);
                 moving = true;
             }
@@ -328,12 +329,12 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
                 selectedShip.rotation -= 0.05f;
-                switch(selectedShip.currentShipIndex)
+                switch (selectedShip.currentShipIndex)
                 {
                     case 0:
                         break;
                     case 1:
-                        selectedShip.textureIndexCounter = FindIndex("left", selectedShip.textureDictionary);
+                        selectedShip.textureIndexCounter = GetIndex("left", selectedShip.textureDictionary);
                         break;
                 }
                 selectedShip.Update();
@@ -347,7 +348,7 @@ namespace Game2Test
                     case 0:
                         break;
                     case 1:
-                        selectedShip.textureIndexCounter = FindIndex("right", selectedShip.textureDictionary);
+                        selectedShip.textureIndexCounter = GetIndex("right", selectedShip.textureDictionary);
                         break;
                 }
                 selectedShip.Update();
@@ -359,7 +360,7 @@ namespace Game2Test
             }
             if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G)) // TODO: fix this awful code
             {
-                if(selectedShip.currentShipIndex == 0)
+                if (selectedShip.currentShipIndex == 0)
                 {
                     ships[1].position = selectedShip.position;
                     ships[1].rotation = selectedShip.rotation;
@@ -389,9 +390,9 @@ namespace Game2Test
             }
             if (mouseState.LeftButton == ButtonState.Pressed && !(oldMouseState.LeftButton == ButtonState.Pressed) && shots.Count < maxShotCount)
             {
-                for(int i = 0; i < selectedShip.turrets.Count; i++)
+                for (int i = 0; i < selectedShip.turrets.Count; i++)
                 {
-                    if(shots.Count < maxShotCount) shots.Add(new Shot(shotTexture, new Vector2(selectedShip.turrets[i].position.X, selectedShip.turrets[i].position.Y), selectedShip.turrets[i].rotation , 0));
+                    if (shots.Count < maxShotCount) shots.Add(new Shot(shotTexture, new Vector2(selectedShip.turrets[i].position.X, selectedShip.turrets[i].position.Y), selectedShip.turrets[i].rotation, 0));
                 }
             }
             for (int i = 0; i < shots.Count; i++)
@@ -402,7 +403,7 @@ namespace Game2Test
                 shots[i].SetPos(tempPos2);
 
                 shots[i].duration++;
-                if(shots[i].duration > 60)
+                if (shots[i].duration > 60)
                 {
                     shots.RemoveAt(i);
                 }
@@ -454,11 +455,11 @@ namespace Game2Test
 
             if (keyState.IsKeyDown(Keys.Up) && !oldState.IsKeyDown(Keys.Up)) selected--;
             if (keyState.IsKeyDown(Keys.Down) && !oldState.IsKeyDown(Keys.Down)) selected++;
-            if (selected < 0) selected = menuLength-1 ;
-            if (selected > menuLength-1) selected = 0;
+            if (selected < 0) selected = menuLength - 1;
+            if (selected > menuLength - 1) selected = 0;
             if (keyState.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter))
             {
-                switch(selected)
+                switch (selected)
                 {
                     case 0:
                         ResetGame();
@@ -489,7 +490,7 @@ namespace Game2Test
 
             if (keyState.IsKeyDown(Keys.Up) && !oldState.IsKeyDown(Keys.Up)) selected--;
             if (keyState.IsKeyDown(Keys.Down) && !oldState.IsKeyDown(Keys.Down)) selected++;
-            if (selected < 0) selected = settingsMenuLength-1;
+            if (selected < 0) selected = settingsMenuLength - 1;
             if (selected > settingsMenuLength - 1) selected = 0;
 
             if (keyState.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter)) if (selected == 0) ChangeState(2);
@@ -503,7 +504,7 @@ namespace Game2Test
         }
         void DrawEndScreen()
         {
-            spriteBatch.DrawString(font, "Final Score: " + score.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2) - (font.MeasureString("Final Score: " + score.ToString()) /2), Color.Black);
+            spriteBatch.DrawString(font, "Final Score: " + score.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2) - (font.MeasureString("Final Score: " + score.ToString()) / 2), Color.Black);
             spriteBatch.DrawString(font, "Press R to reset.", new Vector2(10, 10), Color.Black);
         }
         void DrawGame()
@@ -524,8 +525,8 @@ namespace Game2Test
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
 
             selectedShip.Draw(spriteBatch);
-            
-            for(int i = 0; i < selectedShip.turrets.Count; i++)
+
+            for (int i = 0; i < selectedShip.turrets.Count; i++)
             {
                 selectedShip.turrets[i].Draw(spriteBatch);
             }
@@ -535,7 +536,7 @@ namespace Game2Test
             }
             for (int i = 0; i < rocks.Count; i++)
             {
-                if(IsInView(rocks[i])) rocks[i].Draw(spriteBatch);
+                if (IsInView(rocks[i])) rocks[i].Draw(spriteBatch);
             }
 
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
@@ -554,21 +555,21 @@ namespace Game2Test
         }
         void DrawMenu()
         {
-            spriteBatch.DrawString(font, "Begin", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5)*2) - (font.MeasureString("Begin") / 2), menuColor[0]);
+            spriteBatch.DrawString(font, "Begin", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5) * 2) - (font.MeasureString("Begin") / 2), menuColor[0]);
             spriteBatch.DrawString(font, "Settings", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5) * 3) - (font.MeasureString("Settings") / 2), menuColor[1]);
             spriteBatch.DrawString(font, "Quit", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5) * 4) - (font.MeasureString("Quit") / 2), menuColor[2]);
         }
         void DrawSettings()
         {
             spriteBatch.DrawString(font, "Back", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Back").X / 2), (graphics.PreferredBackBufferHeight / 2) - font.MeasureString("Speed").Y), menuColor[0]);
-            spriteBatch.DrawString(font, "Speed", new Vector2(graphics.PreferredBackBufferWidth / 2 -(font.MeasureString("Speed").X / 2), (graphics.PreferredBackBufferHeight  /2)), menuColor[1]);
+            spriteBatch.DrawString(font, "Speed", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Speed").X / 2), (graphics.PreferredBackBufferHeight / 2)), menuColor[1]);
             spriteBatch.Draw(selectedShip.texture, speedbarRectangle2, Color.White);
             spriteBatch.Draw(rockTexture, speedbarRectangle, Color.White);
-            spriteBatch.DrawString(font, speed.ToString(), new Vector2((graphics.PreferredBackBufferWidth / 2) - (font.MeasureString(speed.ToString()).X / 2), (graphics.PreferredBackBufferHeight / 2) + 20 +(font.MeasureString("Speed").Y)), Color.Black);
+            spriteBatch.DrawString(font, speed.ToString(), new Vector2((graphics.PreferredBackBufferWidth / 2) - (font.MeasureString(speed.ToString()).X / 2), (graphics.PreferredBackBufferHeight / 2) + 20 + (font.MeasureString("Speed").Y)), Color.Black);
         }
         private void ChangeColor()
         {
-            for(int i = 0; i < menuColor.Length; i++)
+            for (int i = 0; i < menuColor.Length; i++)
             {
                 if (i == selected) menuColor[i] = Color.White;
                 else menuColor[i] = Color.Black;
@@ -589,7 +590,7 @@ namespace Game2Test
         {
             gameState = (GameState)state;
             selected = 0;
-            
+
         }
         void BeginSpriteBatchCamera(SpriteBatch spriteBatch)
         {
@@ -607,7 +608,7 @@ namespace Game2Test
                 {
                     for (int i = 0; i < rocksPerBackground; i++)
                     {
-                        if (repeatIndex2 == 0|| repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
+                        if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
                         rocks.Add(new Sprite(rockTextures[rnd.Next(rockTextures.Count)], position));
                     }
@@ -640,9 +641,9 @@ namespace Game2Test
                 viewMatrix = camera.GetViewMatrix(parallaxFactor);
                 spriteBatch.Begin(transformMatrix: viewMatrix);
 
-                for (var repeatIndex2 = -mapSize*3; repeatIndex2 <= mapSize*3; repeatIndex2++)
+                for (var repeatIndex2 = -mapSize * 3; repeatIndex2 <= mapSize * 3; repeatIndex2++)
                 {
-                    for (var repeatIndex = -mapSize*3; repeatIndex <= mapSize*3; repeatIndex++)
+                    for (var repeatIndex = -mapSize * 3; repeatIndex <= mapSize * 3; repeatIndex++)
                     {
                         var texture = backgrounds[layerIndex];
                         var position = new Vector2(repeatIndex * texture.Width, repeatIndex2 * texture.Height);
@@ -660,7 +661,7 @@ namespace Game2Test
         public bool IsInView(Sprite sprite)
         {
             // if the object is not within the horizontal bounds of the screen
-            if (sprite.position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.position.X + sprite.texture.Width  < camera.Position.X)
+            if (sprite.position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.position.X + sprite.texture.Width < camera.Position.X)
                 return false;
 
             // if the object is not within the vertical bounds of the screen
@@ -674,19 +675,24 @@ namespace Game2Test
         {
             return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
         }
-        public int FindIndex(string queryString, Dictionary<Texture2D, string> list)
-        {
-            return list.FindIndex(x => x == queryString);
-        }
+        //public int FindIndex(string queryString, Dictionary<Texture2D, string> list)
+        //{
+        //    return list.FindIndex(x => x == queryString);
+        //}
         public void ChangeShip()
         {
             selectedShip = ships[selectedShip.currentShipIndex];
         }
-        public int GetIndex(OrderedDictionary dictionary, string queryString)
+
+        public int GetIndex(string queryString, OrderedDictionary dictionary)
         {
-            for (int index = 0; index < dictionary.Count; index++)
+            int i = 0;
+
+            foreach (var key in dictionary.Keys)
             {
-                if (dictionary[index] == dictionary[key]) return index;
+                i++;
+                if (key.Equals(queryString))
+                    return i;
             }
             return -1;
         }

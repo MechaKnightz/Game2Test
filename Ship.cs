@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using Game2Test.Ships;
 
 namespace Game2Test
@@ -14,6 +15,12 @@ namespace Game2Test
         public List<string> textureIndex = new List<string>();
         public int textureIndexCounter = 0;
         public string description;
+
+        public int FindIndex(string queryString, List<string> list)
+        {
+            return list.FindIndex(x => x == queryString);
+        }
+
         public Ship(List<Texture2D> textures, Vector2 position) : base(textures[0], position)
         {
             for (int i = 0; i < turrets.Count; i++)

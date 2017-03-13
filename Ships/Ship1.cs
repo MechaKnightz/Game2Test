@@ -7,9 +7,9 @@ using System;
 
 namespace Game2Test.Ships
 {
-    public class Ship1 : Ship
+    public class Ship0 : Ship
     {
-        public Ship1(Texture2D texture, Vector2 position, List<Turret> turrets, string description) : base(texture, position, turrets, description)
+        public Ship0(List<Texture2D> textures, Vector2 position, List<Turret> turrets) : base(textures, position, turrets)
         {
         }
     }

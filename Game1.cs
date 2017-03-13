@@ -25,13 +25,17 @@ namespace Game2Test
         List<Texture2D> rockTextures = new List<Texture2D>();
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
+
         List<Turret> turrets0 = new List<Turret>();
         List<Turret> turrets1 = new List<Turret>();
+
+        List<Texture2D> ship0Textures = new List<Texture2D>();
+        List<Texture2D> ship1Textures = new List<Texture2D>();
         List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D rockTexture, shotTexture, aimTexture, turret1Texture, turret2Texture;
+        Texture2D rockTexture, shotTexture, aimTexture, turret0Texture, turret1Texture;
 
         int sida = 21;
         SpriteFont font;
@@ -102,14 +106,28 @@ namespace Game2Test
 
             defaultShipPos = new Vector2(0, 0);
 
-            turret1Texture = Content.Load<Texture2D>("turret1");
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
-            turret2Texture = Content.Load<Texture2D>("turret2");
-            turrets1.Add(new Turret(turret2Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
-            turrets1.Add(new Turret(turret2Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
-            ships.Add(new Ship1(Content.Load<Texture2D>("ship0"), defaultShipPos, turrets0, "none"));
-            ships.Add(new Ship2(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1, "none"));
+            turret0Texture = Content.Load<Texture2D>("turret1");
+            turrets0.Add(new Turret(turret0Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
+            turrets0.Add(new Turret(turret0Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+
+            turret1Texture = Content.Load<Texture2D>("turret2");
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+
+            //ship0
+            ship0Textures.Add(Content.Load<Texture2D>("ship0Texture0"));
+            //ship0 end
+
+            ships.Add(new Ship0(ship0Textures, defaultShipPos, turrets0));
+
+            //ship1
+            ship1Textures.Add(Content.Load<Texture2D>("ship1Texture0"));
+            ship1Textures.Add(Content.Load<Texture2D>("ship1Texture1"));
+            ship1Textures.Add(Content.Load<Texture2D>("ship1Texture2"));
+
+            ships.Add(new Ship1(ship1Textures, defaultShipPos, turrets1));
+            //ship1 end
+
             selectedShip = ships[0];
 
             shotTexture = Content.Load<Texture2D>("shot");
@@ -302,11 +320,13 @@ namespace Game2Test
             {
                 selectedShip.rotation -= 0.05f;
                 selectedShip.Update();
+                selectedShip.textureIndex = Ship.TextureIndex.Left;
             }
-            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
+            else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
                 selectedShip.rotation += 0.05f;
                 selectedShip.Update();
+                selectedShip.textureIndex = Ship.TextureIndex.Right;
             }
 
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
@@ -567,6 +587,21 @@ namespace Game2Test
                 }
             }
         }
+        //void GenerateShotBoost()
+        //{
+        //    for (int repeatIndex2 = -mapSize; repeatIndex2 <= mapSize; repeatIndex2++)
+        //    {
+        //        for (int repeatIndex = -mapSize; repeatIndex <= mapSize; repeatIndex++)
+        //        {
+        //            for (int i = 0; i < rocksPerBackground; i++)
+        //            {
+        //                if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
+        //                Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
+        //                rocks.Add(new Sprite(rockTextures[rnd.Next(rockTextures.Count)], position));
+        //            }
+        //        }
+        //    }
+        //}
         /// <summary>
         /// call when spritebatch has ended
         /// </summary>

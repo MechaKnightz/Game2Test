@@ -3,29 +3,45 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using Game2Test.Ships;
 
 namespace Game2Test
 {
     public class Ship : Sprite
     {
+        public enum TextureIndex
+        {
+            Default,
+            Left,
+            Right,
+        }
+        public TextureIndex textureIndex;
         public List<Turret> turrets = new List<Turret>();
+        public List<Texture2D> textures = new List<Texture2D>();
         public string description;
-        public Ship(Texture2D texture, Vector2 position, List<Turret> turrets, string description) : base(texture, position)
+        public Ship(List<Texture2D> textures, Vector2 position) : base(textures[0], position)
         {
             for (int i = 0; i < turrets.Count; i++)
             {
                 this.turrets.Add(turrets[i]);
             }
-            this.description = description;
+            for (int i = 0; i < textures.Count; i++)
+            {
+                this.textures.Add(textures[i]);
+            }
         }
-        public Ship(Texture2D texture, Vector2 position, List<Turret> turrets) : base(texture, position)
+        public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets) : base(textures[0], position)
         {
             for (int i = 0; i < turrets.Count; i++)
             {
                 this.turrets.Add(turrets[i]);
             }
+            for (int i = 0; i < textures.Count; i++)
+            {
+                this.textures.Add(textures[i]);
+            }
         }
-        public void Update()
+        new public void Update()
         {
             rectangle.X = (int)position.X;
             rectangle.Y = (int)position.Y;
@@ -69,7 +85,7 @@ namespace Game2Test
         /// </summary>
         /// <param name="x"> move along x-axis by this amount</param>
         /// <param name="y">move along y-axis by this amount</param>
-        public void SetPos(float x, float y)
+        new public void SetPos(float x, float y)
         {
             position.X = x;
             position.X = x;
@@ -80,10 +96,16 @@ namespace Game2Test
         /// </summary>
         /// <param name="vector">amount to move ship with</param>
         /// <param name="rotation">adjust turret position for rotation</param>
-        public void SetPos(Vector2 vector)
+        public new void SetPos(Vector2 vector)
         {
             position = vector;
             Update();
+        }
+        new public void Draw(SpriteBatch spriteBatch)
+        {
+            texture = textures[(int)textureIndex];
+            spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
+            textureIndex = TextureIndex.Default;
         }
     }
 }

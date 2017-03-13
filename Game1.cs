@@ -111,9 +111,9 @@ namespace Game2Test
 
             defaultShipPos = new Vector2(0, 0);
 
-            turret0Texture = Content.Load<Texture2D>("turret1");
-            turrets0.Add(new Turret(turret0Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
-            turrets0.Add(new Turret(turret0Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+            turret0Texture = Content.Load<Texture2D>("turret2");
+            turrets0.Add(new Turret(turret0Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0));
+            turrets0.Add(new Turret(turret0Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0));
 
             turret1Texture = Content.Load<Texture2D>("turret2");
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
@@ -121,7 +121,12 @@ namespace Game2Test
 
             //ship0
             ship0Textures.Add(Content.Load<Texture2D>("ship0Texture0"));
+            ship0Textures.Add(Content.Load<Texture2D>("ship0Texture1"));
+            ship0Textures.Add(Content.Load<Texture2D>("ship0Texture2"));
+
             ship0TextureIndex.Add("default");
+            ship0TextureIndex.Add("left");
+            ship0TextureIndex.Add("right");
 
             ships.Add(new Ship0(ship0Textures, defaultShipPos, turrets0, ship0TextureIndex));
             //ship0 end
@@ -329,9 +334,10 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
                 selectedShip.rotation -= 0.05f;
-                switch (selectedShip.currentShipIndex)
+                switch (selectedShip.currentShipIndex) // TODO make something nice than these switches
                 {
                     case 0:
+                        selectedShip.textureIndexCounter = "left";
                         break;
                     case 1:
                         selectedShip.textureIndexCounter = "left";
@@ -343,9 +349,10 @@ namespace Game2Test
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
                 selectedShip.rotation += 0.05f;
-                switch (selectedShip.currentShipIndex)
+                switch (selectedShip.currentShipIndex) //this one aswell
                 {
                     case 0:
+                        selectedShip.textureIndexCounter = "right";
                         break;
                     case 1:
                         selectedShip.textureIndexCounter = "right";

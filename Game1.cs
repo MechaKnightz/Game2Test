@@ -27,6 +27,7 @@ namespace Game2Test
         List<int> highscores = new List<int>();
         List<Turret> turrets1 = new List<Turret>();
         List<Turret> turrets2 = new List<Turret>();
+        List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
@@ -49,8 +50,6 @@ namespace Game2Test
         bool drawParticles = false;
         int movingDelayCounter = 0;
         GameState gameState = (GameState)2;
-        Ship1 ship1;
-        Ship2 ship2;
         Ship selectedShip;
         Sprite aimSprite;
         Camera2D camera;
@@ -109,9 +108,9 @@ namespace Game2Test
             turret2Texture = Content.Load<Texture2D>("turret2");
             turrets2.Add(new Turret(turret2Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
             turrets2.Add(new Turret(turret2Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
-            ship1 = new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1);
-            ship2 = new Ship2(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets2);
-            selectedShip = ship1;
+            ships.Add(new Ship1(Content.Load<Texture2D>("ship1"), defaultShipPos, turrets1));
+            ships.Add(new Ship2(Content.Load<Texture2D>("ship2"), defaultShipPos, turrets2));
+            selectedShip = ships[0];
 
             shotTexture = Content.Load<Texture2D>("shot");
             aimTexture = Content.Load<Texture2D>("aimWhite");
@@ -318,16 +317,16 @@ namespace Game2Test
             {
                 if(selectedIndex == 0)
                 {
-                    ship2.position = selectedShip.position;
-                    ship2.rotation = selectedShip.rotation;
-                    selectedShip = ship2;
+                    ships[1].position = selectedShip.position;
+                    ships[1].rotation = selectedShip.rotation;
+                    selectedShip = ships[1];
                     selectedIndex++;
                 }
                 else
                 {
-                    ship1.position = selectedShip.position;
-                    ship1.rotation = selectedShip.rotation;
-                    selectedShip = ship1;
+                    ships[0].position = selectedShip.position;
+                    ships[0].rotation = selectedShip.rotation;
+                    selectedShip = ships[0];
                     selectedIndex--;
                 }
             }

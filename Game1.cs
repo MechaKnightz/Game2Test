@@ -70,7 +70,6 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
-        int selectedIndex = 0;
 
         public Game1()
         {
@@ -328,14 +327,28 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
                 selectedShip.rotation -= 0.05f;
-                selectedShip.textureIndexCounter = FindIndex("left", selectedShip.textureIndex);
+                switch(selectedShip.currentShipIndex)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        selectedShip.textureIndexCounter = FindIndex("left", selectedShip.textureIndex);
+                        break;
+                }
                 selectedShip.Update();
 
             }
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
                 selectedShip.rotation += 0.05f;
-                selectedShip.textureIndexCounter = FindIndex("right", selectedShip.textureIndex);
+                switch (selectedShip.currentShipIndex)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        selectedShip.textureIndexCounter = FindIndex("right", selectedShip.textureIndex);
+                        break;
+                }
                 selectedShip.Update();
             }
 
@@ -345,12 +358,12 @@ namespace Game2Test
             }
             if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G)) // TODO: fix this awful code
             {
-                if(selectedIndex == 0)
+                if(selectedShip.currentShipIndex == 0)
                 {
                     ships[1].position = selectedShip.position;
                     ships[1].rotation = selectedShip.rotation;
                     selectedShip = ships[1];
-                    selectedIndex++;
+                    selectedShip.currentShipIndex = 1;
                     selectedShip.Update();
                 }
                 else
@@ -358,7 +371,7 @@ namespace Game2Test
                     ships[0].position = selectedShip.position;
                     ships[0].rotation = selectedShip.rotation;
                     selectedShip = ships[0];
-                    selectedIndex--;
+                    selectedShip.currentShipIndex = 0;
                     selectedShip.Update();
                 }
             }
@@ -532,7 +545,8 @@ namespace Game2Test
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
             spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.White);
-            spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White);
+            //spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White); 
+            spriteBatch.DrawString(font, selectedShip.currentShipIndex.ToString(), camera.ScreenToWorld(viewYPos), Color.White);
 
             aimSprite.Draw(spriteBatch);
 
@@ -662,6 +676,10 @@ namespace Game2Test
         public int FindIndex(string queryString, List<string> list)
         {
             return list.FindIndex(x => x == queryString);
+        }
+        public void ChangeShip()
+        {
+            selectedShip = ships[selectedShip.currentShipIndex];
         }
     }
 }

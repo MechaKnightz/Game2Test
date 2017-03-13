@@ -14,6 +14,7 @@ namespace Game2Test
         public List<Texture2D> textures = new List<Texture2D>();
         public List<string> textureIndex = new List<string>();
         public int textureIndexCounter = 0;
+        public int currentShipIndex = 0;
         public string description;
 
         public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets, List<string> textureIndex) : base(textures[0], position)

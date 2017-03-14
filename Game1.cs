@@ -334,14 +334,9 @@ namespace Game2Test
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
                 selectedShip.rotation -= 0.05f;
-                switch (selectedShip.currentShipIndex) // TODO make something nice than these switches
+                if(selectedShip.textureDictionary.ContainsKey("left"))
                 {
-                    case 0:
-                        selectedShip.textureIndexCounter = "left";
-                        break;
-                    case 1:
-                        selectedShip.textureIndexCounter = "left";
-                        break;
+                    selectedShip.textureIndexCounter = "left";
                 }
                 selectedShip.Update();
 
@@ -349,14 +344,9 @@ namespace Game2Test
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
                 selectedShip.rotation += 0.05f;
-                switch (selectedShip.currentShipIndex) //this one aswell
+                if (selectedShip.textureDictionary.ContainsKey("right"))
                 {
-                    case 0:
-                        selectedShip.textureIndexCounter = "right";
-                        break;
-                    case 1:
-                        selectedShip.textureIndexCounter = "right";
-                        break;
+                    selectedShip.textureIndexCounter = "right";
                 }
                 selectedShip.Update();
             }
@@ -554,8 +544,7 @@ namespace Game2Test
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
             spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.White);
-            //spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White); 
-            spriteBatch.DrawString(font, selectedShip.currentShipIndex.ToString(), camera.ScreenToWorld(viewYPos), Color.White);
+            spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White); 
 
             aimSprite.Draw(spriteBatch);
 

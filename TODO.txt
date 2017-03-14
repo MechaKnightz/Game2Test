@@ -5,6 +5,7 @@ health and extra shots pickup
 asteroid movement
 change spawn point to just remove everything around the ship before it loads
 make menu look nicer
+add acceleration to asteroids
 
 DONE:
 

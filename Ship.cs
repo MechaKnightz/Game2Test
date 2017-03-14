@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using Game2Test.Ships;
 using System.Collections.Specialized;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Game2Test
 {
@@ -20,44 +21,49 @@ namespace Game2Test
 
         public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets, List<string> textureIndex) : base(textures[0], position)
         {
-            for (int i = 0; i < turrets.Count; i++)
+            foreach (var t in turrets)
             {
-                this.turrets.Add(turrets[i]);
+                this.turrets.Add(t);
             }
-            for (int i = 0; i < textures.Count; i++)
+            for (var i = 0; i < textures.Count; i++)
             {
                 textureDictionary.Add(textureIndex[i], textures[i]);
             }
         }
         public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, List<Turret> turrets) : base(textureDictionary["default"], position)
         {
-            for (int i = 0; i < turrets.Count; i++)
+            foreach (var t in turrets)
             {
-                this.turrets.Add(turrets[i]);
+                this.turrets.Add(t);
             }
             foreach (KeyValuePair<string, Texture2D> entry in textureDictionary)
             {
                 this.textureDictionary.Add(entry.Key, entry.Value);
             }
         }
-        new public void Update()
+        public new void Update()
         {
             rectangle.X = (int)position.X;
             rectangle.Y = (int)position.Y;
-            for (int i = 0; i < turrets.Count; i++)
+            foreach (var t in turrets)
             {
-                //sets the turrets at the position of the ship
-                turrets[i].position.X = position.X;
-                turrets[i].position.Y = position.Y;
+//sets the turrets at the position of the ship
+                t.position.X = position.X;
+                t.position.Y = position.Y;
 
                 //x turret offset
-                turrets[i].position.X -= (float)(turrets[i].offset.X * Math.Cos(rotation - Math.PI));
-                turrets[i].position.Y -= (float)(turrets[i].offset.X * Math.Sin(rotation - Math.PI));
+                t.position.X -= (float)(t.offset.X * Math.Cos(rotation - Math.PI));
+                t.position.Y -= (float)(t.offset.X * Math.Sin(rotation - Math.PI));
 
                 //y turret offset
-                turrets[i].position.X -= (float)(turrets[i].offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-                turrets[i].position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+                t.position.X -= (float)(t.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
+                t.position.Y -= (float)(t.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
             }
+        }
+        public new void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(textureDictionary[textureIndexCounter], position, origin: origin, rotation: rotation);
+            textureIndexCounter = "default";
         }
         /// <summary>
         /// returns vector at the back of the ship, based off of the back of the texture
@@ -84,7 +90,7 @@ namespace Game2Test
         /// </summary>
         /// <param name="x"> move along x-axis by this amount</param>
         /// <param name="y">move along y-axis by this amount</param>
-        new public void SetPos(float x, float y)
+        public new void SetPos(float x, float y)
         {
             position.X = x;
             position.X = x;
@@ -100,10 +106,13 @@ namespace Game2Test
             position = vector;
             Update();
         }
-        new public void Draw(SpriteBatch spriteBatch)
+
+        public void FireAll()
         {
-            spriteBatch.Draw(textureDictionary[textureIndexCounter], position, origin: origin, rotation: rotation);
-            textureIndexCounter = "default";
+            foreach (var t in turrets)
+            {
+                t.Fire();
+            }
         }
     }
 }

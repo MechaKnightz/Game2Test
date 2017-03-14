@@ -363,7 +363,7 @@ namespace Game2Test
             {
                 selectedShip.SetPos(defaultShipPos);
             }
-            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G)) // TODO: fix this awful code
+            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G))
             {
                 NextShip();
             }

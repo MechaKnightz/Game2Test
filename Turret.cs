@@ -30,7 +30,7 @@ namespace Game2Test
 
         public void Fire() //fire the default shot
         {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, 60)); // TODO: doesnt add to list for some reason
+            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, 60));
         }
 
         public void UpdateShots()
@@ -45,9 +45,9 @@ namespace Game2Test
                     temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * 15;
                     t.Value[i].SetPos(temp);
 
-                    if (t.Value[i].duration > 60)
+                    if (t.Value[i].duration > 60) // TODO: fix intersection method
                     {
-                        t.Value.RemoveAt(i);
+                        //t.Value.RemoveAt(i);
                     }
                 }
             }

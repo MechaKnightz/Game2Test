@@ -28,6 +28,17 @@ namespace Game2Test
                 textureDictionary.Add(textureIndex[i], textures[i]);
             }
         }
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, List<Turret> turrets) : base(textureDictionary["default"], position)
+        {
+            for (int i = 0; i < turrets.Count; i++)
+            {
+                this.turrets.Add(turrets[i]);
+            }
+            foreach (KeyValuePair<string, Texture2D> entry in textureDictionary)
+            {
+                this.textureDictionary.Add(entry.Key, entry.Value);
+            }
+        }
         new public void Update()
         {
             rectangle.X = (int)position.X;

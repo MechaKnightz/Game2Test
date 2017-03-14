@@ -37,6 +37,9 @@ namespace Game2Test
         List<string> ship0TextureIndex = new List<string>();
         List<string> ship1TextureIndex = new List<string>();
 
+        Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
+        Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
+
         List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
@@ -120,27 +123,19 @@ namespace Game2Test
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
 
             //ship0
-            ship0Textures.Add(Content.Load<Texture2D>("ship0Texture0"));
-            ship0Textures.Add(Content.Load<Texture2D>("ship0Texture1"));
-            ship0Textures.Add(Content.Load<Texture2D>("ship0Texture2"));
+            ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
+            ship0Dictionary.Add("left", Content.Load<Texture2D>("ship0Texture1"));
+            ship0Dictionary.Add("right", Content.Load<Texture2D>("ship0Texture2"));
 
-            ship0TextureIndex.Add("default");
-            ship0TextureIndex.Add("left");
-            ship0TextureIndex.Add("right");
-
-            ships.Add(new Ship0(ship0Textures, defaultShipPos, turrets0, ship0TextureIndex));
+            ships.Add(new Ship(ship0Dictionary, defaultShipPos, turrets0));
             //ship0 end
 
             //ship1
-            ship1Textures.Add(Content.Load<Texture2D>("ship1Texture0"));
-            ship1Textures.Add(Content.Load<Texture2D>("ship1Texture1"));
-            ship1Textures.Add(Content.Load<Texture2D>("ship1Texture2"));
+            ship1Dictionary.Add("default", Content.Load<Texture2D>("ship1Texture0"));
+            ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
+            ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
 
-            ship1TextureIndex.Add("default");
-            ship1TextureIndex.Add("left");
-            ship1TextureIndex.Add("right");
-
-            ships.Add(new Ship1(ship1Textures, defaultShipPos, turrets1, ship1TextureIndex));
+            ships.Add(new Ship(ship1Dictionary, defaultShipPos, turrets1));
             //ship1 end
 
             selectedShip = ships[0];

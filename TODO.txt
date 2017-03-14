@@ -2,7 +2,6 @@
 
 asteroid explosion dropping minerals with own class
 search for texture state and if it exists set it to that
-if rot > 2pi, rot -= 2pi
 health and extra shots pickup
 stone movement
 
@@ -15,3 +14,4 @@ turretrotation
 random gem asteroids
 ship index class holding rotation, position et.c
 ship texture list when turning
+if rot > 2pi, rot -= 2pi

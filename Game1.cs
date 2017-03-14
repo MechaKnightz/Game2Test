@@ -432,6 +432,9 @@ namespace Game2Test
             //}
 
             //particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
+
+            if (selectedShip.rotation > (float)Math.PI * 2f || selectedShip.rotation < (float)-Math.PI * 2f) selectedShip.rotation -= (float)Math.PI * 2f;
+
             particleEngine.EmitterLocation = selectedShip.GetBackOfShip();
             particleEngine.Update();
 

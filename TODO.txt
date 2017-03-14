@@ -4,6 +4,7 @@ asteroid explosion dropping minerals with own class
 health and extra shots pickup
 asteroid movement
 change spawn point to just remove everything around the ship before it loads
+make menu look nicer
 
 DONE:
 

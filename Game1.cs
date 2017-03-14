@@ -33,12 +33,6 @@ namespace Game2Test
         List<Turret> turrets1 = new List<Turret>();
         List<Turret> turrets2 = new List<Turret>();
 
-        List<Texture2D> ship0Textures = new List<Texture2D>();
-        List<Texture2D> ship1Textures = new List<Texture2D>();
-
-        List<string> ship0TextureIndex = new List<string>();
-        List<string> ship1TextureIndex = new List<string>();
-
         Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship2Dictionary = new Dictionary<string, Texture2D>();
@@ -280,13 +274,11 @@ namespace Game2Test
             {
                 for (int j = 0; j < rocks.Count; j++)
                 {
-                    if (shots[i].rectangle.Intersects(rocks[j].rectangle))
-                    {
-                        shots.RemoveAt(i);
-                        rocks.RemoveAt(j);
-                        score++;
-                        break;
-                    }
+                    if (!shots[i].rectangle.Intersects(rocks[j].rectangle)) continue;
+                    shots.RemoveAt(i);
+                    rocks.RemoveAt(j);
+                    score++;
+                    break;
                 }
             }
         }

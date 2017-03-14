@@ -116,15 +116,15 @@ namespace Game2Test
 
             defaultShipPos = new Vector2(0, 0);
 
-            turret0Texture = Content.Load<Texture2D>("turret2");
+            turret0Texture = Content.Load<Texture2D>("turret0");
             turrets0.Add(new Turret(turret0Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0));
             turrets0.Add(new Turret(turret0Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0));
 
-            turret1Texture = Content.Load<Texture2D>("turret2");
+            turret1Texture = Content.Load<Texture2D>("turret1");
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
 
-            turrets2.Add(new Turret(turret1Texture, new Vector2(10, 10), new Vector2(10, 10), 0));
+            turrets2.Add(new Turret(turret0Texture, new Vector2(7, 0), new Vector2(7, 0), 0));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));

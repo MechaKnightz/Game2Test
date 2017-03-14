@@ -7,6 +7,7 @@ using System.Linq;
 using MonoGame.Extended;
 using Game2Test.Ships;
 using System.Collections.Specialized;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Game2Test
 {
@@ -378,11 +379,11 @@ namespace Game2Test
             {
                 selectedShip.turrets[i].rotation = RotationToMouse(selectedShip.turrets[i].position);
             }
-            if (mouseState.LeftButton == ButtonState.Pressed && !(oldMouseState.LeftButton == ButtonState.Pressed) && shots.Count < maxShotCount)
+            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && shots.Count < maxShotCount)
             {
-                for (int i = 0; i < selectedShip.turrets.Count; i++)
+                foreach (var t in selectedShip.turrets)
                 {
-                    if (shots.Count < maxShotCount) shots.Add(new Shot(shotTexture, new Vector2(selectedShip.turrets[i].position.X, selectedShip.turrets[i].position.Y), selectedShip.turrets[i].rotation, 0));
+                    if (shots.Count < maxShotCount) shots.Add(new Shot(shotTexture, new Vector2(t.position.X, t.position.Y), t.rotation, 0));
                 }
             }
             for (int i = 0; i < shots.Count; i++)
@@ -398,17 +399,17 @@ namespace Game2Test
                     shots.RemoveAt(i);
                 }
             }
-            for (int i = 0; i < rocks.Count; i++)
+            foreach (var t in rocks)
             {
-                if (Vector2.Distance(rocks[i].position, selectedShip.position) < 1000)
+                if (Vector2.Distance(t.position, selectedShip.position) < 1000)
                 {
-                    tempPos3 = rocks[i].position;
+                    tempPos3 = t.position;
                     if (tempPos3.X < selectedShip.position.X) tempPos3.X += 3;
                     else if (tempPos3.X > selectedShip.position.X) tempPos3.X -= 3;
 
                     if (tempPos3.Y < selectedShip.position.Y) tempPos3.Y += 3;
                     else if (tempPos3.Y > selectedShip.position.Y) tempPos3.Y -= 3;
-                    rocks[i].SetPos(tempPos3);
+                    t.SetPos(tempPos3);
                 }
             }
             //for (int i = 0; i < rocks.Count; i++) //rock flyttare
@@ -519,17 +520,17 @@ namespace Game2Test
 
             selectedShip.Draw(spriteBatch);
 
-            for (int i = 0; i < selectedShip.turrets.Count; i++)
+            foreach (var t in selectedShip.turrets)
             {
-                selectedShip.turrets[i].Draw(spriteBatch);
+                t.Draw(spriteBatch);
             }
-            for (int i = 0; i < shots.Count; i++)
+            foreach (var t in shots)
             {
-                shots[i].Draw(spriteBatch);
+                t.Draw(spriteBatch);
             }
-            for (int i = 0; i < rocks.Count; i++)
+            foreach (var t in rocks)
             {
-                if (IsInView(rocks[i])) rocks[i].Draw(spriteBatch);
+                if (IsInView(t)) t.Draw(spriteBatch);
             }
 
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);

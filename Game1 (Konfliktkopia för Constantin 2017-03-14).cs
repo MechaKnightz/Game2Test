@@ -674,7 +674,7 @@ namespace Game2Test
         {
             if (selectedShip.currentShipIndex == ships.Count-1)
             {
-                selectedShip.previousShipIndex = selectedShip.currentShipIndex;
+                selectedShip.previousShipIndex = ships.Count;
                 selectedShip.currentShipIndex = 0;
                 ChangeShip();
             }
@@ -684,17 +684,13 @@ namespace Game2Test
                 selectedShip.currentShipIndex++;
                 ChangeShip();
             }
+
         }
         public void ChangeShip()
         {
-            var tempRot = selectedShip.rotation;
-            var tempPos = selectedShip.position;
-            var tempIndex = selectedShip.currentShipIndex;
+            selectedShip.position = ships[selectedShip.previousShipIndex].position;
+            selectedShip.rotation = ships[selectedShip.previousShipIndex].rotation;
             selectedShip = ships[selectedShip.currentShipIndex];
-            selectedShip.currentShipIndex = tempIndex;
-            selectedShip.position = tempPos;
-            selectedShip.rotation = tempRot;
-            selectedShip.Update();
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

@@ -65,6 +65,22 @@ namespace Game2Test
             spriteBatch.Draw(textureDictionary[textureIndexCounter], position, origin: origin, rotation: rotation);
             textureIndexCounter = "default";
         }
+
+        public void UpdateTurrets()
+        {
+            foreach (var t in turrets)
+            {
+                t.Update();
+            }
+        }
+
+        public void DrawTurrets(SpriteBatch spriteBatch)
+        {
+            foreach (var t in turrets)
+            {
+                t.Draw(spriteBatch);
+            }
+        }
         /// <summary>
         /// returns vector at the back of the ship, based off of the back of the texture
         /// </summary>
@@ -106,7 +122,14 @@ namespace Game2Test
             position = vector;
             Update();
         }
-
+        public bool TurretCollision(Rectangle rectangle)
+        {
+            foreach (var t in turrets)
+            {
+                if (t.ShotCollision(rectangle)) return true;
+            }
+            return false;
+        }
         public void FireAll()
         {
             foreach (var t in turrets)

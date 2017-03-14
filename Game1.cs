@@ -23,9 +23,8 @@ namespace Game2Test
         KeyboardState keyState, oldState;
 
         //lists
-        List<Shot> shots = new List<Shot>();
         List<Sprite> rocks = new List<Sprite>();
-        List<Texture2D> rockTextures = new List<Texture2D>();
+        List<Texture2D> asteroidTextures = new List<Texture2D>();
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
 
@@ -39,9 +38,11 @@ namespace Game2Test
 
         List<Ship> ships = new List<Ship>();
 
-        Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, shotOrigin, halfScreenPos, halfScreen;
+        Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D rockTexture, shotTexture, aimTexture, turret0Texture, turret1Texture;
+        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture;
+
+        Shot shot0;
 
         int sida = 21;
         SpriteFont font;
@@ -114,13 +115,16 @@ namespace Game2Test
             turret0Texture = Content.Load<Texture2D>("turret0");
             turret1Texture = Content.Load<Texture2D>("turret1");
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0));
+            shot0Texture = Content.Load<Texture2D>("shot0");
+            shot0 = new Shot(shot0Texture, 60, "default");
 
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0));
 
-            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0));
+
+            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
@@ -148,16 +152,13 @@ namespace Game2Test
 
             selectedShip = ships[0];
 
-            shotTexture = Content.Load<Texture2D>("shot");
             aimTexture = Content.Load<Texture2D>("aimWhite");
-            rockTexture = Content.Load<Texture2D>("rock");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
             font = Content.Load<SpriteFont>("font");
             rnd = new System.Random();
             speedbarRectangle = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
             speedbarRectangle2 = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
             speed = defaultSpeed;
-            shotOrigin = new Vector2(sida / 2, sida / 2);
             halfScreenPos = new Vector2(halfScreen.X, halfScreen.Y);
 
             viewScorePos = new Vector2(10, 10);
@@ -171,7 +172,7 @@ namespace Game2Test
             //rock textures
             for (int i = 1; i < asteroidTextureAmount + 1; i++)
             {
-                rockTextures.Add(Content.Load<Texture2D>("asteroid" + i));
+                asteroidTextures.Add(Content.Load<Texture2D>("asteroid" + i));
             }
 
             //map generation
@@ -270,15 +271,14 @@ namespace Game2Test
         }
         void CollisionTest() //kollar om shots intersects med rocks
         {
-            for (int i = 0; i < shots.Count; i++)
+            for(int i = 0; i < rocks.Count; i++)
             {
-                for (int j = 0; j < rocks.Count; j++)
+                if (IsInView(rocks[i]))
                 {
-                    if (!shots[i].rectangle.Intersects(rocks[j].rectangle)) continue;
-                    shots.RemoveAt(i);
-                    rocks.RemoveAt(j);
-                    score++;
-                    break;
+                    if (selectedShip.TurretCollision(rocks[i].rectangle))
+                    {
+                        rocks.RemoveAt(i);
+                    }
                 }
             }
         }
@@ -365,31 +365,15 @@ namespace Game2Test
             tempPos4 = selectedShip.position - halfScreen;
             camera.Position = tempPos4;
 
-            aimSprite.SetPos(mouseState.Position.ToVector2() + camera.Position);
+            aimSprite.SetPos(camera.ScreenToWorld(mouseState.Position.ToVector2()));
 
             for (int i = 0; i < selectedShip.turrets.Count; i++)
             {
                 selectedShip.turrets[i].rotation = RotationToMouse(selectedShip.turrets[i].position);
             }
-            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && shots.Count < maxShotCount)
+            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed)
             {
-                foreach (var t in selectedShip.turrets)
-                {
-                    if (shots.Count < maxShotCount) shots.Add(new Shot(shotTexture, new Vector2(t.position.X, t.position.Y), t.rotation, 0));
-                }
-            }
-            for (int i = 0; i < shots.Count; i++)
-            {
-                tempPos2 = shots[i].position;
-                tempPos2.X += (float)(System.Math.Cos(shots[i].rotation)) * 15;
-                tempPos2.Y += (float)(System.Math.Sin(shots[i].rotation)) * 15;
-                shots[i].SetPos(tempPos2);
-
-                shots[i].duration++;
-                if (shots[i].duration > 60)
-                {
-                    shots.RemoveAt(i);
-                }
+                selectedShip.FireAll();
             }
             foreach (var t in rocks)
             {
@@ -425,6 +409,7 @@ namespace Game2Test
             //particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
 
             if (selectedShip.rotation > (float)Math.PI * 2f || selectedShip.rotation < (float)-Math.PI * 2f) selectedShip.rotation -= (float)Math.PI * 2f;
+            selectedShip.UpdateTurrets();
 
             particleEngine.EmitterLocation = selectedShip.GetBackOfShip();
             particleEngine.Update();
@@ -511,12 +496,9 @@ namespace Game2Test
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
 
             selectedShip.Draw(spriteBatch);
+            selectedShip.DrawTurrets(spriteBatch);
 
             foreach (var t in selectedShip.turrets)
-            {
-                t.Draw(spriteBatch);
-            }
-            foreach (var t in shots)
             {
                 t.Draw(spriteBatch);
             }
@@ -532,8 +514,8 @@ namespace Game2Test
             yPosString = "Ypos: " + selectedShip.position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
-            spriteBatch.DrawString(font, "Xpos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewXPos), Color.White);
-            spriteBatch.DrawString(font, "Ypos: " + selectedShip.position.Y.ToString("F0"), camera.ScreenToWorld(viewYPos), Color.White); 
+            spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
+            spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White); 
 
             aimSprite.Draw(spriteBatch);
 
@@ -549,7 +531,7 @@ namespace Game2Test
             spriteBatch.DrawString(font, "Back", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Back").X / 2), (graphics.PreferredBackBufferHeight / 2) - font.MeasureString("Speed").Y), menuColor[0]);
             spriteBatch.DrawString(font, "Speed", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Speed").X / 2), (graphics.PreferredBackBufferHeight / 2)), menuColor[1]);
             spriteBatch.Draw(selectedShip.texture, speedbarRectangle2, Color.White);
-            spriteBatch.Draw(rockTexture, speedbarRectangle, Color.White);
+            spriteBatch.Draw(asteroidTextures[4], speedbarRectangle, Color.White);
             spriteBatch.DrawString(font, speed.ToString(), new Vector2((graphics.PreferredBackBufferWidth / 2) - (font.MeasureString(speed.ToString()).X / 2), (graphics.PreferredBackBufferHeight / 2) + 20 + (font.MeasureString("Speed").Y)), Color.Black);
         }
         private void ChangeColor()
@@ -562,7 +544,7 @@ namespace Game2Test
         }
         void ResetGame()
         {
-            shots.Clear();
+            selectedShip = ships[0];
             lives = defaultLives;
             score = defaultScore;
             selectedShip.position = defaultShipPos;
@@ -595,7 +577,7 @@ namespace Game2Test
                     {
                         if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
-                        rocks.Add(new Sprite(rockTextures[rnd.Next(rockTextures.Count)], position));
+                        rocks.Add(new Sprite(asteroidTextures[rnd.Next(asteroidTextures.Count)], position));
                     }
                 }
             }
@@ -610,7 +592,7 @@ namespace Game2Test
         //            {
         //                if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
         //                Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
-        //                rocks.Add(new Sprite(rockTextures[rnd.Next(rockTextures.Count)], position));
+        //                rocks.Add(new Sprite(asteroidTextures[rnd.Next(asteroidTextures.Count)], position));
         //            }
         //        }
         //    }

@@ -1,5 +1,6 @@
 ﻿TODO:
 
+search for texture state and if it exists set it to that
 if rot > 2pi, rot -= 2pi
 health and extra shots pickup
 stone movement

@@ -185,12 +185,10 @@ namespace Game2Test
             }
 
             //particles
-            List<Texture2D> textures = new List<Texture2D> //add particle collection
-            {
-                Content.Load<Texture2D>("red"),
-                Content.Load<Texture2D>("orange"),
-                Content.Load<Texture2D>("yellow")
-            };
+            List<Texture2D> textures = new List<Texture2D>();
+            textures.Add(Content.Load<Texture2D>("red"));
+            textures.Add(Content.Load<Texture2D>("orange"));
+            textures.Add(Content.Load<Texture2D>("yellow"));
             particleEngine = new ParticleEngine(textures, new Vector2(0, 0));
         }
 
@@ -369,9 +367,9 @@ namespace Game2Test
 
             aimSprite.SetPos(mouseState.Position.ToVector2() + camera.Position);
 
-            foreach (var t in selectedShip.turrets)
+            for (int i = 0; i < selectedShip.turrets.Count; i++)
             {
-                t.rotation = RotationToMouse(t.position);
+                selectedShip.turrets[i].rotation = RotationToMouse(selectedShip.turrets[i].position);
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && shots.Count < maxShotCount)
             {

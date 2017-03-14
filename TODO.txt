@@ -6,6 +6,9 @@ asteroid movement
 change spawn point to just remove everything around the ship before it loads
 make menu look nicer
 add acceleration to asteroids
+max shot count per turret
+fix intersection
+add speed member variable to shots
 
 DONE:
 

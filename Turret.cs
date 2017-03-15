@@ -44,7 +44,7 @@ namespace Game2Test
                 {
                     t.Value[i].duration--;
                     var temp = t.Value[i].position;
-                    temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * t.Value[i].speed; // TODO: 15 supposed to be speed
+                    temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * t.Value[i].speed;
                     temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * t.Value[i].speed;
                     t.Value[i].SetPos(temp);
 

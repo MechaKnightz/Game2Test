@@ -9,6 +9,7 @@ add acceleration to asteroids
 max shot count per turret
 fix intersection
 add speed member variable to shots
+maxshots per turret and type/all
 
 DONE:
 

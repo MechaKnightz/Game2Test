@@ -30,7 +30,7 @@ namespace Game2Test
 
         public void Fire() //fire the default shot
         {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, 60));
+            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, 60, shots["default"].speed));
         }
 
         public void UpdateShots()
@@ -41,8 +41,8 @@ namespace Game2Test
                 {
                     t.Value[i].duration--;
                     var temp = t.Value[i].position;
-                    temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * 15; // TODO: 15 supposed to be speed
-                    temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * 15;
+                    temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * t.Value[i].speed; // TODO: 15 supposed to be speed
+                    temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * t.Value[i].speed;
                     t.Value[i].SetPos(temp);
 
                     if (t.Value[i].duration < 00)

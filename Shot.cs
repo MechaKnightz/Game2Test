@@ -10,7 +10,8 @@ namespace Game2Test
     {
         public string name = "default";
         public int duration;
-        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, string name) : base(texture, position, rotation)
+        public float speed;
+        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, string name, float speed) : base(texture, position, rotation)
         {
             this.duration = duration;
         }
@@ -18,9 +19,15 @@ namespace Game2Test
         {
             this.duration = duration;
         }
-        public Shot(Texture2D texture, int duration, string name) : base(texture)
+        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, float speed) : base(texture, position, rotation)
         {
             this.duration = duration;
+            this.speed = speed;
+        }
+        public Shot(Texture2D texture, int duration, string name, int speed) : base(texture)
+        {
+            this.duration = duration;
+            this.speed = speed;
         }
 
         public void Update()

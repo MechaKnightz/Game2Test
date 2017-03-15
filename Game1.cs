@@ -104,8 +104,13 @@ namespace Game2Test
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            graphics.PreferredBackBufferWidth = 801;  // window width
-            graphics.PreferredBackBufferHeight = 701;   // window height
+            //graphics.PreferredBackBufferWidth = 1366;  // window width 801
+            //graphics.PreferredBackBufferHeight = 768;   // window height 701
+            //graphics.IsFullScreen = true;
+
+            graphics.PreferredBackBufferWidth = 801;  // window width 
+            graphics.PreferredBackBufferHeight = 701;   // window height 
+
             graphics.ApplyChanges();
 
             halfScreen = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
@@ -116,7 +121,7 @@ namespace Game2Test
             turret1Texture = Content.Load<Texture2D>("turret1");
 
             shot0Texture = Content.Load<Texture2D>("shot0");
-            shot0 = new Shot(shot0Texture, 60, "default");
+            shot0 = new Shot(shot0Texture, 60, "default", 25);
 
             turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0));
             turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0));

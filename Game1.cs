@@ -381,7 +381,7 @@ namespace Game2Test
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed)
             {
-                selectedShip.FirePrimary();
+                selectedShip.Fire("primary", "default");
             }
             foreach (var t in rocks)
             {

@@ -139,5 +139,20 @@ namespace Game2Test
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameOfGunGroup">the turrets' name et.c primary0, primary1 where name is primary</param>
+        /// <param name="nameOfShot">name of the projectile you're firing</param>
+        public void Fire(string nameOfGunGroup, string nameOfShot)
+        {
+            foreach (var t in turrets)
+            {
+                for (int i = 0; i < turrets.Count; i++)
+                {
+                    if (t.Key == nameOfGunGroup + i) t.Value.Fire(nameOfShot);
+                }
+            }
+        }
     }
 }

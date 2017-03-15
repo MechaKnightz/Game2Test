@@ -86,7 +86,7 @@ namespace Game2Test
 
         public void Fire(string name) //fire shot by name
         {
-            
+            shotDictionary[name].Add(new Shot(shots[name].texture, position, rotation, shots[name].duration, shots[name].speed));
         }
     }
 }

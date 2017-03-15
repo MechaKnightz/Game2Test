@@ -8,6 +8,8 @@ make menu look nicer
 add acceleration to asteroids
 max shot count per turret
 maxshots per turret and type/all
+asteroid health dependant on size
+particleengine color
 
 DONE:
 

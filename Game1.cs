@@ -35,6 +35,8 @@ namespace Game2Test
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship2Dictionary = new Dictionary<string, Texture2D>();
 
+        Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
+
         List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, halfScreenPos, halfScreen;
@@ -121,7 +123,7 @@ namespace Game2Test
 
             shot0Texture = Content.Load<Texture2D>("shot0");
             shot0 = new Shot(shot0Texture, 60, "default", 15);
-            var shot0Dictionary = new Dictionary<string, Shot>();
+            shot0Dictionary = new Dictionary<string, Shot>();
             shot0Dictionary.Add(shot0.name, shot0);
 
             turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary));

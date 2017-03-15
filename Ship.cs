@@ -47,7 +47,7 @@ namespace Game2Test
             rectangle.Y = (int)position.Y;
             foreach (var t in turrets)
             {
-//sets the turrets at the position of the ship
+                //sets the turrets at the position of the ship
                 t.position.X = position.X;
                 t.position.Y = position.Y;
 
@@ -130,7 +130,7 @@ namespace Game2Test
             }
             return false;
         }
-        public void FireAll()
+        public void FirePrimary()
         {
             foreach (var t in turrets)
             {

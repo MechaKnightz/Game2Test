@@ -30,7 +30,7 @@ namespace Game2Test
 
         public void Fire() //fire the default shot
         {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, 60, shots["default"].speed));
+            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, shots["default"].duration, shots["default"].speed));
         }
 
         public void UpdateShots()

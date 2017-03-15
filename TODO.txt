@@ -8,7 +8,6 @@ make menu look nicer
 add acceleration to asteroids
 max shot count per turret
 fix intersection
-add speed member variable to shots
 maxshots per turret and type/all
 
 DONE:
@@ -22,3 +21,4 @@ ship index class holding rotation, position et.c
 ship texture list when turning
 if rot > 2pi, rot -= 2pi
 search for texture state and if it exists set it to that
+add speed member variable to shots

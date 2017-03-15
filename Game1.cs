@@ -121,7 +121,7 @@ namespace Game2Test
             turret1Texture = Content.Load<Texture2D>("turret1");
 
             shot0Texture = Content.Load<Texture2D>("shot0");
-            shot0 = new Shot(shot0Texture, 60, "default", 25);
+            shot0 = new Shot(shot0Texture, 60, "default", 15);
 
             turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0));
             turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0));

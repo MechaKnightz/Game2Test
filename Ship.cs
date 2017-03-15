@@ -14,9 +14,15 @@ namespace Game2Test
         public Dictionary<string, Turret> turrets = new Dictionary<string, Turret>();
         public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
         public string textureIndexCounter = "default";
-        public int currentShipIndex = 0;
-        public int previousShipIndex = 0;
+        public int shipCurrentIndex = 0;
+        public int shipPreviousIndex = 0;
         public string description;
+
+        public string health;
+        public string healthMax;
+
+        public string energy;
+        public string energyMax;
 
         public Ship(List<Texture2D> textures, Vector2 position, Dictionary<string, Turret> turrets, List<string> textureIndex) : base(textures[0], position)
         {

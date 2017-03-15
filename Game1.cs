@@ -22,7 +22,7 @@ namespace Game2Test
         KeyboardState keyState, oldState;
 
         //lists
-        List<Sprite> rocks = new List<Sprite>();
+        List<Asteroid> asteroids = new List<Asteroid>();
         List<Texture2D> asteroidTextures = new List<Texture2D>();
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
@@ -277,29 +277,29 @@ namespace Game2Test
             oldState = Keyboard.GetState();
             base.Draw(gameTime);
         }
-        void CollisionTest() //kollar om shots intersects med rocks
+        void CollisionTest() //kollar om shots intersects med asteroids
         {
-            for(int i = 0; i < rocks.Count; i++)
+            for(int i = 0; i < asteroids.Count; i++)
             {
-                if (IsInView(rocks[i]))
+                if (IsInView(asteroids[i]))
                 {
-                    if (selectedShip.TurretCollision(rocks[i].rectangle))
+                    if (selectedShip.TurretCollision(asteroids[i].rectangle))
                     {
-                        rocks.RemoveAt(i);
+                        asteroids.RemoveAt(i);
                     }
                 }
             }
         }
-        void CollisionTest2() //kollar om rocks intersects med ship.rectangle
+        void CollisionTest2() //kollar om asteroids intersects med ship.rectangle
         {
-            for (int i = 0; i < rocks.Count; i++)
+            for (int i = 0; i < asteroids.Count; i++)
             {
-                if (IsInView(rocks[i]))
+                if (IsInView(asteroids[i]))
                 {
-                    if (rocks[i].rectangle.Intersects(selectedShip.rectangle))
+                    if (asteroids[i].rectangle.Intersects(selectedShip.rectangle))
                     {
                         lives--;
-                        rocks.RemoveAt(i);
+                        asteroids.RemoveAt(i);
                         if (lives <= 0)
                         {
                             ChangeState(1);
@@ -377,28 +377,22 @@ namespace Game2Test
 
             foreach (var t in selectedShip.turrets)
             {
-                t.Value.rotation = RotationToMouse(t.Value.position);
+                t.Value.rotation = AngleToMouse(t.Value.position);
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed)
             {
                 selectedShip.Fire("primary", "default");
             }
-            foreach (var t in rocks)
+            foreach (var t in asteroids)
             {
                 if (Vector2.Distance(t.position, selectedShip.position) < 1000)
                 {
-                    tempPos3 = t.position;
-                    if (tempPos3.X < selectedShip.position.X) tempPos3.X += 3;
-                    else if (tempPos3.X > selectedShip.position.X) tempPos3.X -= 3;
-
-                    if (tempPos3.Y < selectedShip.position.Y) tempPos3.Y += 3;
-                    else if (tempPos3.Y > selectedShip.position.Y) tempPos3.Y -= 3;
-                    t.SetPos(tempPos3);
+                    t.MoveTowardsPosition(selectedShip.position);
                 }
             }
-            //for (int i = 0; i < rocks.Count; i++) //rock flyttare
+            //for (int i = 0; i < asteroids.Count; i++) //rock flyttare
             //{
-            //    tempPos3 = rocks[i].position;
+            //    tempPos3 = asteroids[i].position;
 
             //    if (tempPos3.X < ship.position.X) tempPos3.X += speed;
             //    else if (tempPos3.X > ship.position.X) tempPos3.X -= speed;
@@ -411,7 +405,7 @@ namespace Game2Test
             //    //temp.X += System.Convert.ToInt16(0.05f * skillnadX);
             //    //temp.Y += System.Convert.ToInt16(0.05f * skillnadY);
 
-            //    rocks[i].SetPos(tempPos3);
+            //    asteroids[i].SetPos(tempPos3);
             //}
 
             //particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
@@ -510,7 +504,7 @@ namespace Game2Test
             {
                 t.Value.Draw(spriteBatch);
             }
-            foreach (var t in rocks)
+            foreach (var t in asteroids)
             {
                 if (IsInView(t)) t.Draw(spriteBatch);
             }
@@ -557,7 +551,7 @@ namespace Game2Test
             score = defaultScore;
             selectedShip.position = defaultShipPos;
             selectedShip.rotation = 0;
-            rocks.Clear();
+            asteroids.Clear();
             GenerateRocks();
 
         }
@@ -585,7 +579,7 @@ namespace Game2Test
                     {
                         if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
-                        rocks.Add(new Sprite(asteroidTextures[rnd.Next(asteroidTextures.Count)], position));
+                        asteroids.Add(new Asteroid(asteroidTextures[rnd.Next(asteroidTextures.Count)], position, 3f));
                     }
                 }
             }
@@ -600,7 +594,7 @@ namespace Game2Test
         //            {
         //                if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
         //                Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
-        //                rocks.Add(new Sprite(asteroidTextures[rnd.Next(asteroidTextures.Count)], position));
+        //                asteroids.Add(new Sprite(asteroidTextures[rnd.Next(asteroidTextures.Count)], position));
         //            }
         //        }
         //    }
@@ -646,7 +640,7 @@ namespace Game2Test
             // if in view
             return true;
         }
-        public float RotationToMouse(Vector2 position)
+        public float AngleToMouse(Vector2 position)
         {
             return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
         }

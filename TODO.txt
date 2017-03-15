@@ -2,7 +2,6 @@
 
 asteroid explosion dropping minerals with own class
 health and extra shots pickup
-asteroid movement
 change spawn point to just remove everything around the ship before it loads
 make menu look nicer
 add acceleration to asteroids
@@ -24,3 +23,4 @@ if rot > 2pi, rot -= 2pi
 search for texture state and if it exists set it to that
 add speed member variable to shots
 fix intersection with turret projectiles
+asteroid movement smoothness

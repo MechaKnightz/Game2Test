@@ -13,7 +13,7 @@ namespace Game2Test
         public Vector2 position, origin;
         public Rectangle rectangle;
         public Texture2D texture;
-        public float rotation = 0;
+        public float rotation;
 
         public Sprite() { }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle, float rotation, Vector2 origin)
@@ -44,7 +44,6 @@ namespace Game2Test
             this.rectangle.Height = texture.Height;
             this.position = position;
             this.texture = texture;
-            this.rotation = 0f;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
         }
         public Sprite(Texture2D texture, Vector2 position, float rotation)

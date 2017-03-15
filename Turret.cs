@@ -39,15 +39,15 @@ namespace Game2Test
             {
                 for (int i = 0; i < t.Value.Count; i++)
                 {
-                    t.Value[i].duration++;
+                    t.Value[i].duration--;
                     var temp = t.Value[i].position;
                     temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * 15; // TODO: 15 supposed to be speed
                     temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * 15;
                     t.Value[i].SetPos(temp);
 
-                    if (t.Value[i].duration > 60) // TODO: fix intersection method
+                    if (t.Value[i].duration < 00)
                     {
-                        //t.Value.RemoveAt(i);
+                        t.Value.RemoveAt(i);
                     }
                 }
             }

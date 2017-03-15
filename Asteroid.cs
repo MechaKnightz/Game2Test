@@ -11,6 +11,7 @@ namespace Game2Test
     public class Asteroid : Sprite
     {
         public float speed;
+        public float acceleration = 1.1f;
         public Asteroid(Texture2D texture, Vector2 position, float speed) :base(texture, position)
         {
             this.speed = speed;
@@ -20,8 +21,10 @@ namespace Game2Test
         {
             float angle = (float)Math.Atan2(towardsPosition.Y - position.Y, towardsPosition.X - position.X);
 
-            position.X += (float)(System.Math.Cos(angle)) * speed;
-            position.Y += (float)(System.Math.Sin(angle)) * speed;
+            position.X += (float)(System.Math.Cos(angle)) * speed*acceleration;
+            position.Y += (float)(System.Math.Sin(angle)) * speed*acceleration;
+
+            acceleration += 0.005f;
 
             rectangle.X = (int)position.X;
             rectangle.Y = (int)position.Y;

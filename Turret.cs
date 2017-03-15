@@ -51,6 +51,7 @@ namespace Game2Test
                     if (t.Value[i].duration < 00)
                     {
                         t.Value.RemoveAt(i);
+                        i--;
                     }
                 }
             }

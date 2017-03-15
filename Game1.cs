@@ -109,6 +109,10 @@ namespace Game2Test
             //graphics.PreferredBackBufferHeight = 768;   // window height 701
             //graphics.IsFullScreen = true;
 
+            //graphics.PreferredBackBufferWidth = 1920;  // window width 801
+            //graphics.PreferredBackBufferHeight = 1080;   // window height 701
+            //graphics.IsFullScreen = true;
+
             graphics.PreferredBackBufferWidth = 801;  // window width 
             graphics.PreferredBackBufferHeight = 701;   // window height 
 
@@ -116,7 +120,7 @@ namespace Game2Test
 
             halfScreen = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
 
-            defaultShipPos = new Vector2(0, 0);
+            defaultShipPos = Vector2.Zero;
 
             turret0Texture = Content.Load<Texture2D>("turret0");
             turret1Texture = Content.Load<Texture2D>("turret1");
@@ -285,6 +289,7 @@ namespace Game2Test
                 {
                     if (selectedShip.TurretCollision(asteroids[i].rectangle))
                     {
+                        score++;
                         asteroids.RemoveAt(i);
                     }
                 }
@@ -553,7 +558,6 @@ namespace Game2Test
             selectedShip.rotation = 0;
             asteroids.Clear();
             GenerateRocks();
-
         }
         void ChangeState(int state)
         {
@@ -577,10 +581,18 @@ namespace Game2Test
                 {
                     for (int i = 0; i < rocksPerBackground; i++)
                     {
-                        if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
+                        //if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
                         asteroids.Add(new Asteroid(asteroidTextures[rnd.Next(asteroidTextures.Count)], position, 3f));
                     }
+                }
+            }
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+                if (Vector2.Distance(selectedShip.position, asteroids[i].position) < 1100)
+                {
+                    asteroids.RemoveAt(i);
+                    i--;
                 }
             }
         }

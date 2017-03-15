@@ -4,8 +4,7 @@ asteroid explosion dropping minerals with own class
 health and extra shots pickup
 change spawn point to just remove everything around the ship before it loads
 make menu look nicer
-add acceleration to asteroids
-max shot count per turret
+max shot count per turret/ energy per ship
 maxshots per turret and type/all
 asteroid health dependant on size
 particleengine color
@@ -24,3 +23,4 @@ search for texture state and if it exists set it to that
 add speed member variable to shots
 fix intersection with turret projectiles
 asteroid movement smoothness
+add acceleration to asteroids

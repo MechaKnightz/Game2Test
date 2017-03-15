@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using MonoGame.Extended;
-using Game2Test.Ships;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
 
@@ -28,9 +27,9 @@ namespace Game2Test
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
 
-        List<Turret> turrets0 = new List<Turret>();
-        List<Turret> turrets1 = new List<Turret>();
-        List<Turret> turrets2 = new List<Turret>();
+        Dictionary<string, Turret> turrets0 = new Dictionary<string, Turret>();
+        Dictionary<string, Turret> turrets1 = new Dictionary<string, Turret>();
+        Dictionary<string, Turret> turrets2 = new Dictionary<string, Turret>();
 
         Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
@@ -123,13 +122,13 @@ namespace Game2Test
             shot0Texture = Content.Load<Texture2D>("shot0");
             shot0 = new Shot(shot0Texture, 60, "default", 15);
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0));
+            turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0));
+            turrets0.Add("primary1", new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0));
 
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0));
+            turrets1.Add("primary0", new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0));
+            turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0));
 
-            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0));
+            turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
@@ -372,9 +371,9 @@ namespace Game2Test
 
             aimSprite.SetPos(camera.ScreenToWorld(mouseState.Position.ToVector2()));
 
-            for (int i = 0; i < selectedShip.turrets.Count; i++)
+            foreach (var t in selectedShip.turrets)
             {
-                selectedShip.turrets[i].rotation = RotationToMouse(selectedShip.turrets[i].position);
+                t.Value.rotation = RotationToMouse(t.Value.position);
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed)
             {
@@ -505,7 +504,7 @@ namespace Game2Test
 
             foreach (var t in selectedShip.turrets)
             {
-                t.Draw(spriteBatch);
+                t.Value.Draw(spriteBatch);
             }
             foreach (var t in rocks)
             {

@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using Game2Test.Ships;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
 
@@ -12,29 +11,29 @@ namespace Game2Test
 {
     public class Ship : Sprite
     {
-        public List<Turret> turrets = new List<Turret>();
+        public Dictionary<string, Turret> turrets = new Dictionary<string, Turret>();
         public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
         public string textureIndexCounter = "default";
         public int currentShipIndex = 0;
         public int previousShipIndex = 0;
         public string description;
 
-        public Ship(List<Texture2D> textures, Vector2 position, List<Turret> turrets, List<string> textureIndex) : base(textures[0], position)
+        public Ship(List<Texture2D> textures, Vector2 position, Dictionary<string, Turret> turrets, List<string> textureIndex) : base(textures[0], position)
         {
-            foreach (var t in turrets)
+            foreach (KeyValuePair<string, Turret> t in turrets)
             {
-                this.turrets.Add(t);
+                this.turrets.Add(t.Key, t.Value);
             }
             for (var i = 0; i < textures.Count; i++)
             {
                 textureDictionary.Add(textureIndex[i], textures[i]);
             }
         }
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, List<Turret> turrets) : base(textureDictionary["default"], position)
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, Turret> turrets) : base(textureDictionary["default"], position)
         {
             foreach (var t in turrets)
             {
-                this.turrets.Add(t);
+                this.turrets.Add(t.Key, t.Value);
             }
             foreach (KeyValuePair<string, Texture2D> entry in textureDictionary)
             {
@@ -48,16 +47,16 @@ namespace Game2Test
             foreach (var t in turrets)
             {
                 //sets the turrets at the position of the ship
-                t.position.X = position.X;
-                t.position.Y = position.Y;
+                t.Value.position.X = position.X;
+                t.Value.position.Y = position.Y;
 
                 //x turret offset
-                t.position.X -= (float)(t.offset.X * Math.Cos(rotation - Math.PI));
-                t.position.Y -= (float)(t.offset.X * Math.Sin(rotation - Math.PI));
+                t.Value.position.X -= (float)(t.Value.offset.X * Math.Cos(rotation - Math.PI));
+                t.Value.position.Y -= (float)(t.Value.offset.X * Math.Sin(rotation - Math.PI));
 
                 //y turret offset
-                t.position.X -= (float)(t.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-                t.position.Y -= (float)(t.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+                t.Value.position.X -= (float)(t.Value.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
+                t.Value.position.Y -= (float)(t.Value.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
             }
         }
         public new void Draw(SpriteBatch spriteBatch)
@@ -70,7 +69,7 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                t.Update();
+                t.Value.Update();
             }
         }
 
@@ -78,7 +77,7 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                t.Draw(spriteBatch);
+                t.Value.Draw(spriteBatch);
             }
         }
         /// <summary>
@@ -126,7 +125,7 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                if (t.ShotCollision(rectangle)) return true;
+                if (t.Value.ShotCollision(rectangle)) return true;
             }
             return false;
         }
@@ -134,7 +133,10 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                t.Fire();
+                for(int i = 0; i < turrets.Count; i++)
+                {
+                    if (t.Key == "primary" + i) t.Value.Fire();
+                }
             }
         }
     }

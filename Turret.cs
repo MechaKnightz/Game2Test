@@ -16,11 +16,14 @@ namespace Game2Test
         public Vector2 offset;
         public Dictionary<string, List<Shot>> shotDictionary = new Dictionary<string, List<Shot>>();
         public Dictionary<string, Shot> shots = new Dictionary<string, Shot>();
-        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot) : base(texture, position, rotation)
+        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots) : base(texture, position, rotation)
         {
             this.offset = offset;
-            shots.Add(shot.name, shot);
-            shotDictionary.Add(shot.name, new List<Shot>());
+            foreach(var t in shots)
+            {
+                this.shots.Add(t.Key, t.Value);
+                shotDictionary.Add(t.Key, new List<Shot>());
+            }
         }
 
         public new void Update()

@@ -121,14 +121,16 @@ namespace Game2Test
 
             shot0Texture = Content.Load<Texture2D>("shot0");
             shot0 = new Shot(shot0Texture, 60, "default", 15);
+            var shot0Dictionary = new Dictionary<string, Shot>();
+            shot0Dictionary.Add(shot0.name, shot0);
 
-            turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0));
-            turrets0.Add("primary1", new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0));
+            turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary));
+            turrets0.Add("primary1", new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0Dictionary));
 
-            turrets1.Add("primary0", new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0));
-            turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0));
+            turrets1.Add("primary0", new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary));
+            turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary));
 
-            turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0));
+            turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));

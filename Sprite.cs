@@ -106,6 +106,12 @@ namespace Game2Test
         {
             spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
         }
+        public void DrawRectangle(SpriteBatch spriteBatch)
+        {
+            rectangle.X = (int)position.X;
+            rectangle.Y = (int) position.Y;
+            spriteBatch.Draw(texture, rectangle, Color.White);
+        }
         public void Draw(SpriteBatch spriteBatch, Camera2D camera)
         {
             spriteBatch.Draw(texture, position + camera.Position, origin: origin, rotation: rotation);

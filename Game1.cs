@@ -21,6 +21,9 @@ namespace Game2Test
         //lists
         List<Asteroid> asteroids = new List<Asteroid>();
         List<Texture2D> asteroidTextures = new List<Texture2D>();
+        List<Sprite> asteroidsHealthRed = new List<Sprite>();
+        List<Sprite> asteroidsHealthGreen = new List<Sprite>();
+
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
 
@@ -38,7 +41,7 @@ namespace Game2Test
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture;
+        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture, redPixel, greenPixel;
 
         Shot shot0;
 
@@ -95,12 +98,12 @@ namespace Game2Test
             //graphics.PreferredBackBufferHeight = 768;   // window height 701
             //graphics.IsFullScreen = true;
 
-            graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;  // window width 801
-            graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;   // window height 701
-            graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height; 
+            //graphics.IsFullScreen = true;
 
-            //graphics.PreferredBackBufferWidth = 801;  // window width 
-            //graphics.PreferredBackBufferHeight = 701;   // window height 
+            graphics.PreferredBackBufferWidth = 801;  // window width 801
+            graphics.PreferredBackBufferHeight = 701;   // window height 701
 
             graphics.ApplyChanges();
 
@@ -150,6 +153,8 @@ namespace Game2Test
 
             currentShip = ships[0];
 
+            redPixel = Content.Load<Texture2D>("redPixel");
+            greenPixel = Content.Load<Texture2D>("greenPixel");
             shieldIconTexture = Content.Load<Texture2D>("shieldIcon");
             aimTexture = Content.Load<Texture2D>("aimWhite");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
@@ -466,12 +471,19 @@ namespace Game2Test
             {
                 t.Value.Draw(spriteBatch);
             }
-            foreach (var t in asteroids)
+            for(int i = 0; i < asteroids.Count; i++)
             {
-                if (IsInView(t))
+                if (IsInView(asteroids[i]))
                 {
-                    t.Draw(spriteBatch);
-                    
+                    asteroids[i].Draw(spriteBatch);
+                    if (asteroids[i].health < asteroids[i].healthMax)
+                    {
+                        asteroidsHealthRed[i].position = asteroids[i].position - new Vector2(asteroids[i].texture.Width / 2, 30);
+                        asteroidsHealthGreen[i].position = asteroids[i].position - new Vector2(asteroids[i].texture.Width / 2, 30);
+                        asteroidsHealthGreen[i].rectangle.Width = (int) ((asteroids[i].health / asteroids[i].healthMax) * asteroidsHealthRed[i].rectangle.Width);
+                        asteroidsHealthRed[i].DrawRectangle(spriteBatch);
+                        asteroidsHealthGreen[i].DrawRectangle(spriteBatch);
+                    }
                 }
             }
 
@@ -547,7 +559,10 @@ namespace Game2Test
                     {
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
                         var rndInt = rnd.Next(asteroidTextures.Count);
-                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 3f, rndInt+1));
+                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 3f/(rndInt*0.5f + 1), rndInt+1));
+
+                        asteroidsHealthRed.Add(new Sprite(greenPixel, position - new Vector2(0, 30), new Rectangle((int)position.X, (int)position.Y - 30, 50, 20)));
+                        asteroidsHealthGreen.Add(new Sprite(redPixel, position - new Vector2(0, 30), new Rectangle((int)position.X, (int)position.Y - 30, 50, 20)));
                     }
                 }
             }
@@ -556,6 +571,8 @@ namespace Game2Test
                 if (Vector2.Distance(currentShip.position, asteroids[i].position) < 1100)
                 {
                     asteroids.RemoveAt(i);
+                    asteroidsHealthRed.RemoveAt(i);
+                    asteroidsHealthGreen.RemoveAt(i);
                     i--;
                 }
             }

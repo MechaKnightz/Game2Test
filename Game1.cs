@@ -99,11 +99,12 @@ namespace Game2Test
             //graphics.IsFullScreen = true;
 
             //graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;
-            //graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height; 
+            //graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;
             //graphics.IsFullScreen = true;
 
             graphics.PreferredBackBufferWidth = 801;  // window width 801
             graphics.PreferredBackBufferHeight = 701;   // window height 701
+            graphics.IsFullScreen = false;
 
             graphics.ApplyChanges();
 
@@ -268,9 +269,12 @@ namespace Game2Test
                 {
                     if (currentShip.TurretCollision(asteroids[i].rectangle))
                     {
-                        score++;
                         asteroids[i].health--;
-                        if(asteroids[i].health <= 0) asteroids.RemoveAt(i);
+                        if (asteroids[i].health <= 0)
+                        {
+                            asteroids.RemoveAt(i);
+                            score++;
+                        }
                     }
                 }
             }

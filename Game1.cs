@@ -143,7 +143,7 @@ namespace Game2Test
             ship0Dictionary.Add("left", Content.Load<Texture2D>("ship0Texture1"));
             ship0Dictionary.Add("right", Content.Load<Texture2D>("ship0Texture2"));
 
-            ships.Add(new Ship(ship0Dictionary, defaultShipPos, turrets0));
+            ships.Add(new Ship(ship0Dictionary, defaultShipPos, turrets0, 10, 10));
             //ship0 end
 
             //ship1
@@ -151,7 +151,7 @@ namespace Game2Test
             ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
             ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
 
-            ships.Add(new Ship(ship1Dictionary, defaultShipPos, turrets1));
+            ships.Add(new Ship(ship1Dictionary, defaultShipPos, turrets1, 10, 10));
             //ship1 end
 
             //ship2
@@ -159,7 +159,7 @@ namespace Game2Test
             ship2Dictionary.Add("left", Content.Load<Texture2D>("ship2Texture1"));
             ship2Dictionary.Add("right", Content.Load<Texture2D>("ship2Texture2"));
 
-            ships.Add(new Ship(ship2Dictionary, defaultShipPos, turrets2));
+            ships.Add(new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 10));
             //ship2 end
 
             selectedShip = ships[0];

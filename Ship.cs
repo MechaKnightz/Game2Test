@@ -18,13 +18,13 @@ namespace Game2Test
         public int shipPreviousIndex = 0;
         public string description;
 
-        public string health;
-        public string healthMax;
+        public float health;
+        public float healthMax;
 
-        public string energy;
-        public string energyMax;
+        public float energy;
+        public float energyMax;
 
-        public Ship(List<Texture2D> textures, Vector2 position, Dictionary<string, Turret> turrets, List<string> textureIndex) : base(textures[0], position)
+        public Ship(List<Texture2D> textures, Vector2 position, Dictionary<string, Turret> turrets, List<string> textureIndex, float healthMax, float energyMax) : base(textures[0], position)
         {
             foreach (KeyValuePair<string, Turret> t in turrets)
             {
@@ -34,8 +34,12 @@ namespace Game2Test
             {
                 textureDictionary.Add(textureIndex[i], textures[i]);
             }
+            this.healthMax = healthMax;
+            this.health = healthMax;
+            this.energyMax = energyMax;
+            this.energy = energyMax;
         }
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, Turret> turrets) : base(textureDictionary["default"], position)
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, Turret> turrets, float healthMax, float energyMax) : base(textureDictionary["default"], position)
         {
             foreach (var t in turrets)
             {

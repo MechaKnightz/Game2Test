@@ -41,7 +41,7 @@ namespace Game2Test
 
         Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture;
+        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture;
 
         Shot shot0;
 
@@ -49,11 +49,10 @@ namespace Game2Test
         SpriteFont font;
         int maxShotCount = 2;
         System.Random rnd;
-        int score, lives, speed;
+        int score, speed;
         Color[] menuColor = new Color[3];
         int selected = 0;
         int defaultScore = 0;
-        int defaultLives = 5;
         int defaultSpeed = 10;
         int menuLength = 3;
         int settingsMenuLength = 2;
@@ -62,7 +61,7 @@ namespace Game2Test
         bool drawParticles = false;
         int movingDelayCounter = 0;
         GameState gameState = (GameState)2;
-        Ship selectedShip;
+        Ship currentShip;
         Sprite aimSprite;
         Camera2D camera;
         string xPosString, yPosString;
@@ -109,12 +108,12 @@ namespace Game2Test
             //graphics.PreferredBackBufferHeight = 768;   // window height 701
             //graphics.IsFullScreen = true;
 
-            graphics.PreferredBackBufferWidth = 1920;  // window width 801
-            graphics.PreferredBackBufferHeight = 1080;   // window height 701
-            graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferWidth = 1920;  // window width 801
+            //graphics.PreferredBackBufferHeight = 1080;   // window height 701
+            //graphics.IsFullScreen = true;
 
-            //graphics.PreferredBackBufferWidth = 801;  // window width 
-            //graphics.PreferredBackBufferHeight = 701;   // window height 
+            graphics.PreferredBackBufferWidth = 801;  // window width 
+            graphics.PreferredBackBufferHeight = 701;   // window height 
 
             graphics.ApplyChanges();
 
@@ -130,20 +129,20 @@ namespace Game2Test
             shot0Dictionary = new Dictionary<string, Shot>();
             shot0Dictionary.Add(shot0.name, shot0);
 
-            turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary));
-            turrets0.Add("primary1", new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0Dictionary));
+            turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary, 150));
+            turrets0.Add("primary1", new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0Dictionary, 150));
 
-            turrets1.Add("primary0", new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary));
-            turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary));
+            turrets1.Add("primary0", new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150));
+            turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150));
 
-            turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary));
+            turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
             ship0Dictionary.Add("left", Content.Load<Texture2D>("ship0Texture1"));
             ship0Dictionary.Add("right", Content.Load<Texture2D>("ship0Texture2"));
 
-            ships.Add(new Ship(ship0Dictionary, defaultShipPos, turrets0, 10, 10));
+            ships.Add(new Ship(ship0Dictionary, defaultShipPos, turrets0, 10, 1000, 5));
             //ship0 end
 
             //ship1
@@ -151,7 +150,7 @@ namespace Game2Test
             ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
             ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
 
-            ships.Add(new Ship(ship1Dictionary, defaultShipPos, turrets1, 10, 10));
+            ships.Add(new Ship(ship1Dictionary, defaultShipPos, turrets1, 10, 1000, 5));
             //ship1 end
 
             //ship2
@@ -159,11 +158,12 @@ namespace Game2Test
             ship2Dictionary.Add("left", Content.Load<Texture2D>("ship2Texture1"));
             ship2Dictionary.Add("right", Content.Load<Texture2D>("ship2Texture2"));
 
-            ships.Add(new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 10));
+            ships.Add(new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 1000, 5));
             //ship2 end
 
-            selectedShip = ships[0];
+            currentShip = ships[0];
 
+            shieldIconTexture = Content.Load<Texture2D>("shieldIcon");
             aimTexture = Content.Load<Texture2D>("aimWhite");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
             font = Content.Load<SpriteFont>("font");
@@ -287,7 +287,7 @@ namespace Game2Test
             {
                 if (IsInView(asteroids[i]))
                 {
-                    if (selectedShip.TurretCollision(asteroids[i].rectangle))
+                    if (currentShip.TurretCollision(asteroids[i].rectangle))
                     {
                         score++;
                         asteroids.RemoveAt(i);
@@ -301,11 +301,11 @@ namespace Game2Test
             {
                 if (IsInView(asteroids[i]))
                 {
-                    if (asteroids[i].rectangle.Intersects(selectedShip.rectangle))
+                    if (asteroids[i].rectangle.Intersects(currentShip.rectangle))
                     {
-                        lives--;
+                        currentShip.health--;
                         asteroids.RemoveAt(i);
-                        if (lives <= 0)
+                        if (currentShip.health <= 0)
                         {
                             ChangeState(1);
                             highscores.Add(score);// TODO: add fixerino LEjalkafsdbd
@@ -321,53 +321,53 @@ namespace Game2Test
 
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
-                tempPos = selectedShip.position;
-                tempPos.X += (float)(System.Math.Cos(selectedShip.rotation)) * (speed * speedBoostConst);
-                tempPos.Y += (float)(System.Math.Sin(selectedShip.rotation)) * (speed * speedBoostConst);
-                selectedShip.SetPos(tempPos);
+                tempPos = currentShip.position;
+                tempPos.X += (float)(System.Math.Cos(currentShip.rotation)) * (speed * speedBoostConst);
+                tempPos.Y += (float)(System.Math.Sin(currentShip.rotation)) * (speed * speedBoostConst);
+                currentShip.SetPos(tempPos);
                 moving = true;
             }
             else if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
             {
-                tempPos = selectedShip.position;
-                tempPos.X += (float)(System.Math.Cos(selectedShip.rotation)) * speed;
-                tempPos.Y += (float)(System.Math.Sin(selectedShip.rotation)) * speed;
-                selectedShip.SetPos(tempPos);
+                tempPos = currentShip.position;
+                tempPos.X += (float)(System.Math.Cos(currentShip.rotation)) * speed;
+                tempPos.Y += (float)(System.Math.Sin(currentShip.rotation)) * speed;
+                currentShip.SetPos(tempPos);
                 moving = true;
             }
 
             if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
             {
-                tempPos = selectedShip.position;
-                tempPos.X -= (float)(System.Math.Cos(selectedShip.rotation)) * (speed / 5);
-                tempPos.Y -= (float)(System.Math.Sin(selectedShip.rotation)) * (speed / 5);
-                selectedShip.SetPos(tempPos);
+                tempPos = currentShip.position;
+                tempPos.X -= (float)(System.Math.Cos(currentShip.rotation)) * (speed / 5);
+                tempPos.Y -= (float)(System.Math.Sin(currentShip.rotation)) * (speed / 5);
+                currentShip.SetPos(tempPos);
                 moving = true;
             }
 
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
-                selectedShip.rotation -= 0.05f;
-                if(selectedShip.textureDictionary.ContainsKey("left"))
+                currentShip.rotation -= 0.05f;
+                if(currentShip.textureDictionary.ContainsKey("left"))
                 {
-                    selectedShip.textureIndexCounter = "left";
+                    currentShip.textureIndexCounter = "left";
                 }
-                selectedShip.Update();
+                currentShip.Update();
 
             }
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
-                selectedShip.rotation += 0.05f;
-                if (selectedShip.textureDictionary.ContainsKey("right"))
+                currentShip.rotation += 0.05f;
+                if (currentShip.textureDictionary.ContainsKey("right"))
                 {
-                    selectedShip.textureIndexCounter = "right";
+                    currentShip.textureIndexCounter = "right";
                 }
-                selectedShip.Update();
+                currentShip.Update();
             }
 
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
-                selectedShip.SetPos(defaultShipPos);
+                currentShip.SetPos(defaultShipPos);
             }
             if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G))
             {
@@ -375,50 +375,32 @@ namespace Game2Test
             }
 
             tempPos4 = camera.Position;
-            tempPos4 = selectedShip.position - halfScreen;
+            tempPos4 = currentShip.position - halfScreen;
             camera.Position = tempPos4;
 
             aimSprite.SetPos(camera.ScreenToWorld(mouseState.Position.ToVector2()));
 
-            foreach (var t in selectedShip.turrets)
+            foreach (var t in currentShip.turrets)
             {
                 t.Value.rotation = AngleToMouse(t.Value.position);
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed)
             {
-                selectedShip.Fire("primary", "default");
+                currentShip.Fire("primary", "default");
             }
             foreach (var t in asteroids)
             {
-                if (Vector2.Distance(t.position, selectedShip.position) < 1000)
+                if (Vector2.Distance(t.position, currentShip.position) < 1000)
                 {
-                    t.MoveTowardsPosition(selectedShip.position);
+                    t.MoveTowardsPosition(currentShip.position);
                 }
             }
-            //for (int i = 0; i < asteroids.Count; i++) //rock flyttare
-            //{
-            //    tempPos3 = asteroids[i].position;
+            currentShip.UpdateEnergy();
 
-            //    if (tempPos3.X < ship.position.X) tempPos3.X += speed;
-            //    else if (tempPos3.X > ship.position.X) tempPos3.X -= speed;
+            if (currentShip.rotation > (float)Math.PI * 2f || currentShip.rotation < (float)-Math.PI * 2f) currentShip.rotation -= (float)Math.PI * 2f;
+            currentShip.UpdateTurrets();
 
-            //    if (tempPos3.Y < ship.position.Y) tempPos3.Y += speed;
-            //    else if (tempPos3.Y > ship.position.Y) tempPos3.Y -= speed;
-
-            //    //int skillnadX = ship.rectangle.X - temp.X;
-            //    //int skillnadY = ship.rectangle.Y - temp.Y;
-            //    //temp.X += System.Convert.ToInt16(0.05f * skillnadX);
-            //    //temp.Y += System.Convert.ToInt16(0.05f * skillnadY);
-
-            //    asteroids[i].SetPos(tempPos3);
-            //}
-
-            //particleEngine.EmitterLocation = camera.WorldToScreen(selectedShip.position);
-
-            if (selectedShip.rotation > (float)Math.PI * 2f || selectedShip.rotation < (float)-Math.PI * 2f) selectedShip.rotation -= (float)Math.PI * 2f;
-            selectedShip.UpdateTurrets();
-
-            particleEngine.EmitterLocation = selectedShip.GetBackOfShip();
+            particleEngine.EmitterLocation = currentShip.GetBackOfShip();
             particleEngine.Update();
 
             CollisionTest();
@@ -502,10 +484,10 @@ namespace Game2Test
             //ship.rotationRender = (float)(Math.Round(ship.rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
 
-            selectedShip.Draw(spriteBatch);
-            selectedShip.DrawTurrets(spriteBatch);
+            currentShip.Draw(spriteBatch);
+            currentShip.DrawTurrets(spriteBatch);
 
-            foreach (var t in selectedShip.turrets)
+            foreach (var t in currentShip.turrets)
             {
                 t.Value.Draw(spriteBatch);
             }
@@ -515,14 +497,17 @@ namespace Game2Test
             }
 
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
-            spriteBatch.DrawString(font, "Lives: " + lives, camera.ScreenToWorld(viewLivesPos), Color.White);
+            spriteBatch.DrawString(font, "Lives: " + currentShip.health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
-            xPosString = "Xpos: " + selectedShip.position.X.ToString("F0");
-            yPosString = "Ypos: " + selectedShip.position.Y.ToString("F0");
+            xPosString = "Xpos: " + currentShip.position.X.ToString("F0");
+            yPosString = "Ypos: " + currentShip.position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
             spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
-            spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White); 
+            spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
+
+            spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y*2 - shieldIconTexture.Height)));
+            spriteBatch.DrawString(font, currentShip.energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
 
             aimSprite.Draw(spriteBatch);
 
@@ -537,7 +522,7 @@ namespace Game2Test
         {
             spriteBatch.DrawString(font, "Back", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Back").X / 2), (graphics.PreferredBackBufferHeight / 2) - font.MeasureString("Speed").Y), menuColor[0]);
             spriteBatch.DrawString(font, "Speed", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Speed").X / 2), (graphics.PreferredBackBufferHeight / 2)), menuColor[1]);
-            spriteBatch.Draw(selectedShip.texture, speedbarRectangle2, Color.White);
+            spriteBatch.Draw(currentShip.texture, speedbarRectangle2, Color.White);
             spriteBatch.Draw(asteroidTextures[4], speedbarRectangle, Color.White);
             spriteBatch.DrawString(font, speed.ToString(), new Vector2((graphics.PreferredBackBufferWidth / 2) - (font.MeasureString(speed.ToString()).X / 2), (graphics.PreferredBackBufferHeight / 2) + 20 + (font.MeasureString("Speed").Y)), Color.Black);
         }
@@ -551,11 +536,11 @@ namespace Game2Test
         }
         void ResetGame()
         {
-            selectedShip = ships[0];
-            lives = defaultLives;
+            currentShip = ships[0];
+            currentShip.health = currentShip.healthMax;
             score = defaultScore;
-            selectedShip.position = defaultShipPos;
-            selectedShip.rotation = 0;
+            currentShip.position = defaultShipPos;
+            currentShip.rotation = 0;
             asteroids.Clear();
             GenerateRocks();
         }
@@ -589,7 +574,7 @@ namespace Game2Test
             }
             for (int i = 0; i < asteroids.Count; i++)
             {
-                if (Vector2.Distance(selectedShip.position, asteroids[i].position) < 1100)
+                if (Vector2.Distance(currentShip.position, asteroids[i].position) < 1100)
                 {
                     asteroids.RemoveAt(i);
                     i--;
@@ -662,29 +647,34 @@ namespace Game2Test
         //}
         public void NextShip()
         {
-            if (selectedShip.shipCurrentIndex == ships.Count-1)
+            if (currentShip.shipCurrentIndex == ships.Count-1)
             {
-                selectedShip.shipPreviousIndex = selectedShip.shipCurrentIndex;
-                selectedShip.shipCurrentIndex = 0;
+                currentShip.shipPreviousIndex = currentShip.shipCurrentIndex;
+                currentShip.shipCurrentIndex = 0;
                 ChangeShip();
             }
             else
             {
-                selectedShip.shipPreviousIndex = selectedShip.shipCurrentIndex;
-                selectedShip.shipCurrentIndex++;
+                currentShip.shipPreviousIndex = currentShip.shipCurrentIndex;
+                currentShip.shipCurrentIndex++;
                 ChangeShip();
             }
         }
         public void ChangeShip()
         {
-            var tempRot = selectedShip.rotation;
-            var tempPos = selectedShip.position;
-            var tempIndex = selectedShip.shipCurrentIndex;
-            selectedShip = ships[selectedShip.shipCurrentIndex];
-            selectedShip.shipCurrentIndex = tempIndex;
-            selectedShip.position = tempPos;
-            selectedShip.rotation = tempRot;
-            selectedShip.Update();
+            var tempRot = currentShip.rotation;
+            var tempPos = currentShip.position;
+            var tempIndex = currentShip.shipCurrentIndex;
+            var tempHealth = currentShip.health;
+            var tempEnergy = currentShip.energy;
+            currentShip = ships[currentShip.shipCurrentIndex];
+            currentShip.shipCurrentIndex = tempIndex;
+            currentShip.position = tempPos;
+            currentShip.rotation = tempRot;
+            currentShip.health = tempHealth;
+            currentShip.energy = tempEnergy;
+
+            currentShip.Update();
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

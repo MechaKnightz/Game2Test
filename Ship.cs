@@ -23,6 +23,33 @@ namespace Game2Test
 
         public float energy;
         public float energyMax;
+        public float energyRegen;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="textureDictionary">all ship textures</param>
+        /// <param name="position">position of the ship</param>
+        /// <param name="turrets">all the turrets on the ship</param>
+        /// <param name="healthMax">ship max health</param>
+        /// <param name="energyMax">ship max energy</param>
+        /// /// <param name="energyRegen">energy regeneration per frame</param>
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, Turret> turrets, float healthMax, float energyMax, float energyRegen) : base(textureDictionary["default"], position)
+        {
+            foreach (var t in turrets)
+            {
+                this.turrets.Add(t.Key, t.Value);
+            }
+            foreach (KeyValuePair<string, Texture2D> entry in textureDictionary)
+            {
+                this.textureDictionary.Add(entry.Key, entry.Value);
+            }
+            this.healthMax = healthMax;
+            this.health = healthMax;
+            this.energyMax = energyMax;
+            this.energy = energyMax;
+            this.energyRegen = energyRegen;
+        }
 
         public Ship(List<Texture2D> textures, Vector2 position, Dictionary<string, Turret> turrets, List<string> textureIndex, float healthMax, float energyMax) : base(textures[0], position)
         {
@@ -38,17 +65,6 @@ namespace Game2Test
             this.health = healthMax;
             this.energyMax = energyMax;
             this.energy = energyMax;
-        }
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, Turret> turrets, float healthMax, float energyMax) : base(textureDictionary["default"], position)
-        {
-            foreach (var t in turrets)
-            {
-                this.turrets.Add(t.Key, t.Value);
-            }
-            foreach (KeyValuePair<string, Texture2D> entry in textureDictionary)
-            {
-                this.textureDictionary.Add(entry.Key, entry.Value);
-            }
         }
         public new void Update()
         {
@@ -68,6 +84,11 @@ namespace Game2Test
                 t.Value.position.X -= (float)(t.Value.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
                 t.Value.position.Y -= (float)(t.Value.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
             }
+        }
+
+        public void UpdateEnergy()
+        {
+            if (energy + energyRegen < energyMax) energy += energyRegen;
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
@@ -160,7 +181,11 @@ namespace Game2Test
             {
                 for (int i = 0; i < turrets.Count; i++)
                 {
-                    if (t.Key == nameOfGunGroup + i) t.Value.Fire(nameOfShot);
+                    if (t.Key == nameOfGunGroup + i)
+                    {
+                        if(energy - t.Value.energyCost < 0) continue;
+                        energy -= t.Value.Fire(nameOfShot);
+                    };
                 }
             }
         }

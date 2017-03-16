@@ -8,6 +8,7 @@ max shot count per turret/ energy per ship
 maxshots per turret and type/all
 asteroid health dependant on size
 particleengine color
+particles dissapear when ship stops
 
 DONE:
 

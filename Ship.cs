@@ -88,7 +88,7 @@ namespace Game2Test
 
         public void UpdateEnergy()
         {
-            if (energy + energyRegen < energyMax) energy += energyRegen;
+            if (energy + energyRegen <= energyMax) energy += energyRegen;
         }
         public new void Draw(SpriteBatch spriteBatch)
         {

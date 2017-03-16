@@ -4,7 +4,6 @@ asteroid explosion dropping minerals with own class
 health and extra shots pickup
 change spawn point to just remove everything around the ship before it loads
 make menu look nicer
-asteroid health dependant on size
 particleengine color
 particles dissapear when ship stops
 add speed to ship class
@@ -26,3 +25,5 @@ asteroid movement smoothness
 add acceleration to asteroids
 max shot count per turret/ energy per ship
 maxshots per turret and type/all
+healthbar for asteroids
+asteroid health dependant on size

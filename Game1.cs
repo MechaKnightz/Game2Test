@@ -559,7 +559,7 @@ namespace Game2Test
                     {
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
                         var rndInt = rnd.Next(asteroidTextures.Count);
-                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 3f/(rndInt*0.5f + 1), rndInt+1));
+                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f/rndInt, rndInt+1));
 
                         asteroidsHealthRed.Add(new Sprite(greenPixel, position - new Vector2(0, 30), new Rectangle((int)position.X, (int)position.Y - 30, 50, 20)));
                         asteroidsHealthGreen.Add(new Sprite(redPixel, position - new Vector2(0, 30), new Rectangle((int)position.X, (int)position.Y - 30, 50, 20)));

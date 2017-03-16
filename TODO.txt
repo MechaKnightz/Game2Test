@@ -7,7 +7,7 @@ make menu look nicer
 asteroid health dependant on size
 particleengine color
 particles dissapear when ship stops
-add speed to ship and shot class
+add speed to ship class
 
 DONE:
 

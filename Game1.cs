@@ -95,12 +95,12 @@ namespace Game2Test
             //graphics.PreferredBackBufferHeight = 768;   // window height 701
             //graphics.IsFullScreen = true;
 
-            //graphics.PreferredBackBufferWidth = 1920;  // window width 801
-            //graphics.PreferredBackBufferWidth = 1080;   // window height 701
-            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;  // window width 801
+            graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;   // window height 701
+            graphics.IsFullScreen = true;
 
-            graphics.PreferredBackBufferWidth = 801;  // window width 
-            graphics.PreferredBackBufferHeight = 701;   // window height 
+            //graphics.PreferredBackBufferWidth = 801;  // window width 
+            //graphics.PreferredBackBufferHeight = 701;   // window height 
 
             graphics.ApplyChanges();
 

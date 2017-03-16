@@ -12,17 +12,22 @@ namespace Game2Test
     {
         public float speed;
         public float acceleration = 1.1f;
-        public Asteroid(Texture2D texture, Vector2 position, float speed) :base(texture, position)
+
+        public float health;
+        public float healthMax;
+        public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax) :base(texture, position)
         {
             this.speed = speed;
+            this.healthMax = healthMax;
+            health = healthMax;
         }
 
         public void MoveTowardsPosition(Vector2 towardsPosition)
         {
             float angle = (float)Math.Atan2(towardsPosition.Y - position.Y, towardsPosition.X - position.X);
 
-            position.X += (float)(System.Math.Cos(angle)) * speed*acceleration;
-            position.Y += (float)(System.Math.Sin(angle)) * speed*acceleration;
+            position.X += (float)(System.Math.Cos(angle)) * speed * acceleration;
+            position.Y += (float)(System.Math.Sin(angle)) * speed * acceleration;
 
             acceleration += 0.005f;
 

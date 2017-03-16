@@ -95,12 +95,12 @@ namespace Game2Test
             //graphics.PreferredBackBufferHeight = 768;   // window height 701
             //graphics.IsFullScreen = true;
 
-            graphics.PreferredBackBufferWidth = 1920;  // window width 801
-            graphics.PreferredBackBufferWidth = 1080;   // window height 701
-            graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferWidth = 1920;  // window width 801
+            //graphics.PreferredBackBufferWidth = 1080;   // window height 701
+            //graphics.IsFullScreen = true;
 
-            //graphics.PreferredBackBufferWidth = 801;  // window width 
-            //graphics.PreferredBackBufferHeight = 701;   // window height 
+            graphics.PreferredBackBufferWidth = 801;  // window width 
+            graphics.PreferredBackBufferHeight = 701;   // window height 
 
             graphics.ApplyChanges();
 
@@ -264,7 +264,8 @@ namespace Game2Test
                     if (currentShip.TurretCollision(asteroids[i].rectangle))
                     {
                         score++;
-                        asteroids.RemoveAt(i);
+                        asteroids[i].health--;
+                        if(asteroids[i].health <= 0) asteroids.RemoveAt(i);
                     }
                 }
             }
@@ -467,7 +468,11 @@ namespace Game2Test
             }
             foreach (var t in asteroids)
             {
-                if (IsInView(t)) t.Draw(spriteBatch);
+                if (IsInView(t))
+                {
+                    t.Draw(spriteBatch);
+                    
+                }
             }
 
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
@@ -540,9 +545,9 @@ namespace Game2Test
                 {
                     for (int i = 0; i < rocksPerBackground; i++)
                     {
-                        //if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
-                        asteroids.Add(new Asteroid(asteroidTextures[rnd.Next(asteroidTextures.Count)], position, 3f));
+                        var rndInt = rnd.Next(asteroidTextures.Count);
+                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 3f, rndInt+1));
                     }
                 }
             }
@@ -600,11 +605,11 @@ namespace Game2Test
         /// <returns></returns>
         public bool IsInView(Sprite sprite)
         {
-            // if the object is not within the horizontal bounds of the screen
+            // if not within the horizontal bounds of the screen
             if (sprite.position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.position.X + sprite.texture.Width < camera.Position.X)
                 return false;
 
-            // if the object is not within the vertical bounds of the screen
+            // if not within the vertical bounds of the screen
             if (sprite.position.Y - sprite.texture.Height > camera.Position.Y + camera.GetBoundingRectangle().Height || sprite.position.Y + sprite.texture.Height < camera.Position.Y)
                 return false;
 

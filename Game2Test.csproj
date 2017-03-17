@@ -52,6 +52,7 @@
     <Compile Include="Ship.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="Station.cs" />
     <Compile Include="Turret.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -191,6 +191,8 @@ namespace Game2Test
                 backgrounds.Add(Content.Load<Texture2D>("background" + i));
             }
 
+            // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
+
             //particles
             List<Texture2D> textures = new List<Texture2D>();
             textures.Add(Content.Load<Texture2D>("red"));

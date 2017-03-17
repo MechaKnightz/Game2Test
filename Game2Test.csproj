@@ -44,7 +44,7 @@
     <Compile Include="Asteroid.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameState.cs" />
-    <Compile Include="Healthbar.cs" />
+    <Compile Include="Bar.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleEngine.cs" />
     <Compile Include="Program.cs" />

@@ -7,7 +7,7 @@ using MonoGame.Extended;
 
 namespace Game2Test
 {
-    public class Healthbar : Sprite
+    public class Bar : Sprite
     {
         float max; //maxHealth et.c
         float current; //currentHealth et.c
@@ -15,7 +15,7 @@ namespace Game2Test
         Sprite front;
         Sprite back;
         Vector2 offset;
-        public Healthbar(Sprite front, Sprite back, Vector2 position, int width, int height, Vector2 offset, float max)
+        public Bar(Sprite front, Sprite back, Vector2 position, int width, int height, Vector2 offset, float max)
         {
             this.front = front;
             this.back = back;
@@ -38,7 +38,7 @@ namespace Game2Test
             back.rectangle.Width = width;
             back.rectangle.Height = height;
         }
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float current)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float current, float max)
         {
             position = position + offset;
 

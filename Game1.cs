@@ -560,7 +560,7 @@ namespace Game2Test
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
                         var rndInt = rnd.Next(asteroidTextures.Count);
                         var maxHealth = rndInt + 1;
-                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f/rndInt, maxHealth, new Healthbar(redHealth, greenHealth, position,50, 20, new Vector2(0,-30), maxHealth)));
+                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f/rndInt, maxHealth, new Bar(redHealth, greenHealth, position,50, 20, new Vector2(0,-30), maxHealth)));
                     }
                 }
             }

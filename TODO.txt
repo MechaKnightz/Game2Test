@@ -8,7 +8,6 @@ particleengine color
 particles dissapear when ship stops
 add speed to ship class
 make bar ("healthbar, shieldbar") class (cyanpixel, whitepixel)
-refactor health bar into asteroid class
 
 DONE:
 
@@ -29,3 +28,4 @@ max shot count per turret/ energy per ship
 maxshots per turret and type/all
 healthbar for asteroids
 asteroid health dependant on size
+refactor health class bar into asteroid class

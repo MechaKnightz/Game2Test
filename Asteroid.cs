@@ -15,11 +15,13 @@ namespace Game2Test
 
         public float health;
         public float healthMax;
-        public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax) :base(texture, position)
+        public Healthbar healthbar;
+        public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax, Healthbar healthbar) :base(texture, position)
         {
             this.speed = speed;
             this.healthMax = healthMax;
             health = healthMax;
+            this.healthbar = healthbar;
         }
 
         public void MoveTowardsPosition(Vector2 towardsPosition)
@@ -33,6 +35,11 @@ namespace Game2Test
 
             rectangle.X = (int)position.X;
             rectangle.Y = (int)position.Y;
+        }
+        public new void Draw(SpriteBatch spriteBatch)
+        {
+            if(health < healthMax) healthbar.Draw(spriteBatch, position, health);
+            spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
         }
     }
 }

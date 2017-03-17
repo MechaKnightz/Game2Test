@@ -37,7 +37,7 @@ namespace Game2Test
 
         List<Ship> ships = new List<Ship>();
 
-        Vector2 defaultShipPos, tempPos, tempPos2, tempPos3, tempPos4, halfScreenPos, halfScreen;
+        Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
         Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture, redPixel, greenPixel;
 
@@ -45,9 +45,7 @@ namespace Game2Test
         Sprite greenHealth;
         Sprite redHealth;
 
-        int sida = 21;
         SpriteFont font;
-        int maxShotCount = 2;
         System.Random rnd;
         int score, speed;
         Color[] menuColor = new Color[3];
@@ -384,7 +382,8 @@ namespace Game2Test
             }
             currentShip.UpdateEnergy();
 
-            if (currentShip.rotation > (float)Math.PI * 2f || currentShip.rotation < (float)-Math.PI * 2f) currentShip.rotation -= (float)Math.PI * 2f;
+            if (currentShip.rotation > (float)Math.PI * 2f) currentShip.rotation -= (float)Math.PI * 2f;
+            else if(currentShip.rotation < (float)-Math.PI * 2f) currentShip.rotation += (float)Math.PI * 2f;
             currentShip.UpdateTurrets();
 
             particleEngine.EmitterLocation = currentShip.GetBackOfShip();

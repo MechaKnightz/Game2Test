@@ -7,7 +7,7 @@ make menu look nicer
 particleengine color
 particles dissapear when ship stops
 add speed to ship class
-make bar ("healthbar, shieldbar") class (cyanpixel, whitepixel)
+space station at (0,0)
 
 DONE:
 
@@ -29,3 +29,5 @@ maxshots per turret and type/all
 healthbar for asteroids
 asteroid health dependant on size
 refactor health class bar into asteroid class
+make bar ("healthbar, shieldbar") class (cyanpixel, whitepixel)
+fix rotation resetter

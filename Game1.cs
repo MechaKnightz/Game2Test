@@ -94,17 +94,17 @@ namespace Game2Test
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //graphics.PreferredBackBufferWidth = 1366;  // window width 801
-            //graphics.PreferredBackBufferHeight = 768;   // window height 701
-            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width; ;  // window width 801
+            graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height; ;   // window height 701
+            graphics.IsFullScreen = true;
 
             //graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;
             //graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;
             //graphics.IsFullScreen = true;
 
-            graphics.PreferredBackBufferWidth = 801;  // window width 801
-            graphics.PreferredBackBufferHeight = 701;   // window height 701
-            graphics.IsFullScreen = false;
+            //graphics.PreferredBackBufferWidth = 801;  // window width 801
+            //graphics.PreferredBackBufferHeight = 701;   // window height 701
+            //graphics.IsFullScreen = false;
 
             graphics.ApplyChanges();
 

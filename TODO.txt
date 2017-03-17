@@ -8,6 +8,7 @@ particleengine color
 particles dissapear when ship stops
 add speed to ship class
 make bar ("healthbar, shieldbar") class (cyanpixel, whitepixel)
+refactor health bar into asteroid class
 
 DONE:
 

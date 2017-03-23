@@ -8,6 +8,7 @@ particleengine color
 particles dissapear when ship stops
 add speed to ship class
 space station at (0,0)
+fix station targetting
 
 DONE:
 

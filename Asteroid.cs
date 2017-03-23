@@ -24,6 +24,11 @@ namespace Game2Test
             this.bar = bar;
         }
 
+        public Asteroid()
+        {
+
+        }
+
         public void MoveTowardsPosition(Vector2 towardsPosition)
         {
             float angle = (float)Math.Atan2(towardsPosition.Y - position.Y, towardsPosition.X - position.X);

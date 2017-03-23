@@ -28,18 +28,24 @@ namespace Game2Test
         Dictionary<string, Turret> turrets0 = new Dictionary<string, Turret>();
         Dictionary<string, Turret> turrets1 = new Dictionary<string, Turret>();
         Dictionary<string, Turret> turrets2 = new Dictionary<string, Turret>();
+        Dictionary<string, Turret> turretsStation = new Dictionary<string, Turret>();
 
         Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship2Dictionary = new Dictionary<string, Texture2D>();
+        Dictionary<string, Texture2D> stationDictionary = new Dictionary<string, Texture2D>();
 
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
+        Ship stationShip;
+
+        Texture2D stationTexture;
 
         List<Ship> ships = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture, redPixel, greenPixel;
+        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
+            redPixel, greenPixel, turretStationTexture;
 
         Shot shot0;
         Sprite greenHealth;
@@ -112,6 +118,7 @@ namespace Game2Test
 
             turret0Texture = Content.Load<Texture2D>("turret0");
             turret1Texture = Content.Load<Texture2D>("turret1");
+            turretStationTexture = Content.Load<Texture2D>("turretStationTexture");
 
             shot0Texture = Content.Load<Texture2D>("shot0");
             shot0 = new Shot(shot0Texture, 60, "default", 15);
@@ -126,6 +133,9 @@ namespace Game2Test
             turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150));
 
             turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150));
+
+            turretsStation.Add("primary0", new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150));
+            turretsStation.Add("primary1", new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
@@ -150,6 +160,14 @@ namespace Game2Test
 
             ships.Add(new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 1000, 5));
             //ship2 end
+
+            //stationShip
+
+            stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
+
+            stationShip = new Ship(stationDictionary, defaultShipPos, turretsStation, 100, 1000, 5);
+
+            //stationShip end
 
             currentShip = ships[0];
 
@@ -279,6 +297,14 @@ namespace Game2Test
                             score++;
                         }
                     }
+                    if(stationShip.TurretCollision(asteroids[i].rectangle))
+                    {
+                        asteroids[i].health--;
+                        if (asteroids[i].health <= 0)
+                        {
+                            asteroids.RemoveAt(i);
+                        }
+                    }
                 }
             }
         }
@@ -367,6 +393,30 @@ namespace Game2Test
 
             aimSprite.SetPos(camera.ScreenToWorld(mouseState.Position.ToVector2()));
 
+            foreach (var t in stationShip.turrets)
+            {
+                Asteroid asteroid = new Asteroid();
+                float tempDistance = 99999999;
+                for(int i = 0; i < asteroids.Count; i++) //TODO fix targetting
+                {
+                    if(Vector2.Distance(asteroids[i].position, t.Value.position) < tempDistance)
+                    {
+                        tempDistance = Vector2.Distance(asteroids[i].position, t.Value.position);
+                        asteroid.position = asteroids[i].position;
+                        var tempTime = tempDistance / speed;
+                        for(int j = 0; j < tempTime; j++)
+                        {
+                            asteroid.MoveTowardsPosition(currentShip.position);
+                        }
+                    }
+                }
+                if (tempDistance < 800)
+                {
+                    t.Value.rotation = AngleToOther(t.Value.position, asteroid.position);
+                    stationShip.Fire("primary", "default");
+                }
+            }
+
             foreach (var t in currentShip.turrets)
             {
                 t.Value.rotation = AngleToMouse(t.Value.position);
@@ -383,10 +433,12 @@ namespace Game2Test
                 }
             }
             currentShip.UpdateEnergy();
+            stationShip.UpdateEnergy();
 
             if (currentShip.rotation > (float)Math.PI * 2f) currentShip.rotation -= (float)Math.PI * 2f;
             else if(currentShip.rotation < (float)-Math.PI * 2f) currentShip.rotation += (float)Math.PI * 2f;
             currentShip.UpdateTurrets();
+            stationShip.UpdateTurrets();
 
             particleEngine.EmitterLocation = currentShip.GetBackOfShip();
             particleEngine.Update();
@@ -472,8 +524,8 @@ namespace Game2Test
             //ship.rotationRender = (float)(Math.Round(ship.rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
 
+            stationShip.Draw(spriteBatch);
             currentShip.Draw(spriteBatch);
-            currentShip.DrawTurrets(spriteBatch);
 
             foreach (var t in currentShip.turrets)
             {
@@ -631,7 +683,11 @@ namespace Game2Test
         }
         public float AngleToMouse(Vector2 position)
         {
-            return (float)Math.Atan2(aimSprite.position.Y - position.Y, aimSprite.position.X - position.X);
+            return (float)AngleToOther(position, aimSprite.position);
+        }
+        public float AngleToOther(Vector2 main, Vector2 other)
+        {
+            return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
         }
         //public string FindIndex(string queryString, Dictionary<string, Texture2D> list)
         //{

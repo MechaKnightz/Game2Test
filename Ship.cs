@@ -94,6 +94,7 @@ namespace Game2Test
         {
             spriteBatch.Draw(textureDictionary[textureIndexCounter], position, origin: origin, rotation: rotation);
             textureIndexCounter = "default";
+            DrawTurrets(spriteBatch);
         }
 
         public void UpdateTurrets()

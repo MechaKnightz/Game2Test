@@ -8,7 +8,6 @@ particleengine color
 particles dissapear when ship stops
 add speed to ship class
 space station at (0,0)
-fix station targetting
 
 DONE:
 
@@ -32,3 +31,4 @@ asteroid health dependant on size
 refactor health class bar into asteroid class
 make bar ("healthbar, shieldbar") class (cyanpixel, whitepixel)
 fix rotation resetter
+fix station targetting

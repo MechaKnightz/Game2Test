@@ -165,7 +165,7 @@ namespace Game2Test
 
             stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
 
-            stationShip = new Ship(stationDictionary, defaultShipPos, turretsStation, 100, 1000, 5);
+            stationShip = new Ship(stationDictionary, defaultShipPos, turretsStation, 100, 1000, 15);
 
             //stationShip end
 
@@ -403,7 +403,10 @@ namespace Game2Test
                     {
                         tempDistance = Vector2.Distance(asteroids[i].position, t.Value.position);
                         asteroid.position = asteroids[i].position;
-                        var tempTime = tempDistance / speed;
+                        asteroid.rotation = asteroids[i].rotation;
+                        asteroid.speed = asteroids[i].speed;
+                        asteroid.acceleration = asteroids[i].acceleration;
+                        var tempTime = tempDistance / t.Value.shots["default"].speed;
                         for(int j = 0; j < tempTime; j++)
                         {
                             asteroid.MoveTowardsPosition(currentShip.position);
@@ -412,7 +415,11 @@ namespace Game2Test
                 }
                 if (tempDistance < 800)
                 {
-                    t.Value.rotation = AngleToOther(t.Value.position, asteroid.position);
+                    var rot = AngleToOther(t.Value.position, asteroid.position);
+                    const float rotConst = 0.03f; //TODO fix the if statements
+                    if (t.Value.rotation > rot ) t.Value.rotation -= rotConst;
+                    else if(t.Value.rotation < rot ) t.Value.rotation += rotConst;
+                    //t.Value.rotation = AngleToOther(t.Value.position, asteroid.position));
                     stationShip.Fire("primary", "default");
                 }
             }

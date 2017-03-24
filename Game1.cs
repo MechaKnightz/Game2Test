@@ -420,7 +420,8 @@ namespace Game2Test
                     if (t.Value.rotation > rot ) t.Value.rotation -= rotConst;
                     else if(t.Value.rotation < rot ) t.Value.rotation += rotConst;
                     //t.Value.rotation = AngleToOther(t.Value.position, asteroid.position));
-                    stationShip.Fire("primary", "default");
+                    float diff = Math.Abs(MathHelper.WrapAngle(rot - t.Value.rotation));
+                    if (diff < 0.2) stationShip.Fire("primary", "default");
                 }
             }
 

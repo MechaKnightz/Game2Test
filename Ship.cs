@@ -16,7 +16,10 @@ namespace Game2Test
         public string textureIndexCounter = "default";
         public int shipCurrentIndex = 0;
         public int shipPreviousIndex = 0;
+
         public string description;
+        public string name;
+        public float cost;
 
         public float health;
         public float healthMax;

@@ -12,5 +12,6 @@ namespace Game2Test
         EndScreen,
         MainMenu,
         SettingsMenu,
+        ShopMenu,
     }
 }

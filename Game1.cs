@@ -7,6 +7,8 @@ using System.Linq;
 using MonoGame.Extended;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
+using GeonBit.UI;
+using GeonBit.UI.Entities;
 
 namespace Game2Test
 {
@@ -41,11 +43,12 @@ namespace Game2Test
         Texture2D stationTexture;
 
         List<Ship> ships = new List<Ship>();
-
+        List<Ship> availableShips = new List<Ship>();
+            
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
         Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
-            redPixel, greenPixel, turretStationTexture;
+            redPixel, greenPixel, turretStationTexture, transparent;
 
         Shot shot0;
         Sprite greenHealth;
@@ -77,6 +80,14 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
+        private Panel mainMenuPanel, shopPanel, shopPanel2;
+        Button mainMenuPlayButton, mainMenuSettingsButton, mainMenuExitButton, shopButton, shopButton2, warpButton, shopHUDButton;
+        List<Button> shopButtons = new List<Button>();
+        List<Paragraph> shopDescriptions = new List<Paragraph>();
+        private PanelTabs tabs;
+        private PanelTabs.TabData tab0, tab1, tab2;
+        private Paragraph shipDescription;
+        private float distanceToStation;
 
         public Game1()
         {
@@ -87,8 +98,9 @@ namespace Game2Test
         protected override void Initialize()
         {
 
-            IsMouseVisible = false;
-            camera = new Camera2D(GraphicsDevice);
+            UserInterface.Initialize(Content, BuiltinThemes.hd);
+            UserInterface.UseRenderTarget = true;
+            Paragraph.BaseSize = 1f;
 
             base.Initialize();
         }
@@ -98,16 +110,18 @@ namespace Game2Test
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width; ;  // window width 801
-            graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height; ;   // window height 701
+            camera = new Camera2D(GraphicsDevice);
+
+            //graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width; ;  // window width 801
+            //graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height; ;   // window height 701
             graphics.IsFullScreen = false;
 
             //graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;
             //graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;
             //graphics.IsFullScreen = true;
 
-            //graphics.PreferredBackBufferWidth = 801;  // window width 801
-            //graphics.PreferredBackBufferHeight = 701;   // window height 701
+            graphics.PreferredBackBufferWidth = 801;  // window width 801
+            graphics.PreferredBackBufferHeight = 701;   // window height 701
             //graphics.IsFullScreen = false;
 
             graphics.ApplyChanges();
@@ -142,7 +156,12 @@ namespace Game2Test
             ship0Dictionary.Add("left", Content.Load<Texture2D>("ship0Texture1"));
             ship0Dictionary.Add("right", Content.Load<Texture2D>("ship0Texture2"));
 
-            ships.Add(new Ship(ship0Dictionary, defaultShipPos, turrets0, 10, 1000, 5));
+            var ship0 = new Ship(ship0Dictionary, defaultShipPos, turrets0, 10, 1000, 5);
+            ship0.cost = 0f;
+            ship0.description = "Human ship 1 description";
+            ship0.name = "Human ship 1";
+            ships.Add(ship0);
+            availableShips.Add(ship0); //TODO REMOVE
             //ship0 end
 
             //ship1
@@ -150,7 +169,12 @@ namespace Game2Test
             ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
             ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
 
-            ships.Add(new Ship(ship1Dictionary, defaultShipPos, turrets1, 10, 1000, 5));
+            var ship1 = new Ship(ship1Dictionary, defaultShipPos, turrets1, 10, 1000, 5);
+            ship1.cost = 15f;
+            ship1.description = "Human ship 2 description";
+            ship1.name = "Human ship 2";
+            ships.Add(ship1);
+            availableShips.Add(ship1);
             //ship1 end
 
             //ship2
@@ -158,7 +182,12 @@ namespace Game2Test
             ship2Dictionary.Add("left", Content.Load<Texture2D>("ship2Texture1"));
             ship2Dictionary.Add("right", Content.Load<Texture2D>("ship2Texture2"));
 
-            ships.Add(new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 1000, 5));
+            var ship2 = new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 1000, 5);
+            ship2.cost = 10f;
+            ship2.description = "Alien ship 1 description";
+            ship2.name = "Alien ship 1";
+            ships.Add(ship2);
+            availableShips.Add(ship2);
             //ship2 end
 
             //stationShip
@@ -166,7 +195,7 @@ namespace Game2Test
             stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
 
             stationShip = new Ship(stationDictionary, defaultShipPos, turretsStation, 100, 1000, 15);
-
+            
             //stationShip end
 
             currentShip = ships[0];
@@ -184,6 +213,7 @@ namespace Game2Test
             speedbarRectangle2 = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
             speed = defaultSpeed;
             halfScreenPos = new Vector2(halfScreen.X, halfScreen.Y);
+            transparent = Content.Load<Texture2D>("transparent");
 
             viewScorePos = new Vector2(10, 10);
             viewLivesPos = new Vector2(10, 40);
@@ -217,6 +247,13 @@ namespace Game2Test
             textures.Add(Content.Load<Texture2D>("orange"));
             textures.Add(Content.Load<Texture2D>("yellow"));
             particleEngine = new ParticleEngine(textures, new Vector2(0, 0));
+
+            
+            //main menu
+
+            GenerateInterface(GameState.MainMenu);
+
+            //end menu
         }
 
         protected override void UnloadContent()
@@ -225,8 +262,12 @@ namespace Game2Test
 
         protected override void Update(GameTime gameTime)
         {
+            if (!IsActive)
+                return;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            UserInterface.Update(gameTime);
 
             switch (gameState)
             {
@@ -238,19 +279,41 @@ namespace Game2Test
                     break;
                 case GameState.MainMenu: //main menu
                     ChangeColor();
-                    MenuLogic();
+                    MenuLogic(gameTime);
                     break;
                 case GameState.SettingsMenu: //settings
                     ChangeColor();
                     SettingsLogic();
+                    break;
+                case GameState.ShopMenu:
+                    GameLogic(gameTime);
+                    ShopLogic(gameTime);
                     break;
             }
 
             base.Update(gameTime);
         }
 
+        private void ShopLogic(GameTime gameTime)
+        {
+
+            //for (int i = 0; i < shopButtons.Count; i++) TODO make class for a set of panels and buttons
+            //{
+            //    shopButtons[i].OnClick = (Entity btn) =>
+            //    {
+            //        if (i == shopButtons.Count) return;
+            //        shopButtons.RemoveAt(i);
+            //        currentShip = availableShips[i];
+            //        availableShips.RemoveAt(i);
+            //        i--;
+            //    };
+            //}
+        }
+
         protected override void Draw(GameTime gameTime)
         {
+            UserInterface.Draw(spriteBatch);
+
             GraphicsDevice.Clear(clearColor);
 
             spriteBatch.Begin();
@@ -269,9 +332,15 @@ namespace Game2Test
                 case GameState.SettingsMenu:
                     DrawSettings();
                     break;
+                case GameState.ShopMenu:
+                    DrawGame();
+                    DrawShop(gameTime);
+                    break;
             }
 
             spriteBatch.End();
+
+            UserInterface.DrawMainRenderTarget(spriteBatch);
 
             if (moving) movingDelayCounter = 5;
             else movingDelayCounter--;
@@ -282,6 +351,11 @@ namespace Game2Test
             oldState = Keyboard.GetState();
             base.Draw(gameTime);
         }
+
+        private void DrawShop(GameTime gameTime)
+        {
+        }
+
         void CollisionTest() //kollar om shots intersects med asteroids
         {
             for(int i = 0; i < asteroids.Count; i++)
@@ -320,7 +394,7 @@ namespace Game2Test
                         asteroids.RemoveAt(i);
                         if (currentShip.health <= 0)
                         {
-                            ChangeState(1);
+                            ChangeState(GameState.EndScreen);
                             highscores.Add(score);// TODO: add fixerino LEjalkafsdbd
                         }
                     }
@@ -335,8 +409,8 @@ namespace Game2Test
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
                 tempPos = currentShip.position;
-                tempPos.X += (float)(System.Math.Cos(currentShip.rotation)) * (speed * speedBoostConst);
-                tempPos.Y += (float)(System.Math.Sin(currentShip.rotation)) * (speed * speedBoostConst);
+                tempPos.X += (float)System.Math.Cos(currentShip.rotation) * (speed * speedBoostConst);
+                tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * (speed * speedBoostConst);
                 currentShip.SetPos(tempPos);
                 moving = true;
             }
@@ -378,13 +452,16 @@ namespace Game2Test
                 currentShip.Update();
             }
 
+            distanceToStation = Vector2.Distance(currentShip.position, stationShip.position);
+
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
                 currentShip.SetPos(defaultShipPos);
             }
-            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G))
+            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G) && distanceToStation < 400)
             {
-                NextShip();
+                if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
+                else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
             }
 
             tempPos4 = camera.Position;
@@ -429,10 +506,30 @@ namespace Game2Test
             {
                 t.Value.rotation = AngleToMouse(t.Value.position);
             }
-            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed)
+            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
                 currentShip.Fire("primary", "default");
             }
+
+            if (distanceToStation < 400)
+            {
+                shopHUDButton.Skin = ButtonSkin.Default;
+                shopHUDButton.Disabled = false;
+            }
+            else
+            {
+                shopHUDButton.Skin = ButtonSkin.Fancy;
+                shopHUDButton.Disabled = true;
+            }
+            if (distanceToStation < 400)
+            {
+                if(shopPanel != null) shopPanel.Visible = true;
+            }
+            else
+            {
+                if (shopPanel != null) shopPanel.Visible = false;
+            }
+
             foreach (var t in asteroids)
             {
                 if (Vector2.Distance(t.position, currentShip.position) < 1000)
@@ -457,38 +554,147 @@ namespace Game2Test
             oldState = Keyboard.GetState();
             oldMouseState = Mouse.GetState();
         }
-        void MenuLogic()
+        void MenuLogic(GameTime gameTime)
         {
-            keyState = Keyboard.GetState();
-
-            if (keyState.IsKeyDown(Keys.Up) && !oldState.IsKeyDown(Keys.Up)) selected--;
-            if (keyState.IsKeyDown(Keys.Down) && !oldState.IsKeyDown(Keys.Down)) selected++;
-            if (selected < 0) selected = menuLength - 1;
-            if (selected > menuLength - 1) selected = 0;
-            if (keyState.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter))
-            {
-                switch (selected)
-                {
-                    case 0:
-                        ResetGame();
-                        ChangeState(0);
-                        break;
-                    case 1:
-                        ChangeState(3);
-                        break;
-                    case 2:
-                        Exit();
-                        break;
-                }
-            }
-
-            oldState = Keyboard.GetState();
+            
         }
+
+        private void ChangeState(GameState tempGameState)
+        {
+            GenerateInterface(tempGameState);
+            RemoveInterface(gameState);
+            gameState = tempGameState;
+        }
+
+        private void RemoveInterface(GameState gameState)
+        {
+            switch(gameState)
+            {
+                case GameState.MainMenu:
+                    mainMenuPanel.RemoveFromParent();
+                    break;
+                case GameState.ShopMenu:
+                    shopPanel.RemoveFromParent();
+                    shopButtons.Clear();
+                    shopDescriptions.Clear();
+                    break;
+                case GameState.MainGame:
+                    shopHUDButton.Visible = false;
+                    break;
+            }
+        }
+
+        private void GenerateInterface(GameState tempGameState)
+        {
+            switch (tempGameState)
+            {
+                case GameState.MainGame:
+                    //UserInterface.SetCursor(transparent);
+                    shopHUDButton = new Button("Shop (G)", anchor: Anchor.BottomRight, size: new Vector2(150, 50));
+                    shopHUDButton.ButtonParagraph.WrapWords = false;
+                    shopHUDButton.OnClick = (Entity btn) =>
+                    {
+                        if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
+                        else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
+                    };
+                    UserInterface.AddEntity(shopHUDButton);
+                    break;
+                case GameState.EndScreen:
+                    UserInterface.SetCursor(CursorType.Default);
+                    break;
+                case GameState.MainMenu:
+                    mainMenuPanel = new Panel(new Vector2(300, 500));
+                    UserInterface.AddEntity(mainMenuPanel);
+                    mainMenuPlayButton = new Button("Play");
+                    mainMenuSettingsButton = new Button("Settings");
+                    mainMenuExitButton = new Button("Quit");
+
+                    mainMenuPanel.AddChild(mainMenuPlayButton);
+                    mainMenuPanel.AddChild(mainMenuSettingsButton);
+                    mainMenuPanel.AddChild(mainMenuExitButton);
+
+                    mainMenuPlayButton.OnClick = (Entity btn) => {
+                        ResetGame();
+                        ChangeState(GameState.MainGame);
+                    };
+                    mainMenuSettingsButton.OnClick = (Entity btn) => {
+                        ChangeState(GameState.SettingsMenu);
+                    };
+                    mainMenuExitButton.OnClick = (Entity btn) => {
+                        Exit();
+                    };
+                    break;
+                case GameState.SettingsMenu:
+                    UserInterface.SetCursor(CursorType.Default);
+                    break;
+                case GameState.ShopMenu:
+                    UserInterface.SetCursor(CursorType.Default);
+                    shopPanel = new Panel(new Vector2(500, 300), anchor: Anchor.TopLeft, offset: new Vector2(0, 70));
+                    UserInterface.AddEntity(shopPanel);
+                    tabs = new PanelTabs();
+                    tab0 = tabs.AddTab("Warp");
+                    tab1 = tabs.AddTab("Shop");
+                    tab2 = tabs.AddTab("Upgrades");
+                    tab2.button.ButtonParagraph.WrapWords = false;
+                    warpButton = new Button("Warp to new sector");
+                    tab0.panel.AddChild(warpButton);
+
+                    int height = 200;
+                    //TODO: offset = text width, measurestring
+                    for (int i = 0; i < availableShips.Count; i++)
+                    {
+                        var offset = new Vector2(0, (height + 20) * i);
+                        var img = new Image(availableShips[i].texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
+                        img.SetOffset(offset);
+
+                        shopDescriptions.Add(new Paragraph(availableShips[i].description));
+                        img.Identifier = i.ToString();
+                        img.OnMouseEnter = (Entity entity) =>
+                        {
+                            UserInterface.AddEntity(shopDescriptions[Convert.ToUInt16(entity.Identifier)]);
+                        };
+                        img.OnMouseLeave = (Entity entity) =>
+                        {
+                            UserInterface.RemoveEntity(shopDescriptions[Convert.ToUInt16(entity.Identifier)]);
+                        };
+                        tab1.panel.AddChild(img);
+
+                        var name = new Paragraph(availableShips[i].name, anchor: Anchor.TopRight);
+                        name.SetOffset(offset);
+                        tab1.panel.AddChild(name);
+
+                        var cost = new Paragraph("Cost: " + availableShips[i].cost.ToString(), anchor: Anchor.CenterRight);
+                        cost.SetOffset(offset - new Vector2(-25, 50));
+                        tab1.panel.AddChild(cost);
+
+                        shopButtons.Add(new Button("Buy", size: new Vector2(100,50), anchor: Anchor.CenterRight));
+                        shopButtons[i].SetOffset(offset + new Vector2(0, 0));
+                        shopButtons[i].ButtonParagraph.SetOffset(new Vector2(0, -22));
+                        tab1.panel.AddChild(shopButtons[i]);
+                        tab1.panel.AddChild(new HorizontalLine());
+
+                        shopButtons[i].Identifier = i.ToString();
+                        shopButtons[i].OnClick = (Entity btn) => {
+                            BuyShip(availableShips[Convert.ToUInt16(btn.Identifier)]);
+                        };
+                    }
+
+                    tab1.panel.PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
+                    tab1.panel.Scrollbar.Max = Convert.ToUInt16((availableShips.Count * (height+20)) - shopPanel.Size.Y);
+                    tab1.panel.Scrollbar.StepsCount = (uint)availableShips.Count*5;
+
+                    shopPanel.AddChild(tabs);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(tempGameState), tempGameState, null);
+            }
+        }
+
         void EndScreenLogic()
         {
             keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R)) ChangeState(2);
+            if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R)) ChangeState(GameState.MainMenu);
 
             oldState = Keyboard.GetState();
         }
@@ -501,7 +707,7 @@ namespace Game2Test
             if (selected < 0) selected = settingsMenuLength - 1;
             if (selected > settingsMenuLength - 1) selected = 0;
 
-            if (keyState.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter)) if (selected == 0) ChangeState(2);
+            if (keyState.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter)) if (selected == 0) ChangeState(GameState.MainMenu);
 
             if (keyState.IsKeyDown(Keys.Left) && selected == 1 && speed <= 101 && speed > 1) speed--;
             if (keyState.IsKeyDown(Keys.Right) && selected == 1 && speed < 101 && speed >= 1) speed++;
@@ -517,13 +723,10 @@ namespace Game2Test
         }
         void DrawGame()
         {
+            
             spriteBatch.End();
 
-            //backgrounds
-
             DrawBackground();
-
-            //backgrounds end
 
             if (drawParticles) particleEngine.Draw(spriteBatch, camera.GetViewMatrix());
 
@@ -560,14 +763,12 @@ namespace Game2Test
             spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y*2 - shieldIconTexture.Height)));
             spriteBatch.DrawString(font, currentShip.energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
 
-            aimSprite.Draw(spriteBatch);
+            if(gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
 
         }
         void DrawMenu()
         {
-            spriteBatch.DrawString(font, "Begin", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5) * 2) - (font.MeasureString("Begin") / 2), menuColor[0]);
-            spriteBatch.DrawString(font, "Settings", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5) * 3) - (font.MeasureString("Settings") / 2), menuColor[1]);
-            spriteBatch.DrawString(font, "Quit", new Vector2(graphics.PreferredBackBufferWidth / 2, (graphics.PreferredBackBufferHeight / 5) * 4) - (font.MeasureString("Quit") / 2), menuColor[2]);
+
         }
         void DrawSettings()
         {
@@ -594,12 +795,6 @@ namespace Game2Test
             currentShip.rotation = 0;
             asteroids.Clear();
             GenerateRocks();
-        }
-        void ChangeState(int state)
-        {
-            gameState = (GameState)state;
-            selected = 0;
-
         }
         void BeginSpriteBatchCamera(SpriteBatch spriteBatch)
         {
@@ -715,6 +910,23 @@ namespace Game2Test
                 currentShip.shipCurrentIndex++;
                 ChangeShip();
             }
+        }
+
+        public void BuyShip(Ship ship)
+        {
+            var tempRot = currentShip.rotation;
+            var tempPos = stationShip.position;
+            var tempIndex = currentShip.shipCurrentIndex;
+            var tempHealth = currentShip.health;
+            var tempEnergy = currentShip.energy;
+            currentShip = ship;
+            currentShip.shipCurrentIndex = tempIndex;
+            currentShip.position = tempPos;
+            currentShip.rotation = tempRot;
+            currentShip.health = tempHealth;
+            currentShip.energy = tempEnergy;
+
+            currentShip.Update();
         }
         public void ChangeShip()
         {

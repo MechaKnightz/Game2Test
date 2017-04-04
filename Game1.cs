@@ -21,7 +21,7 @@ namespace Game2Test
         KeyboardState keyState, oldState;
 
         //lists
-        List<Asteroid> asteroids = new List<Asteroid>();
+        List<Asteroid> currentAsteroids = new List<Asteroid>();
         List<Texture2D> asteroidTextures = new List<Texture2D>();
 
         List<Texture2D> backgrounds = new List<Texture2D>();
@@ -355,25 +355,25 @@ namespace Game2Test
 
         void CollisionTest() //kollar om shots intersects med asteroids
         {
-            for(int i = 0; i < asteroids.Count; i++)
+            for(int i = 0; i < currentSector.Asteroids.Count; i++)
             {
-                if (IsInView(asteroids[i]))
+                if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentShip.TurretCollision(asteroids[i].rectangle))
+                    if (currentShip.TurretCollision(currentSector.Asteroids[i].rectangle))
                     {
-                        asteroids[i].health--;
-                        if (asteroids[i].health <= 0)
+                        currentSector.Asteroids[i].health--;
+                        if (currentSector.Asteroids[i].health <= 0)
                         {
-                            asteroids.RemoveAt(i);
+                            currentSector.Asteroids.RemoveAt(i);
                             score++;
                         }
                     }
-                    if(stationShip.TurretCollision(asteroids[i].rectangle))
+                    if(stationShip.TurretCollision(currentSector.Asteroids[i].rectangle))
                     {
-                        asteroids[i].health--;
-                        if (asteroids[i].health <= 0)
+                        currentSector.Asteroids[i].health--;
+                        if (currentSector.Asteroids[i].health <= 0)
                         {
-                            asteroids.RemoveAt(i);
+                            currentSector.Asteroids.RemoveAt(i);
                         }
                     }
                 }
@@ -381,14 +381,14 @@ namespace Game2Test
         }
         void CollisionTest2() //kollar om asteroids intersects med ship.rectangle
         {
-            for (int i = 0; i < asteroids.Count; i++)
+            for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
-                if (IsInView(asteroids[i]))
+                if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (asteroids[i].rectangle.Intersects(currentShip.rectangle))
+                    if (currentSector.Asteroids[i].rectangle.Intersects(currentShip.rectangle))
                     {
                         currentShip.health--;
-                        asteroids.RemoveAt(i);
+                        currentSector.Asteroids.RemoveAt(i);
                         if (currentShip.health <= 0)
                         {
                             ChangeState(GameState.EndScreen);
@@ -473,15 +473,15 @@ namespace Game2Test
                 {
                     Asteroid asteroid = new Asteroid();
                     float tempDistance = 99999999;
-                    for (int i = 0; i < asteroids.Count; i++) //TODO fix targetting
+                    for (int i = 0; i < currentSector.Asteroids.Count; i++) //TODO fix targetting
                     {
-                        if (Vector2.Distance(asteroids[i].Position, tur.Position) < tempDistance)
+                        if (Vector2.Distance(currentSector.Asteroids[i].Position, tur.Position) < tempDistance)
                         {
-                            tempDistance = Vector2.Distance(asteroids[i].Position, tur.Position);
-                            asteroid.Position = asteroids[i].Position;
-                            asteroid.rotation = asteroids[i].rotation;
-                            asteroid.speed = asteroids[i].speed;
-                            asteroid.acceleration = asteroids[i].acceleration;
+                            tempDistance = Vector2.Distance(currentSector.Asteroids[i].Position, tur.Position);
+                            asteroid.Position = currentSector.Asteroids[i].Position;
+                            asteroid.rotation = currentSector.Asteroids[i].rotation;
+                            asteroid.speed = currentSector.Asteroids[i].speed;
+                            asteroid.acceleration = currentSector.Asteroids[i].acceleration;
                             var tempTime = tempDistance / tur.shots["default"].speed;
                             for (int j = 0; j < tempTime; j++)
                             {
@@ -528,7 +528,7 @@ namespace Game2Test
                 ChangeState(GameState.MainGame);
             }
 
-            foreach (var t in asteroids)
+            foreach (var t in currentSector.Asteroids)
             {
                 if (Vector2.Distance(t.Position, currentShip.Position) < 1000)
                 {
@@ -651,6 +651,11 @@ namespace Game2Test
                     {
                         dropDown.AddItem(sectors[i].Name);
                     }
+                    dropDown.AttachedData = dropDown.SelectedValue;
+                    dropDown.OnValueChange = (Entity drop) =>
+                    {
+                        currentSector = sectors.FirstOrDefault(x => x.Name == dropDown.SelectedValue);
+                    };
                     tab0.panel.AddChild(dropDown);
 
                     //for (int i = 0; i < sectors.Count; i++)
@@ -770,11 +775,11 @@ namespace Game2Test
 
             currentShip.DrawTurrets(spriteBatch);
 
-            for(int i = 0; i < asteroids.Count; i++)
+            for(int i = 0; i < currentSector.Asteroids.Count; i++)
             {
-                if (IsInView(asteroids[i]))
+                if (IsInView(currentSector.Asteroids[i]))
                 {
-                    asteroids[i].Draw(spriteBatch);
+                    currentSector.Asteroids[i].Draw(spriteBatch);
                 }
             }
 
@@ -821,8 +826,7 @@ namespace Game2Test
             score = defaultScore;
             currentShip.Position = defaultShipPos;
             currentShip.rotation = 0;
-            asteroids.Clear();
-            GenerateRocks();
+            GenerateAsteroids();
         }
         void BeginSpriteBatchCamera(SpriteBatch spriteBatch)
         {
@@ -832,8 +836,9 @@ namespace Game2Test
         /// <summary>
         /// Generate all the astroids
         /// </summary>
-        void GenerateRocks()
+        List<Asteroid> GenerateAsteroids()
         {
+            var asteroids = new List<Asteroid>();
             for (int repeatIndex2 = -mapSize; repeatIndex2 <= mapSize; repeatIndex2++)
             {
                 for (int repeatIndex = -mapSize; repeatIndex <= mapSize; repeatIndex++)
@@ -849,12 +854,13 @@ namespace Game2Test
             }
             for (int i = 0; i < asteroids.Count; i++)
             {
-                if (Vector2.Distance(currentShip.Position, asteroids[i].Position) < 1100)
+                if (Vector2.Distance(stationShip.Position, asteroids[i].Position) < 1100)
                 {
                     asteroids.RemoveAt(i);
                     i--;
                 }
             }
+            return asteroids;
         }
         //void GenerateShotBoost()
         //{
@@ -988,16 +994,20 @@ namespace Game2Test
         private Sector GenerateSector()
         {
             var sector = new Sector();
+            //background
             sector.Backgrounds = RandomizeBackground();
 
             char[] array = new[] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
             string tempString = array[rnd.Next(0, array.Length)].ToString() +
                                 array[rnd.Next(0, array.Length)].ToString() +
                                 array[rnd.Next(0, array.Length)].ToString();
-
+            //name
             //AAA - 000
             string name = tempString +" - " + rnd.Next(0, 1000).ToString();
             sector.Name = name;
+
+            //asteroids
+            sector.Asteroids = GenerateAsteroids();
 
             sectors.Add(sector);
             return sector;

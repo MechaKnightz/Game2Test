@@ -88,6 +88,7 @@ namespace Game2Test
         private PanelTabs.TabData tab0, tab1, tab2;
         private Paragraph shipDescription;
         private float distanceToStation;
+        private float shopRadius = 200;
 
         public Game1()
         {
@@ -287,28 +288,12 @@ namespace Game2Test
                     break;
                 case GameState.ShopMenu:
                     GameLogic(gameTime);
-                    ShopLogic(gameTime);
                     break;
             }
 
             base.Update(gameTime);
         }
 
-        private void ShopLogic(GameTime gameTime)
-        {
-
-            //for (int i = 0; i < shopButtons.Count; i++) TODO make class for a set of panels and buttons
-            //{
-            //    shopButtons[i].OnClick = (Entity btn) =>
-            //    {
-            //        if (i == shopButtons.Count) return;
-            //        shopButtons.RemoveAt(i);
-            //        currentShip = availableShips[i];
-            //        availableShips.RemoveAt(i);
-            //        i--;
-            //    };
-            //}
-        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -334,7 +319,6 @@ namespace Game2Test
                     break;
                 case GameState.ShopMenu:
                     DrawGame();
-                    DrawShop(gameTime);
                     break;
             }
 
@@ -350,10 +334,6 @@ namespace Game2Test
 
             oldState = Keyboard.GetState();
             base.Draw(gameTime);
-        }
-
-        private void DrawShop(GameTime gameTime)
-        {
         }
 
         void CollisionTest() //kollar om shots intersects med asteroids
@@ -458,7 +438,7 @@ namespace Game2Test
             {
                 currentShip.SetPos(defaultShipPos);
             }
-            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G) && distanceToStation < 400)
+            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G) && distanceToStation < shopRadius)
             {
                 if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
                 else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
@@ -511,23 +491,17 @@ namespace Game2Test
                 currentShip.Fire("primary", "default");
             }
 
-            if (distanceToStation < 400)
+            if (distanceToStation < shopRadius)
             {
-                shopHUDButton.Skin = ButtonSkin.Default;
                 shopHUDButton.Disabled = false;
             }
             else
             {
-                shopHUDButton.Skin = ButtonSkin.Fancy;
                 shopHUDButton.Disabled = true;
             }
-            if (distanceToStation < 400)
+            if (distanceToStation > shopRadius && gameState != GameState.MainGame)
             {
-                if(shopPanel != null) shopPanel.Visible = true;
-            }
-            else
-            {
-                if (shopPanel != null) shopPanel.Visible = false;
+                ChangeState(GameState.MainGame);
             }
 
             foreach (var t in asteroids)
@@ -589,8 +563,8 @@ namespace Game2Test
             switch (tempGameState)
             {
                 case GameState.MainGame:
-                    //UserInterface.SetCursor(transparent);
-                    shopHUDButton = new Button("Shop (G)", anchor: Anchor.BottomRight, size: new Vector2(150, 50));
+                    UserInterface.SetCursor(transparent);
+                    shopHUDButton = new Button("Shop (G)", anchor: Anchor.BottomRight, size: new Vector2(150, 50), skin: ButtonSkin.Alternative);
                     shopHUDButton.ButtonParagraph.WrapWords = false;
                     shopHUDButton.OnClick = (Entity btn) =>
                     {

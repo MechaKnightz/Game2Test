@@ -32,6 +32,8 @@ namespace Game2Test
         List<Turret> turrets2 = new List<Turret>();
         List<Turret> turretsStation = new List<Turret>();
 
+        List<Sector> sectors = new List<Sector>();
+
         Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship2Dictionary = new Dictionary<string, Texture2D>();
@@ -255,8 +257,7 @@ namespace Game2Test
 
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
 
-            currentSector = new Sector();
-            currentSector.Backgrounds = RandomizeBackground();
+            currentSector = GenerateSector();
 
             //particles
             List<Texture2D> textures = new List<Texture2D>();
@@ -633,8 +634,38 @@ namespace Game2Test
                     tab1 = tabs.AddTab("Shop");
                     tab2 = tabs.AddTab("Upgrades");
                     tab2.button.ButtonParagraph.WrapWords = false;
+
+                    //first tab
                     warpButton = new Button("Warp to new sector");
+                    warpButton.OnClick = (Entity btn) => {
+                        currentSector = GenerateSector();
+                        ChangeState(GameState.MainGame);
+                    };
+
                     tab0.panel.AddChild(warpButton);
+                    tab0.panel.AddChild(new HorizontalLine());
+                    
+                    var dropDown = new DropDown(new Vector2(0, 0));
+                    dropDown.SelectedTextPanelParagraph.Text = "Warp to an old sector";
+                    for (int i = 0; i < sectors.Count; i++)
+                    {
+                        dropDown.AddItem(sectors[i].Name);
+                    }
+                    tab0.panel.AddChild(dropDown);
+
+                    //for (int i = 0; i < sectors.Count; i++)
+                    //{
+                    //    var button = new Button("Sector: " + sectors[i].Name);
+                    //    button.Identifier = i.ToString();
+                    //    button.OnClick = (Entity btn) => {
+                    //        currentSector = sectors[Convert.ToInt16(btn.Identifier)];
+                    //        ChangeState(GameState.MainGame);
+                    //    };
+                    //    tab0.panel.AddChild(button);
+                    //    tab0.panel.AddChild(new HorizontalLine());
+                    //}
+
+                    //second tab
 
                     int height = 200;
                     //TODO: offset = text width, measurestring
@@ -679,6 +710,8 @@ namespace Game2Test
                     tab1.panel.PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
                     tab1.panel.Scrollbar.Max = Convert.ToUInt16((availableShips.Count * (height+20)) - shopPanel.Size.Y);
                     tab1.panel.Scrollbar.StepsCount = (uint)availableShips.Count*5;
+
+                    //second tab end
 
                     shopPanel.AddChild(tabs);
                     break;
@@ -950,6 +983,24 @@ namespace Game2Test
 
             randomBackgroundList.Add(Content.Load<Texture2D>("background3"));
             return randomBackgroundList;
+        }
+
+        private Sector GenerateSector()
+        {
+            var sector = new Sector();
+            sector.Backgrounds = RandomizeBackground();
+
+            char[] array = new[] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+            string tempString = array[rnd.Next(0, array.Length)].ToString() +
+                                array[rnd.Next(0, array.Length)].ToString() +
+                                array[rnd.Next(0, array.Length)].ToString();
+
+            //AAA - 000
+            string name = tempString +" - " + rnd.Next(0, 1000).ToString();
+            sector.Name = name;
+
+            sectors.Add(sector);
+            return sector;
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

@@ -20,7 +20,7 @@ namespace Game2Test
             this.front = front;
             this.back = back;
             this.offset = offset;
-            this.position = position + offset;
+            Position = position + offset;
             this.max = max;
             current = max;
             this.front = front;

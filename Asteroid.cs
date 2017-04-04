@@ -31,20 +31,22 @@ namespace Game2Test
 
         public void MoveTowardsPosition(Vector2 towardsPosition)
         {
-            float angle = (float)Math.Atan2(towardsPosition.Y - position.Y, towardsPosition.X - position.X);
+            float angle = (float)Math.Atan2(towardsPosition.Y - Position.Y, towardsPosition.X - Position.X);
 
-            position.X += (float)(System.Math.Cos(angle)) * speed * acceleration;
-            position.Y += (float)(System.Math.Sin(angle)) * speed * acceleration;
+            var temp = Position;
+            temp.X += (float)(Math.Cos(angle)) * speed * acceleration;
+            temp.Y += (float)(Math.Sin(angle)) * speed * acceleration;
+            Position = temp;
 
             acceleration += 0.005f;
 
-            rectangle.X = (int)position.X;
-            rectangle.Y = (int)position.Y;
+            rectangle.X = (int)Position.X;
+            rectangle.Y = (int)Position.Y;
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            if(health < healthMax) bar.Draw(spriteBatch, position, health, healthMax);
-            spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
+            if(health < healthMax) bar.Draw(spriteBatch, Position, health, healthMax);
+            spriteBatch.Draw(texture, Position, origin: origin, rotation: rotation);
         }
     }
 }

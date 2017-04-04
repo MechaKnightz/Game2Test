@@ -71,21 +71,23 @@ namespace Game2Test
         }
         public new void Update()
         {
-            rectangle.X = (int)position.X;
-            rectangle.Y = (int)position.Y;
+            rectangle.X = (int)Position.X;
+            rectangle.Y = (int)Position.Y;
             foreach (var t in turrets)
             {
                 //sets the turrets at the position of the ship
-                t.Value.position.X = position.X;
-                t.Value.position.Y = position.Y;
+                var temp = t.Value.Position;
+                temp.X = Position.X;
+                temp.Y = Position.Y;
 
                 //x turret offset
-                t.Value.position.X -= (float)(t.Value.offset.X * Math.Cos(rotation - Math.PI));
-                t.Value.position.Y -= (float)(t.Value.offset.X * Math.Sin(rotation - Math.PI));
+                temp.X -= (float)(t.Value.offset.X * Math.Cos(rotation - Math.PI));
+                temp.Y -= (float)(t.Value.offset.X * Math.Sin(rotation - Math.PI));
 
                 //y turret offset
-                t.Value.position.X -= (float)(t.Value.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-                t.Value.position.Y -= (float)(t.Value.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+                temp.X -= (float)(t.Value.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
+                temp.Y -= (float)(t.Value.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+                t.Value.Position = temp;
             }
         }
 
@@ -95,7 +97,7 @@ namespace Game2Test
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(textureDictionary[textureIndexCounter], position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: origin, rotation: rotation);
             textureIndexCounter = "default";
             DrawTurrets(spriteBatch);
         }
@@ -122,8 +124,8 @@ namespace Game2Test
         public Vector2 GetBackOfShip()
         {
             Vector2 position;
-            position.X = this.position.X;
-            position.Y = this.position.Y;
+            position.X = this.Position.X;
+            position.Y = this.Position.Y;
 
             //x turret offset
             position.X += (float)((texture.Width / 2) * Math.Cos(rotation - Math.PI));
@@ -136,24 +138,13 @@ namespace Game2Test
             return position;
         }
         /// <summary>
-        /// moves the ship and then updates
-        /// </summary>
-        /// <param name="x"> move along x-axis by this amount</param>
-        /// <param name="y">move along y-axis by this amount</param>
-        public new void SetPos(float x, float y)
-        {
-            position.X = x;
-            position.X = x;
-            Update();
-        }
-        /// <summary>
         /// same as above but with vector
         /// </summary>
         /// <param name="vector">amount to move ship with</param>
         /// <param name="rotation">adjust turret position for rotation</param>
         public new void SetPos(Vector2 vector)
         {
-            position = vector;
+            Position = vector;
             Update();
         }
         public bool TurretCollision(Rectangle rectangle)

@@ -35,7 +35,7 @@ namespace Game2Test
 
         public void Fire() //fire the default shot
         {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, position, rotation, shots["default"].duration, shots["default"].speed));
+            shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, rotation, shots["default"].duration, shots["default"].speed));
         }
 
         public void UpdateShots()
@@ -45,7 +45,7 @@ namespace Game2Test
                 for (int i = 0; i < t.Value.Count; i++)
                 {
                     t.Value[i].duration--;
-                    var temp = t.Value[i].position;
+                    var temp = t.Value[i].Position;
                     temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * t.Value[i].speed;
                     temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * t.Value[i].speed;
                     t.Value[i].SetPos(temp);
@@ -61,7 +61,7 @@ namespace Game2Test
 
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(texture, Position, origin: origin, rotation: rotation);
             foreach (var t in shotDictionary)
             {
                 foreach (var e in t.Value)
@@ -89,7 +89,7 @@ namespace Game2Test
 
         public float Fire(string name) //fire shot by name
         {
-            shotDictionary[name].Add(new Shot(shots[name].texture, position, rotation, shots[name].duration, shots[name].speed));
+            shotDictionary[name].Add(new Shot(shots[name].texture, Position, rotation, shots[name].duration, shots[name].speed));
 
             return energyCost;
         }

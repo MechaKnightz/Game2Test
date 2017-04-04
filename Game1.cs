@@ -408,7 +408,7 @@ namespace Game2Test
 
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
-                tempPos = currentShip.position;
+                tempPos = currentShip.Position;
                 tempPos.X += (float)System.Math.Cos(currentShip.rotation) * (speed * speedBoostConst);
                 tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * (speed * speedBoostConst);
                 currentShip.SetPos(tempPos);
@@ -416,7 +416,7 @@ namespace Game2Test
             }
             else if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
             {
-                tempPos = currentShip.position;
+                tempPos = currentShip.Position;
                 tempPos.X += (float)(System.Math.Cos(currentShip.rotation)) * speed;
                 tempPos.Y += (float)(System.Math.Sin(currentShip.rotation)) * speed;
                 currentShip.SetPos(tempPos);
@@ -425,7 +425,7 @@ namespace Game2Test
 
             if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
             {
-                tempPos = currentShip.position;
+                tempPos = currentShip.Position;
                 tempPos.X -= (float)(System.Math.Cos(currentShip.rotation)) * (speed / 5);
                 tempPos.Y -= (float)(System.Math.Sin(currentShip.rotation)) * (speed / 5);
                 currentShip.SetPos(tempPos);
@@ -452,7 +452,7 @@ namespace Game2Test
                 currentShip.Update();
             }
 
-            distanceToStation = Vector2.Distance(currentShip.position, stationShip.position);
+            distanceToStation = Vector2.Distance(currentShip.Position, stationShip.Position);
 
             if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
             {
@@ -465,7 +465,7 @@ namespace Game2Test
             }
 
             tempPos4 = camera.Position;
-            tempPos4 = currentShip.position - halfScreen;
+            tempPos4 = currentShip.Position - halfScreen;
             camera.Position = tempPos4;
 
             aimSprite.SetPos(camera.ScreenToWorld(mouseState.Position.ToVector2()));
@@ -476,23 +476,23 @@ namespace Game2Test
                 float tempDistance = 99999999;
                 for(int i = 0; i < asteroids.Count; i++) //TODO fix targetting
                 {
-                    if(Vector2.Distance(asteroids[i].position, t.Value.position) < tempDistance)
+                    if(Vector2.Distance(asteroids[i].Position, t.Value.Position) < tempDistance)
                     {
-                        tempDistance = Vector2.Distance(asteroids[i].position, t.Value.position);
-                        asteroid.position = asteroids[i].position;
+                        tempDistance = Vector2.Distance(asteroids[i].Position, t.Value.Position);
+                        asteroid.Position = asteroids[i].Position;
                         asteroid.rotation = asteroids[i].rotation;
                         asteroid.speed = asteroids[i].speed;
                         asteroid.acceleration = asteroids[i].acceleration;
                         var tempTime = tempDistance / t.Value.shots["default"].speed;
                         for(int j = 0; j < tempTime; j++)
                         {
-                            asteroid.MoveTowardsPosition(currentShip.position);
+                            asteroid.MoveTowardsPosition(currentShip.Position);
                         }
                     }
                 }
                 if (tempDistance < 800)
                 {
-                    var rot = AngleToOther(t.Value.position, asteroid.position);
+                    var rot = AngleToOther(t.Value.Position, asteroid.Position);
                     const float rotConst = 0.03f; //TODO fix the if statements
                     if (t.Value.rotation > rot ) t.Value.rotation -= rotConst;
                     else if(t.Value.rotation < rot ) t.Value.rotation += rotConst;
@@ -504,7 +504,7 @@ namespace Game2Test
 
             foreach (var t in currentShip.turrets)
             {
-                t.Value.rotation = AngleToMouse(t.Value.position);
+                t.Value.rotation = AngleToMouse(t.Value.Position);
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
@@ -532,9 +532,9 @@ namespace Game2Test
 
             foreach (var t in asteroids)
             {
-                if (Vector2.Distance(t.position, currentShip.position) < 1000)
+                if (Vector2.Distance(t.Position, currentShip.Position) < 1000)
                 {
-                    t.MoveTowardsPosition(currentShip.position);
+                    t.MoveTowardsPosition(currentShip.Position);
                 }
             }
             currentShip.UpdateEnergy();
@@ -753,8 +753,8 @@ namespace Game2Test
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
             spriteBatch.DrawString(font, "Lives: " + currentShip.health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
-            xPosString = "Xpos: " + currentShip.position.X.ToString("F0");
-            yPosString = "Ypos: " + currentShip.position.Y.ToString("F0");
+            xPosString = "Xpos: " + currentShip.Position.X.ToString("F0");
+            yPosString = "Ypos: " + currentShip.Position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
             spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
@@ -791,7 +791,7 @@ namespace Game2Test
             currentShip = ships[0];
             currentShip.health = currentShip.healthMax;
             score = defaultScore;
-            currentShip.position = defaultShipPos;
+            currentShip.Position = defaultShipPos;
             currentShip.rotation = 0;
             asteroids.Clear();
             GenerateRocks();
@@ -821,7 +821,7 @@ namespace Game2Test
             }
             for (int i = 0; i < asteroids.Count; i++)
             {
-                if (Vector2.Distance(currentShip.position, asteroids[i].position) < 1100)
+                if (Vector2.Distance(currentShip.Position, asteroids[i].Position) < 1100)
                 {
                     asteroids.RemoveAt(i);
                     i--;
@@ -874,11 +874,11 @@ namespace Game2Test
         public bool IsInView(Sprite sprite)
         {
             // if not within the horizontal bounds of the screen
-            if (sprite.position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.position.X + sprite.texture.Width < camera.Position.X)
+            if (sprite.Position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.Position.X + sprite.texture.Width < camera.Position.X)
                 return false;
 
             // if not within the vertical bounds of the screen
-            if (sprite.position.Y - sprite.texture.Height > camera.Position.Y + camera.GetBoundingRectangle().Height || sprite.position.Y + sprite.texture.Height < camera.Position.Y)
+            if (sprite.Position.Y - sprite.texture.Height > camera.Position.Y + camera.GetBoundingRectangle().Height || sprite.Position.Y + sprite.texture.Height < camera.Position.Y)
                 return false;
 
             // if in view
@@ -886,7 +886,7 @@ namespace Game2Test
         }
         public float AngleToMouse(Vector2 position)
         {
-            return (float)AngleToOther(position, aimSprite.position);
+            return (float)AngleToOther(position, aimSprite.Position);
         }
         public float AngleToOther(Vector2 main, Vector2 other)
         {
@@ -915,13 +915,13 @@ namespace Game2Test
         public void BuyShip(Ship ship)
         {
             var tempRot = currentShip.rotation;
-            var tempPos = stationShip.position;
+            var tempPos = stationShip.Position;
             var tempIndex = currentShip.shipCurrentIndex;
             var tempHealth = currentShip.health;
             var tempEnergy = currentShip.energy;
             currentShip = ship;
             currentShip.shipCurrentIndex = tempIndex;
-            currentShip.position = tempPos;
+            currentShip.Position = tempPos;
             currentShip.rotation = tempRot;
             currentShip.health = tempHealth;
             currentShip.energy = tempEnergy;
@@ -931,13 +931,13 @@ namespace Game2Test
         public void ChangeShip()
         {
             var tempRot = currentShip.rotation;
-            var tempPos = currentShip.position;
+            var tempPos = currentShip.Position;
             var tempIndex = currentShip.shipCurrentIndex;
             var tempHealth = currentShip.health;
             var tempEnergy = currentShip.energy;
             currentShip = ships[currentShip.shipCurrentIndex];
             currentShip.shipCurrentIndex = tempIndex;
-            currentShip.position = tempPos;
+            currentShip.Position = tempPos;
             currentShip.rotation = tempRot;
             currentShip.health = tempHealth;
             currentShip.energy = tempEnergy;

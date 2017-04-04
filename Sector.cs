@@ -13,7 +13,7 @@ namespace Game2Test
     {
         public string Name;
         public Station SectorStation;
-        public List<Texture2D> Background = new List<Texture2D>();
+        public List<Texture2D> Backgrounds = new List<Texture2D>();
 
     }
 }

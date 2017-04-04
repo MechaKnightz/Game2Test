@@ -111,7 +111,6 @@ namespace Game2Test
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            currentSector = new Sector();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new Camera2D(GraphicsDevice);
@@ -249,18 +248,15 @@ namespace Game2Test
 
             ResetGame();
 
+
             //backgrounds larger = front
 
-            layer2.Add(Content.Load<Texture2D>("background2Green"));
-            layer2.Add(Content.Load<Texture2D>("background2Blue"));
 
-            backgrounds.Add(Content.Load<Texture2D>("background1"));
-
-            backgrounds.Add(layer2[rnd.Next(0, layer2.Count)]);
-
-            backgrounds.Add(Content.Load<Texture2D>("background3"));
 
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
+
+            currentSector = new Sector();
+            currentSector.Backgrounds = RandomizeBackground();
 
             //particles
             List<Texture2D> textures = new List<Texture2D>();
@@ -847,7 +843,7 @@ namespace Game2Test
         /// </summary>
         void DrawBackground()
         {
-            for (var layerIndex = 0; layerIndex < backgrounds.Count; layerIndex++)
+            for (var layerIndex = 0; layerIndex < currentSector.Backgrounds.Count; layerIndex++)
             {
                 var parallaxFactor = Vector2.One * (0.25f * layerIndex);
                 viewMatrix = camera.GetViewMatrix(parallaxFactor);
@@ -857,7 +853,7 @@ namespace Game2Test
                 {
                     for (var repeatIndex = -mapSize * 3; repeatIndex <= mapSize * 3; repeatIndex++)
                     {
-                        var texture = backgrounds[layerIndex];
+                        var texture = currentSector.Backgrounds[layerIndex];
                         var position = new Vector2(repeatIndex * texture.Width, repeatIndex2 * texture.Height);
                         spriteBatch.Draw(texture, position, Color.White);
                     }
@@ -942,6 +938,18 @@ namespace Game2Test
             currentShip.energy = tempEnergy;
 
             currentShip.Update();
+        }
+        private List<Texture2D> RandomizeBackground()
+        {
+            layer2.Add(Content.Load<Texture2D>("background2Green"));
+            layer2.Add(Content.Load<Texture2D>("background2Blue"));
+            var randomBackgroundList = new List<Texture2D>();
+            randomBackgroundList.Add(Content.Load<Texture2D>("background1"));
+
+            randomBackgroundList.Add(layer2[rnd.Next(0, layer2.Count)]);
+
+            randomBackgroundList.Add(Content.Load<Texture2D>("background3"));
+            return randomBackgroundList;
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

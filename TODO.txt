@@ -7,10 +7,10 @@ make menu look nicer
 particleengine color
 particles dissapear when ship stops
 add speed to ship class
-space station at (0,0)
 
 DONE:
 
+space station at (0,0)
 fix particle engine
 turrets rotation with ship rotation
 refactored shots to class

@@ -27,10 +27,10 @@ namespace Game2Test
         List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
 
-        Dictionary<string, Turret> turrets0 = new Dictionary<string, Turret>();
-        Dictionary<string, Turret> turrets1 = new Dictionary<string, Turret>();
-        Dictionary<string, Turret> turrets2 = new Dictionary<string, Turret>();
-        Dictionary<string, Turret> turretsStation = new Dictionary<string, Turret>();
+        List<Turret> turrets0 = new  List<Turret>();
+        List<Turret> turrets1 = new List<Turret>();
+        List<Turret> turrets2 = new List<Turret>();
+        List<Turret> turretsStation = new List<Turret>();
 
         Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
@@ -89,6 +89,8 @@ namespace Game2Test
         private Paragraph shipDescription;
         private float distanceToStation;
         private float shopRadius = 200;
+        Sector currentSector;
+        List<Texture2D> layer2 = new List<Texture2D>();
 
         public Game1()
         {
@@ -109,6 +111,7 @@ namespace Game2Test
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+            currentSector = new Sector();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new Camera2D(GraphicsDevice);
@@ -141,23 +144,35 @@ namespace Game2Test
             shot0Dictionary.Add(shot0.name, shot0);
             
 
-            turrets0.Add("primary0", new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary, 150));
-            turrets0.Add("primary1", new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0Dictionary, 150));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary, 150));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0Dictionary, 150));
 
-            turrets1.Add("primary0", new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150));
-            turrets1.Add("primary1", new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150));
 
-            turrets2.Add("primary0", new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150));
+            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150));
 
-            turretsStation.Add("primary0", new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150));
-            turretsStation.Add("primary1", new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150));
 
             //ship0
             ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
             ship0Dictionary.Add("left", Content.Load<Texture2D>("ship0Texture1"));
             ship0Dictionary.Add("right", Content.Load<Texture2D>("ship0Texture2"));
 
-            var ship0 = new Ship(ship0Dictionary, defaultShipPos, turrets0, 10, 1000, 5);
+            var turret0Collection = new Dictionary<string, List<Turret>>();
+            turret0Collection.Add("primary",turrets0);
+
+            var turret1Collection = new Dictionary<string, List<Turret>>();
+            turret1Collection.Add("primary", turrets1);
+
+            var turret2Collection = new Dictionary<string, List<Turret>>();
+            turret2Collection.Add("primary", turrets2);
+
+            var turretStationCollection = new Dictionary<string, List<Turret>>();
+            turretStationCollection.Add("primary", turretsStation);
+
+            var ship0 = new Ship(ship0Dictionary, defaultShipPos, turret0Collection, 10, 1000, 5);
             ship0.cost = 0f;
             ship0.description = "Human ship 1 description";
             ship0.name = "Human ship 1";
@@ -170,7 +185,7 @@ namespace Game2Test
             ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
             ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
 
-            var ship1 = new Ship(ship1Dictionary, defaultShipPos, turrets1, 10, 1000, 5);
+            var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5);
             ship1.cost = 15f;
             ship1.description = "Human ship 2 description";
             ship1.name = "Human ship 2";
@@ -183,7 +198,7 @@ namespace Game2Test
             ship2Dictionary.Add("left", Content.Load<Texture2D>("ship2Texture1"));
             ship2Dictionary.Add("right", Content.Load<Texture2D>("ship2Texture2"));
 
-            var ship2 = new Ship(ship2Dictionary, defaultShipPos, turrets2, 10, 1000, 5);
+            var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5);
             ship2.cost = 10f;
             ship2.description = "Alien ship 1 description";
             ship2.name = "Alien ship 1";
@@ -195,7 +210,7 @@ namespace Game2Test
 
             stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
 
-            stationShip = new Ship(stationDictionary, defaultShipPos, turretsStation, 100, 1000, 15);
+            stationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 1000, 15);
             
             //stationShip end
 
@@ -235,10 +250,15 @@ namespace Game2Test
             ResetGame();
 
             //backgrounds larger = front
-            for (int i = 1; i < 4; i++)
-            {
-                backgrounds.Add(Content.Load<Texture2D>("background" + i));
-            }
+
+            layer2.Add(Content.Load<Texture2D>("background2Green"));
+            layer2.Add(Content.Load<Texture2D>("background2Blue"));
+
+            backgrounds.Add(Content.Load<Texture2D>("background1"));
+
+            backgrounds.Add(layer2[rnd.Next(0, layer2.Count)]);
+
+            backgrounds.Add(Content.Load<Texture2D>("background3"));
 
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
 
@@ -452,39 +472,46 @@ namespace Game2Test
 
             foreach (var t in stationShip.turrets)
             {
-                Asteroid asteroid = new Asteroid();
-                float tempDistance = 99999999;
-                for(int i = 0; i < asteroids.Count; i++) //TODO fix targetting
+                foreach(var tur in t.Value)
                 {
-                    if(Vector2.Distance(asteroids[i].Position, t.Value.Position) < tempDistance)
+                    Asteroid asteroid = new Asteroid();
+                    float tempDistance = 99999999;
+                    for (int i = 0; i < asteroids.Count; i++) //TODO fix targetting
                     {
-                        tempDistance = Vector2.Distance(asteroids[i].Position, t.Value.Position);
-                        asteroid.Position = asteroids[i].Position;
-                        asteroid.rotation = asteroids[i].rotation;
-                        asteroid.speed = asteroids[i].speed;
-                        asteroid.acceleration = asteroids[i].acceleration;
-                        var tempTime = tempDistance / t.Value.shots["default"].speed;
-                        for(int j = 0; j < tempTime; j++)
+                        if (Vector2.Distance(asteroids[i].Position, tur.Position) < tempDistance)
                         {
-                            asteroid.MoveTowardsPosition(currentShip.Position);
+                            tempDistance = Vector2.Distance(asteroids[i].Position, tur.Position);
+                            asteroid.Position = asteroids[i].Position;
+                            asteroid.rotation = asteroids[i].rotation;
+                            asteroid.speed = asteroids[i].speed;
+                            asteroid.acceleration = asteroids[i].acceleration;
+                            var tempTime = tempDistance / tur.shots["default"].speed;
+                            for (int j = 0; j < tempTime; j++)
+                            {
+                                asteroid.MoveTowardsPosition(currentShip.Position);
+                            }
                         }
                     }
-                }
-                if (tempDistance < 800)
-                {
-                    var rot = AngleToOther(t.Value.Position, asteroid.Position);
-                    const float rotConst = 0.03f; //TODO fix the if statements
-                    if (t.Value.rotation > rot ) t.Value.rotation -= rotConst;
-                    else if(t.Value.rotation < rot ) t.Value.rotation += rotConst;
-                    //t.Value.rotation = AngleToOther(t.Value.position, asteroid.position));
-                    float diff = Math.Abs(MathHelper.WrapAngle(rot - t.Value.rotation));
-                    if (diff < 0.2) stationShip.Fire("primary", "default");
+                    if (tempDistance < 800)
+                    {
+                        var rot = AngleToOther(tur.Position, asteroid.Position);
+                        const float rotConst = 0.03f; //TODO fix the if statements
+                        if (tur.rotation > rot) tur.rotation -= rotConst;
+                        else if (tur.rotation < rot) tur.rotation += rotConst;
+                        //t.Value.rotation = AngleToOther(t.Value.position, asteroid.position));
+                        float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.rotation));
+                        if (diff < 0.2) stationShip.Fire("primary", "default");
+                    }
                 }
             }
+            //stationShip.turrets["primary"] = stationShip.ShuffleTurrets(stationShip.turrets["primary"]);
 
             foreach (var t in currentShip.turrets)
             {
-                t.Value.rotation = AngleToMouse(t.Value.Position);
+                foreach(var tur in t.Value)
+                {
+                    tur.rotation = AngleToMouse(tur.Position);
+                }
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
@@ -712,10 +739,8 @@ namespace Game2Test
             stationShip.Draw(spriteBatch);
             currentShip.Draw(spriteBatch);
 
-            foreach (var t in currentShip.turrets)
-            {
-                t.Value.Draw(spriteBatch);
-            }
+            currentShip.DrawTurrets(spriteBatch);
+
             for(int i = 0; i < asteroids.Count; i++)
             {
                 if (IsInView(asteroids[i]))

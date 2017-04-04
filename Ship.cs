@@ -11,7 +11,7 @@ namespace Game2Test
 {
     public class Ship : Sprite
     {
-        public Dictionary<string, Turret> turrets = new Dictionary<string, Turret>();
+        public Dictionary<string, List<Turret>> turrets = new Dictionary<string, List<Turret>>();
         public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
         public string textureIndexCounter = "default";
         public int shipCurrentIndex = 0;
@@ -37,7 +37,7 @@ namespace Game2Test
         /// <param name="healthMax">ship max health</param>
         /// <param name="energyMax">ship max energy</param>
         /// /// <param name="energyRegen">energy regeneration per frame</param>
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, Turret> turrets, float healthMax, float energyMax, float energyRegen) : base(textureDictionary["default"], position)
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen) : base(textureDictionary["default"], position)
         {
             foreach (var t in turrets)
             {
@@ -54,21 +54,6 @@ namespace Game2Test
             this.energyRegen = energyRegen;
         }
 
-        public Ship(List<Texture2D> textures, Vector2 position, Dictionary<string, Turret> turrets, List<string> textureIndex, float healthMax, float energyMax) : base(textures[0], position)
-        {
-            foreach (KeyValuePair<string, Turret> t in turrets)
-            {
-                this.turrets.Add(t.Key, t.Value);
-            }
-            for (var i = 0; i < textures.Count; i++)
-            {
-                textureDictionary.Add(textureIndex[i], textures[i]);
-            }
-            this.healthMax = healthMax;
-            this.health = healthMax;
-            this.energyMax = energyMax;
-            this.energy = energyMax;
-        }
         public new void Update()
         {
             rectangle.X = (int)Position.X;
@@ -76,18 +61,21 @@ namespace Game2Test
             foreach (var t in turrets)
             {
                 //sets the turrets at the position of the ship
-                var temp = t.Value.Position;
-                temp.X = Position.X;
-                temp.Y = Position.Y;
+                foreach(var tur in t.Value)
+                {
+                    var temp = tur.Position;
+                    temp.X = Position.X;
+                    temp.Y = Position.Y;
 
-                //x turret offset
-                temp.X -= (float)(t.Value.offset.X * Math.Cos(rotation - Math.PI));
-                temp.Y -= (float)(t.Value.offset.X * Math.Sin(rotation - Math.PI));
+                    //x turret offset
+                    temp.X -= (float)(tur.offset.X * Math.Cos(rotation - Math.PI));
+                    temp.Y -= (float)(tur.offset.X * Math.Sin(rotation - Math.PI));
 
-                //y turret offset
-                temp.X -= (float)(t.Value.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-                temp.Y -= (float)(t.Value.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
-                t.Value.Position = temp;
+                    //y turret offset
+                    temp.X -= (float)(tur.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+                    tur.Position = temp;
+                }
             }
         }
 
@@ -106,7 +94,10 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                t.Value.Update();
+                foreach(var tur in t.Value)
+                {
+                    tur.Update();
+                }
             }
         }
 
@@ -114,7 +105,10 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                t.Value.Draw(spriteBatch);
+                foreach (var tur in t.Value)
+                {
+                    tur.Draw(spriteBatch);
+                }
             }
         }
         /// <summary>
@@ -151,20 +145,25 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                if (t.Value.ShotCollision(rectangle)) return true;
+                foreach(var tur in t.Value)
+                {
+                    if (tur.ShotCollision(rectangle)) return true;
+                }
             }
             return false;
         }
-        public void FirePrimary()
+        public List<Turret> ShuffleTurrets(List<Turret> turrets)
         {
-            foreach (var t in turrets)
+            var tempTurret = turrets[0];
+            for (int i = 0; i < turrets.Count; i++)
             {
-                for(int i = 0; i < turrets.Count; i++)
-                {
-                    if (t.Key == "primary" + i) t.Value.Fire();
-                }
+                if (i == 0) continue;
+                turrets[i - 1] = turrets[i];
             }
-        }
+            turrets[turrets.Count - 1] = tempTurret;
+            return turrets;
+        } //TODO: make dictionary with list of turrets, each list for each group so that you can shuffle them easier
+
         /// <summary>
         /// 
         /// </summary>
@@ -174,13 +173,17 @@ namespace Game2Test
         {
             foreach (var t in turrets)
             {
-                for (int i = 0; i < turrets.Count; i++)
+                if(t.Key == nameOfGunGroup)
                 {
-                    if (t.Key == nameOfGunGroup + i)
+                    foreach(var tur in t.Value)
                     {
-                        if(energy - t.Value.energyCost < 0) continue;
-                        energy -= t.Value.Fire(nameOfShot);
-                    };
+                        //TODO fix energy cost
+                        if(energy - tur.energyCost > 0)
+                        {
+                            tur.Fire(nameOfShot);
+                            energy -= tur.energyCost;
+                        }
+                    }
                 }
             }
         }

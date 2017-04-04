@@ -54,6 +54,7 @@
     <Compile Include="Sprite.cs" />
     <Compile Include="Station.cs" />
     <Compile Include="Turret.cs" />
+    <Compile Include="Sector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

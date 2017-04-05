@@ -29,7 +29,7 @@ namespace Game2Test
             }
         }
 
-        public new void Update()
+        public void Update()
         {
             UpdateShots();
         }

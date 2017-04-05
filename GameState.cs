@@ -13,5 +13,6 @@ namespace Game2Test
         MainMenu,
         SettingsMenu,
         ShopMenu,
+        PauseMenu,
     }
 }

@@ -9,6 +9,10 @@ using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
+using System.IO.IsolatedStorage;
+using Microsoft.Xna.Framework.Storage;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace Game2Test
 {
@@ -83,7 +87,7 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
-        private Panel mainMenuPanel, shopPanel;
+        private Panel mainMenuPanel, shopPanel, pauseMenuPanel;
         Button mainMenuPlayButton, mainMenuSettingsButton, mainMenuExitButton, warpButton, shopHUDButton;
         List<Button> shopButtons = new List<Button>();
         List<Paragraph> shopDescriptions = new List<Paragraph>();
@@ -93,6 +97,8 @@ namespace Game2Test
         private float shopRadius = 200;
         Sector currentSector;
         List<Texture2D> layer2 = new List<Texture2D>();
+        SaveGameData data;
+        
 
         public Game1()
         {
@@ -287,8 +293,6 @@ namespace Game2Test
         {
             if (!IsActive)
                 return;
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
             UserInterface.Update(gameTime);
 
@@ -311,11 +315,13 @@ namespace Game2Test
                 case GameState.ShopMenu:
                     GameLogic(gameTime);
                     break;
+                case GameState.PauseMenu:
+                    PauseMenuLogic(gameTime);
+                    break;
             }
 
             base.Update(gameTime);
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -340,6 +346,9 @@ namespace Game2Test
                     DrawSettings();
                     break;
                 case GameState.ShopMenu:
+                    DrawGame();
+                    break;
+                case GameState.PauseMenu:
                     DrawGame();
                     break;
             }
@@ -558,6 +567,11 @@ namespace Game2Test
             CollisionTest();
             CollisionTest2();
 
+            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape) && gameState == GameState.MainGame)
+            {
+                ChangeState(GameState.PauseMenu);
+            }
+
             oldState = Keyboard.GetState();
             oldMouseState = Mouse.GetState();
         }
@@ -578,15 +592,18 @@ namespace Game2Test
             switch(gameState)
             {
                 case GameState.MainMenu:
-                    mainMenuPanel.RemoveFromParent();
+                    mainMenuPanel.Visible = false;
                     break;
                 case GameState.ShopMenu:
-                    shopPanel.RemoveFromParent();
+                    shopPanel.Visible = false;
                     shopButtons.Clear();
                     shopDescriptions.Clear();
                     break;
                 case GameState.MainGame:
                     shopHUDButton.Visible = false;
+                    break;
+                case GameState.PauseMenu:
+                    pauseMenuPanel.Visible = false;
                     break;
             }
         }
@@ -729,12 +746,65 @@ namespace Game2Test
 
                     shopPanel.AddChild(tabs);
                     break;
+                case GameState.PauseMenu:
+                    UserInterface.SetCursor(CursorType.Default);
+                    //panel
+                    pauseMenuPanel = new Panel(new Vector2(300, 500));
+                    UserInterface.AddEntity(pauseMenuPanel);
+                    //resumebutton
+                    var resumeButton = new Button("Resume");
+                    resumeButton.OnClick = (Entity btn) =>
+                    {
+                        ChangeState(GameState.MainGame);
+                    };
+                    pauseMenuPanel.AddChild(resumeButton);
+                    //save button
+                    var saveButton = new Button("Save game");
+                    saveButton.OnClick = (Entity btn) =>
+                    {
+                        SaveGame();
+                    };
+                    pauseMenuPanel.AddChild(saveButton);
+                    //load button
+                    var loadButton = new Button("Load game");
+                    loadButton.OnClick = (Entity btn) =>
+                    {
+                        //todo
+                    };
+                    pauseMenuPanel.AddChild(loadButton);
+                    //main menu button
+                    var mainMenuButton = new Button("Main Menu");
+                    mainMenuButton.OnClick = (Entity btn) =>
+                    {
+                        ChangeState(GameState.MainMenu);
+                    };
+                    pauseMenuPanel.AddChild(mainMenuButton);
+                    //exit button
+                    var exitButton = new Button("Exit");
+                    exitButton.OnClick = (Entity btn) =>
+                    {
+                        Exit();
+                    };
+                    pauseMenuPanel.AddChild(exitButton);
+
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(tempGameState), tempGameState, null);
             }
         }
+        private void PauseMenuLogic(GameTime gameTime)
+        {
+            keyState = Keyboard.GetState();
 
-        void EndScreenLogic()
+            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape))
+            {
+                if (gameState == GameState.PauseMenu) ChangeState(GameState.MainGame);
+            }
+
+            oldState = Keyboard.GetState();
+        }
+
+        private void EndScreenLogic()
         {
             keyState = Keyboard.GetState();
 
@@ -1006,6 +1076,26 @@ namespace Game2Test
             sectors.Add(sector);
             return sector;
         }
+        private void SaveGame()
+        {
+            const string filename = "test";
+
+            IsolatedStorageFile container = IsolatedStorageFile.GetUserStoreForDomain();
+            if (container.FileExists(filename))
+            {
+                container.DeleteFile(filename);
+            }
+            IsolatedStorageFileStream isolatedFileStream = null;
+
+
+            container.Dispose();
+        }
+        public static void SaveGame2()
+        {
+            StorageDevice device;
+            string containerName = "MyGamesStorage";
+            string filename = "mysave.sav";
+    }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)
         //{

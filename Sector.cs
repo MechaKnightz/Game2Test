@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game2Test
 {
-    class Sector
+    public class Sector
     {
         public string Name;
         public Station SectorStation;

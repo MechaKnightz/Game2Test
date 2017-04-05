@@ -7,6 +7,8 @@ make menu look nicer
 particleengine color
 particles dissapear when ship stops
 add speed to ship class
+add userinterface state 
+add proper collision
 
 DONE:
 

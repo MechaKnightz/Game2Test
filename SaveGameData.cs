@@ -9,14 +9,14 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace Game2Test
 {
+    [Serializable]
     public struct SaveGameData
     {
-        List<Ship> OwnedShips { get; set; }
-        List<Sector> DiscoveredSectors { get; set; }
-        Ship CurrentShip { get; set; }
-        float Score { get; set; }
-        float Lives { get; set; }
-
-
+        public List<Ship> OwnedShips { get; set; }
+        public List<Sector> DiscoveredSectors { get; set; }
+        public Sector CurrentSector { get; set; }
+        public Ship CurrentShip { get; set; }
+        public float Score { get; set; }
+        public float Lives { get; set; }
     }
 }

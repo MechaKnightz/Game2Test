@@ -40,6 +40,7 @@ namespace Game2Test
         Dictionary<string, Texture2D> stationDictionary = new Dictionary<string, Texture2D>();
 
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
+        Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
         Ship stationShip;
 
         Texture2D stationTexture;
@@ -49,10 +50,10 @@ namespace Game2Test
             
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
-        Texture2D shot0Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
+        Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
             redPixel, greenPixel, turretStationTexture, transparent;
 
-        Shot shot0;
+        Shot shot0, shot1;
         Sprite greenHealth;
         Sprite redHealth;
 
@@ -106,6 +107,7 @@ namespace Game2Test
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             UserInterface.UseRenderTarget = true;
             Paragraph.BaseSize = 1f;
+            UserInterface.GlobalScale = 1f;
 
             base.Initialize();
         }
@@ -140,13 +142,17 @@ namespace Game2Test
             turretStationTexture = Content.Load<Texture2D>("turretStationTexture");
 
             shot0Texture = Content.Load<Texture2D>("shot0");
-            shot0 = new Shot(shot0Texture, 60, "default", 15);
+            shot0 = new Shot(shot0Texture, 60, "default", 15, 2);
             shot0Dictionary = new Dictionary<string, Shot>();
             shot0Dictionary.Add(shot0.name, shot0);
-            
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot0Dictionary, 150));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot0Dictionary, 150));
+            shot1Texture = Content.Load<Texture2D>("shot1");
+            shot1 = new Shot(shot1Texture, 60, "default", 15, 1);
+            shot1Dictionary = new Dictionary<string, Shot>();
+            shot1Dictionary.Add(shot1.name, shot1);
+
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1Dictionary, 150));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1Dictionary, 150));
 
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150));
             turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150));
@@ -211,7 +217,7 @@ namespace Game2Test
 
             stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
 
-            stationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 1000, 15);
+            stationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15);
             
             //stationShip end
 
@@ -359,18 +365,22 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentShip.TurretCollision(currentSector.Asteroids[i].rectangle))
+                    var tempTurret = new Turret();
+                    var tempShot = new Shot();
+                    if (currentShip.TurretCollision(currentSector.Asteroids[i].rectangle, out tempTurret, out tempShot))
                     {
-                        currentSector.Asteroids[i].health--;
+                        currentSector.Asteroids[i].health -= tempShot.Damage;
                         if (currentSector.Asteroids[i].health <= 0)
                         {
                             currentSector.Asteroids.RemoveAt(i);
                             score++;
                         }
                     }
-                    if(stationShip.TurretCollision(currentSector.Asteroids[i].rectangle))
+                    var tempTurret2 = new Turret();
+                    var tempShot2 = new Shot();
+                    if (stationShip.TurretCollision(currentSector.Asteroids[i].rectangle, out tempTurret2, out tempShot2))
                     {
-                        currentSector.Asteroids[i].health--;
+                        currentSector.Asteroids[i].health -= tempShot2.Damage;
                         if (currentSector.Asteroids[i].health <= 0)
                         {
                             currentSector.Asteroids.RemoveAt(i);
@@ -862,21 +872,6 @@ namespace Game2Test
             }
             return asteroids;
         }
-        //void GenerateShotBoost()
-        //{
-        //    for (int repeatIndex2 = -mapSize; repeatIndex2 <= mapSize; repeatIndex2++)
-        //    {
-        //        for (int repeatIndex = -mapSize; repeatIndex <= mapSize; repeatIndex++)
-        //        {
-        //            for (int i = 0; i < rocksPerBackground; i++)
-        //            {
-        //                if (repeatIndex2 == 0 || repeatIndex2 == -1 || repeatIndex == 0 || repeatIndex == -1) break;
-        //                Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
-        //                asteroids.Add(new Sprite(asteroidTextures[rnd.Next(asteroidTextures.Count)], position));
-        //            }
-        //        }
-        //    }
-        //}
         /// <summary>
         /// call when spritebatch has ended
         /// </summary>

@@ -17,6 +17,7 @@ namespace Game2Test
         public Dictionary<string, List<Shot>> shotDictionary = new Dictionary<string, List<Shot>>();
         public Dictionary<string, Shot> shots = new Dictionary<string, Shot>();
         public float energyCost;
+        public Turret() { }
         public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost) : base(texture, position, rotation)
         {
             this.offset = offset;
@@ -31,11 +32,6 @@ namespace Game2Test
         public new void Update()
         {
             UpdateShots();
-        }
-
-        public void Fire() //fire the default shot
-        {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, rotation, shots["default"].duration, shots["default"].speed));
         }
 
         public void UpdateShots()
@@ -71,7 +67,7 @@ namespace Game2Test
             }
         }
 
-        public bool ShotCollision(Rectangle rectangle)
+        public bool ShotCollision(Rectangle rectangle, out Shot tempShot)
         {
             foreach (var t in shotDictionary)
             {
@@ -79,17 +75,25 @@ namespace Game2Test
                 {
                     if (t.Value[i].rectangle.Intersects(rectangle))
                     {
+                        tempShot = t.Value[i];
                         t.Value.RemoveAt(i);
+                        i--;
                         return true;
                     }
                 }
             }
+            tempShot = null;
             return false;
         }
 
+        public void Fire() //fire the default shot
+        {
+            shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, rotation, shots["default"].duration, shots["default"].speed, shots["default"].Damage));
+        }
         public float Fire(string name) //fire shot by name
         {
-            shotDictionary[name].Add(new Shot(shots[name].texture, Position, rotation, shots[name].duration, shots[name].speed));
+            Shot shot = shots.FirstOrDefault(x => x.Value.name == name).Value;
+            shotDictionary[name].Add(new Shot(shot.texture, Position, rotation, shot.duration, shot.speed, shot.Damage));
 
             return energyCost;
         }

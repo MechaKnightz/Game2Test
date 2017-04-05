@@ -141,15 +141,21 @@ namespace Game2Test
             Position = vector;
             Update();
         }
-        public bool TurretCollision(Rectangle rectangle)
+        public bool TurretCollision(Rectangle rectangle, out Turret turret, out Shot tempShot)
         {
             foreach (var t in turrets)
             {
                 foreach(var tur in t.Value)
                 {
-                    if (tur.ShotCollision(rectangle)) return true;
+                    if (tur.ShotCollision(rectangle, out tempShot))
+                    {
+                        turret = tur;
+                        return true;
+                    }
                 }
             }
+            turret = null;
+            tempShot = null;
             return false;
         }
         public List<Turret> ShuffleTurrets(List<Turret> turrets)
@@ -180,7 +186,7 @@ namespace Game2Test
                         //TODO fix energy cost
                         if(energy - tur.energyCost > 0)
                         {
-                            tur.Fire(nameOfShot);
+                            tur.Fire();
                             energy -= tur.energyCost;
                         }
                     }

@@ -11,23 +11,25 @@ namespace Game2Test
         public string name = "default";
         public int duration;
         public float speed;
-        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, string name, float speed) : base(texture, position, rotation)
-        {
-            this.duration = duration;
-        }
+
+        public float Damage;
+
+        public Shot() { }
         public Shot(Texture2D texture, Vector2 position, float rotation, int duration) : base(texture, position, rotation)
         {
             this.duration = duration;
         }
-        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, float speed) : base(texture, position, rotation)
+        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, float speed, float damage) : base(texture, position, rotation)
         {
             this.duration = duration;
             this.speed = speed;
+            Damage = damage;
         }
-        public Shot(Texture2D texture, int duration, string name, int speed) : base(texture)
+        public Shot(Texture2D texture, int duration, string name, int speed, float damage) : base(texture)
         {
             this.duration = duration;
             this.speed = speed;
+            Damage = damage;
         }
 
         public void Update()

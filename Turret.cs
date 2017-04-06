@@ -90,7 +90,7 @@ namespace Game2Test
         {
             shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, rotation, shots["default"].duration, shots["default"].speed, shots["default"].Damage));
         }
-        public float Fire(string name) //fire shot by name
+        public float Fire(string name) //fire shot by Name
         {
             Shot shot = shots.FirstOrDefault(x => x.Value.name == name).Value;
             shotDictionary[name].Add(new Shot(shot.texture, Position, rotation, shot.duration, shot.speed, shot.Damage));

@@ -6,9 +6,12 @@ using System;
 using System.Linq;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace Game2Test
 {
+    [DataContract]
     public class Ship : Sprite
     {
         public Dictionary<string, List<Turret>> turrets = new Dictionary<string, List<Turret>>();
@@ -18,7 +21,8 @@ namespace Game2Test
         public int shipPreviousIndex = 0;
 
         public string description;
-        public string name;
+        [DataMember]
+        public string Name { get; set; }
         public float cost;
 
         public float health;
@@ -31,12 +35,12 @@ namespace Game2Test
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="textureDictionary">all ship textures</param>
-        /// <param name="position">position of the ship</param>
-        /// <param name="turrets">all the turrets on the ship</param>
-        /// <param name="healthMax">ship max health</param>
-        /// <param name="energyMax">ship max energy</param>
-        /// /// <param name="energyRegen">energy regeneration per frame</param>
+        /// <param Name="textureDictionary">all ship textures</param>
+        /// <param Name="position">position of the ship</param>
+        /// <param Name="turrets">all the turrets on the ship</param>
+        /// <param Name="healthMax">ship max health</param>
+        /// <param Name="energyMax">ship max energy</param>
+        /// /// <param Name="energyRegen">energy regeneration per frame</param>
         public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen) : base(textureDictionary["default"], position)
         {
             foreach (var t in turrets)
@@ -134,8 +138,8 @@ namespace Game2Test
         /// <summary>
         /// same as above but with vector
         /// </summary>
-        /// <param name="vector">amount to move ship with</param>
-        /// <param name="rotation">adjust turret position for rotation</param>
+        /// <param Name="vector">amount to move ship with</param>
+        /// <param Name="rotation">adjust turret position for rotation</param>
         public new void SetPos(Vector2 vector)
         {
             Position = vector;
@@ -173,8 +177,8 @@ namespace Game2Test
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="nameOfGunGroup">the turrets' name et.c primary0, primary1 where name is primary</param>
-        /// <param name="nameOfShot">name of the projectile you're firing</param>
+        /// <param Name="nameOfGunGroup">the turrets' Name et.c primary0, primary1 where Name is primary</param>
+        /// <param Name="nameOfShot">Name of the projectile you're firing</param>
         public void Fire(string nameOfGunGroup, string nameOfShot)
         {
             foreach (var t in turrets)

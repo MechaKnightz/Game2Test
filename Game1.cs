@@ -12,7 +12,9 @@ using GeonBit.UI.Entities;
 using System.IO.IsolatedStorage;
 using System.Xml.Serialization;
 using System.IO;
+using System.Reflection;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace Game2Test
 {
@@ -51,6 +53,7 @@ namespace Game2Test
 
         List<Ship> ships = new List<Ship>();
         List<Ship> availableShips = new List<Ship>();
+        List<Ship> ownedShips = new List<Ship>();
             
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
@@ -187,8 +190,9 @@ namespace Game2Test
             var ship0 = new Ship(ship0Dictionary, defaultShipPos, turret0Collection, 10, 1000, 5);
             ship0.cost = 0f;
             ship0.description = "Human ship 1 description";
-            ship0.name = "Human ship 1";
+            ship0.Name = "Human ship 1";
             ships.Add(ship0);
+            ownedShips.Add(ship0);
             availableShips.Add(ship0); //TODO REMOVE
             //ship0 end
 
@@ -200,7 +204,7 @@ namespace Game2Test
             var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5);
             ship1.cost = 15f;
             ship1.description = "Human ship 2 description";
-            ship1.name = "Human ship 2";
+            ship1.Name = "Human ship 2";
             ships.Add(ship1);
             availableShips.Add(ship1);
             //ship1 end
@@ -213,7 +217,7 @@ namespace Game2Test
             var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5);
             ship2.cost = 10f;
             ship2.description = "Alien ship 1 description";
-            ship2.name = "Alien ship 1";
+            ship2.Name = "Alien ship 1";
             ships.Add(ship2);
             availableShips.Add(ship2);
             //ship2 end
@@ -263,7 +267,6 @@ namespace Game2Test
 
 
             //backgrounds larger = front
-
 
 
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
@@ -718,7 +721,7 @@ namespace Game2Test
                         };
                         tab1.panel.AddChild(img);
 
-                        var name = new Paragraph(availableShips[i].name, anchor: Anchor.TopRight);
+                        var name = new Paragraph(availableShips[i].Name, anchor: Anchor.TopRight);
                         name.SetOffset(offset);
                         tab1.panel.AddChild(name);
 
@@ -967,7 +970,7 @@ namespace Game2Test
         /// <summary>
         /// is the parameterrectangle in the screen, if so return true, otherwise false
         /// </summary>
-        /// <param name="sprite"> the sprite you want to check</param>
+        /// <param Name="sprite"> the sprite you want to check</param>
         /// <returns></returns>
         public bool IsInView(Sprite sprite)
         {
@@ -1012,6 +1015,7 @@ namespace Game2Test
 
         public void BuyShip(Ship ship)
         {
+            if(ownedShips.All(x => x.Name != ship.Name)) ownedShips.Add(ship);
             var tempRot = currentShip.rotation;
             var tempPos = currentStationShip.Position;
             var tempIndex = currentShip.shipCurrentIndex;
@@ -1065,7 +1069,7 @@ namespace Game2Test
             string tempString = array[rnd.Next(0, array.Length)].ToString() +
                                 array[rnd.Next(0, array.Length)].ToString() +
                                 array[rnd.Next(0, array.Length)].ToString();
-            //name
+            //Name
             //AAA - 000
             string name = tempString +" - " + rnd.Next(0, 1000).ToString();
             sector.Name = name;
@@ -1078,12 +1082,19 @@ namespace Game2Test
         }
         private void SaveGame()
         {
-            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+            data.score = score;
 
+            data.ownedShips = ownedShips;
+
+            List<Data> _data = new List<Data>();
+            _data.Add(data);
+            string json = JsonConvert.SerializeObject(_data.ToArray(), Formatting.Indented);
+
+            File.WriteAllText("save.json", json);
         }
         public void LoadGame()
         {
-            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+            
 
         }
 

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using MonoGame.Extended;
+using Newtonsoft.Json;
 
 
 namespace Game2Test
@@ -24,8 +25,9 @@ namespace Game2Test
 
         public Vector2 origin;
         public Rectangle rectangle;
-        public Texture2D texture;
         public float rotation;
+        [JsonIgnore]
+        public Texture2D texture;
 
         public Sprite() { }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle, float rotation, Vector2 origin)

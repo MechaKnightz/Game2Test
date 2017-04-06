@@ -1067,8 +1067,8 @@ namespace Game2Test
 
             char[] array = new[] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
             string tempString = array[rnd.Next(0, array.Length)].ToString() +
-                                array[rnd.Next(0, array.Length)].ToString() +
-                                array[rnd.Next(0, array.Length)].ToString();
+                                array[rnd.Next(0, array.Length)] +
+                                array[rnd.Next(0, array.Length)];
             //Name
             //AAA - 000
             string name = tempString +" - " + rnd.Next(0, 1000).ToString();
@@ -1095,7 +1095,6 @@ namespace Game2Test
         public void LoadGame()
         {
             
-
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

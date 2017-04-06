@@ -471,10 +471,10 @@
     <Content Include="Content\GeonBit.UI\themes\lowres\textures\white_texture.png" />
     <Content Include="Content\GeonBit.UI\themes\lowres\ThemeData.xml" />
     <Content Include="Icon.ico" />
-    <Content Include="TODO.txt" />
+    <Content Include="..\TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Include="..\Content\Content.mgcb" />
     <None Include="app.manifest" />
     <None Include="Content\GeonBit.UI\themes\hd\fonts\Bold.spritefont" />
     <None Include="Content\GeonBit.UI\themes\hd\fonts\Italic.spritefont" />
@@ -483,7 +483,7 @@
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Italic.spritefont" />
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Regular.spritefont" />
     <None Include="Content\trench100free.ttf" />
-    <None Include="packages.config" />
+    <None Include="..\packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Game2Test
+﻿namespace Game2Test
 {
     enum GameState
     {
@@ -13,6 +7,6 @@ namespace Game2Test
         MainMenu,
         SettingsMenu,
         ShopMenu,
-        PauseMenu,
+        PauseMenu
     }
 }

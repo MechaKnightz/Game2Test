@@ -27,10 +27,8 @@ namespace Game2Test
         KeyboardState keyState, oldState;
 
         //lists
-        List<Asteroid> currentAsteroids = new List<Asteroid>();
         List<Texture2D> asteroidTextures = new List<Texture2D>();
 
-        List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
 
         List<Turret> turrets0 = new  List<Turret>();
@@ -55,7 +53,7 @@ namespace Game2Test
         List<Ship> availableShips = new List<Ship>();
         List<Ship> ownedShips = new List<Ship>();
             
-        Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
+        Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
         Rectangle speedbarRectangle, speedbarRectangle2;
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
             redPixel, greenPixel, turretStationTexture, transparent;
@@ -65,7 +63,7 @@ namespace Game2Test
         Sprite redHealth;
 
         SpriteFont font;
-        System.Random rnd;
+        Random rnd;
         int score, speed;
         Color[] menuColor = new Color[3];
         int selected = 0;
@@ -302,7 +300,7 @@ namespace Game2Test
             switch (gameState)
             {
                 case GameState.MainGame: //main game
-                    GameLogic(gameTime);
+                    GameLogic();
                     break;
                 case GameState.EndScreen: //gameover
                     EndScreenLogic();
@@ -316,7 +314,7 @@ namespace Game2Test
                     SettingsLogic();
                     break;
                 case GameState.ShopMenu:
-                    GameLogic(gameTime);
+                    GameLogic();
                     break;
                 case GameState.PauseMenu:
                     PauseMenuLogic(gameTime);
@@ -419,7 +417,7 @@ namespace Game2Test
                 }
             }
         }
-        void GameLogic(GameTime gameTime)
+        void GameLogic()
         {
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();

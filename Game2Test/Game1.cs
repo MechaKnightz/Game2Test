@@ -104,7 +104,7 @@ namespace Game2Test
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "..\\Content";
         }
 
         protected override void Initialize()

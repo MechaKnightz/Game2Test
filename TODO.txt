@@ -9,6 +9,7 @@ particles dissapear when ship stops
 add speed to ship class
 add userinterface state 
 add proper collision
+fix intersect out, reference type
 
 DONE:
 

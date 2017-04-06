@@ -10,9 +10,9 @@ using System.Runtime.InteropServices.ComTypes;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using System.IO.IsolatedStorage;
-using Microsoft.Xna.Framework.Storage;
 using System.Xml.Serialization;
 using System.IO;
+using System.Web.Script.Serialization;
 
 namespace Game2Test
 {
@@ -97,7 +97,7 @@ namespace Game2Test
         private float shopRadius = 200;
         Sector currentSector;
         List<Texture2D> layer2 = new List<Texture2D>();
-        SaveGameData data;
+        Data data;
         
 
         public Game1()
@@ -1078,24 +1078,14 @@ namespace Game2Test
         }
         private void SaveGame()
         {
-            const string filename = "test";
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
 
-            IsolatedStorageFile container = IsolatedStorageFile.GetUserStoreForDomain();
-            if (container.FileExists(filename))
-            {
-                container.DeleteFile(filename);
-            }
-            IsolatedStorageFileStream isolatedFileStream = null;
-
-
-            container.Dispose();
         }
-        public static void SaveGame2()
+        public void LoadGame()
         {
-            StorageDevice device;
-            string containerName = "MyGamesStorage";
-            string filename = "mysave.sav";
-    }
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+
+        }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)
         //{

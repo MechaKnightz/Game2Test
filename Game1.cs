@@ -12,9 +12,8 @@ using GeonBit.UI.Entities;
 using System.IO.IsolatedStorage;
 using System.Xml.Serialization;
 using System.IO;
-using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Script.Serialization;
-using Newtonsoft.Json;
 
 namespace Game2Test
 {
@@ -27,8 +26,10 @@ namespace Game2Test
         KeyboardState keyState, oldState;
 
         //lists
+        List<Asteroid> currentAsteroids = new List<Asteroid>();
         List<Texture2D> asteroidTextures = new List<Texture2D>();
 
+        List<Texture2D> backgrounds = new List<Texture2D>();
         List<int> highscores = new List<int>();
 
         List<Turret> turrets0 = new  List<Turret>();
@@ -51,9 +52,8 @@ namespace Game2Test
 
         List<Ship> ships = new List<Ship>();
         List<Ship> availableShips = new List<Ship>();
-        List<Ship> ownedShips = new List<Ship>();
             
-        Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
+        Vector2 defaultShipPos, tempPos, tempPos4, halfScreenPos, halfScreen;
         Rectangle speedbarRectangle, speedbarRectangle2;
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
             redPixel, greenPixel, turretStationTexture, transparent;
@@ -63,7 +63,7 @@ namespace Game2Test
         Sprite redHealth;
 
         SpriteFont font;
-        Random rnd;
+        System.Random rnd;
         int score, speed;
         Color[] menuColor = new Color[3];
         int selected = 0;
@@ -99,12 +99,13 @@ namespace Game2Test
         Sector currentSector;
         List<Texture2D> layer2 = new List<Texture2D>();
         Data data;
+        string savePath = @"SavedGame.txt";
         
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "..\\Content";
+            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
@@ -188,9 +189,8 @@ namespace Game2Test
             var ship0 = new Ship(ship0Dictionary, defaultShipPos, turret0Collection, 10, 1000, 5);
             ship0.cost = 0f;
             ship0.description = "Human ship 1 description";
-            ship0.Name = "Human ship 1";
+            ship0.name = "Human ship 1";
             ships.Add(ship0);
-            ownedShips.Add(ship0);
             availableShips.Add(ship0); //TODO REMOVE
             //ship0 end
 
@@ -202,8 +202,7 @@ namespace Game2Test
             var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5);
             ship1.cost = 15f;
             ship1.description = "Human ship 2 description";
-            ship1.Name = "Human ship 2";
-            ships.Add(ship1);
+            ship1.name = "Human ship 2";
             availableShips.Add(ship1);
             //ship1 end
 
@@ -215,8 +214,7 @@ namespace Game2Test
             var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5);
             ship2.cost = 10f;
             ship2.description = "Alien ship 1 description";
-            ship2.Name = "Alien ship 1";
-            ships.Add(ship2);
+            ship2.name = "Alien ship 1";
             availableShips.Add(ship2);
             //ship2 end
 
@@ -267,6 +265,7 @@ namespace Game2Test
             //backgrounds larger = front
 
 
+
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
 
             currentSector = GenerateSector();
@@ -300,7 +299,7 @@ namespace Game2Test
             switch (gameState)
             {
                 case GameState.MainGame: //main game
-                    GameLogic();
+                    GameLogic(gameTime);
                     break;
                 case GameState.EndScreen: //gameover
                     EndScreenLogic();
@@ -314,7 +313,7 @@ namespace Game2Test
                     SettingsLogic();
                     break;
                 case GameState.ShopMenu:
-                    GameLogic();
+                    GameLogic(gameTime);
                     break;
                 case GameState.PauseMenu:
                     PauseMenuLogic(gameTime);
@@ -368,7 +367,7 @@ namespace Game2Test
             base.Draw(gameTime);
         }
 
-        void CollisionTest() //kollar om shots intersects med asteroids
+        void CollisionTest() //kollar om shots wts med asteroids
         {
             for(int i = 0; i < currentSector.Asteroids.Count; i++)
             {
@@ -417,7 +416,7 @@ namespace Game2Test
                 }
             }
         }
-        void GameLogic()
+        void GameLogic(GameTime gameTime)
         {
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();
@@ -719,7 +718,7 @@ namespace Game2Test
                         };
                         tab1.panel.AddChild(img);
 
-                        var name = new Paragraph(availableShips[i].Name, anchor: Anchor.TopRight);
+                        var name = new Paragraph(availableShips[i].name, anchor: Anchor.TopRight);
                         name.SetOffset(offset);
                         tab1.panel.AddChild(name);
 
@@ -968,7 +967,7 @@ namespace Game2Test
         /// <summary>
         /// is the parameterrectangle in the screen, if so return true, otherwise false
         /// </summary>
-        /// <param Name="sprite"> the sprite you want to check</param>
+        /// <param name="sprite"> the sprite you want to check</param>
         /// <returns></returns>
         public bool IsInView(Sprite sprite)
         {
@@ -1013,7 +1012,7 @@ namespace Game2Test
 
         public void BuyShip(Ship ship)
         {
-            if(ownedShips.All(x => x.Name != ship.Name)) ownedShips.Add(ship);
+            ships.Add(ship);
             var tempRot = currentShip.rotation;
             var tempPos = currentStationShip.Position;
             var tempIndex = currentShip.shipCurrentIndex;
@@ -1065,9 +1064,9 @@ namespace Game2Test
 
             char[] array = new[] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
             string tempString = array[rnd.Next(0, array.Length)].ToString() +
-                                array[rnd.Next(0, array.Length)] +
-                                array[rnd.Next(0, array.Length)];
-            //Name
+                                array[rnd.Next(0, array.Length)].ToString() +
+                                array[rnd.Next(0, array.Length)].ToString();
+            //name
             //AAA - 000
             string name = tempString +" - " + rnd.Next(0, 1000).ToString();
             sector.Name = name;
@@ -1080,24 +1079,25 @@ namespace Game2Test
         }
         private void SaveGame()
         {
-            data.score = score;
+            //data.OwnedShips = ships;
+            //data.DiscoveredSectors = sectors;
+            //data.CurrentSector = currentSector;
+            //data.CurrentShip = currentShip;
+            data.Score = score;
 
-            List<Data> _data = new List<Data>();
-            _data.Add(data);
-            string json = JsonConvert.SerializeObject(_data.ToArray(), Formatting.Indented);
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
 
-            File.WriteAllText("save.json", json);
+            string testData = javaScriptSerializer.Serialize(data);
+
+            File.WriteAllText(Environment.CurrentDirectory + @"\save.json", testData);
         }
         public void LoadGame()
         {
-            var text = File.ReadAllText("save.json");
+            var testData = File.ReadAllText(Environment.CurrentDirectory + @"\save.json");
 
-            List<Data> _data = new List<Data>();
-            _data = (JsonConvert.DeserializeObject<List<Data>>(text));
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
 
-            data = _data[0];
-
-            score = data.score;
+            data = javaScriptSerializer.Deserialize<Data>(testData);
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

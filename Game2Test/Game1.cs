@@ -1063,14 +1063,19 @@ namespace Game2Test
             //background
             sector.Backgrounds = RandomizeBackground();
 
-            char[] array = new[] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-            string tempString = array[rnd.Next(0, array.Length)].ToString() +
-                                array[rnd.Next(0, array.Length)] +
-                                array[rnd.Next(0, array.Length)];
-            //Name
-            //AAA - 000
-            string name = tempString +" - " + rnd.Next(0, 1000).ToString();
-            sector.Name = name;
+            while(true)
+            {
+                char[] array = new[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+                string tempString = array[rnd.Next(0, array.Length)].ToString() +
+                                    array[rnd.Next(0, array.Length)] +
+                                    array[rnd.Next(0, array.Length)];
+                //Name
+                //AAA - 000
+                string name = tempString + " - " + rnd.Next(0, 1000).ToString();
+                if (sectors.Any(x => x.Name == name)) continue;
+                sector.Name = name;
+                break;
+            }
 
             //asteroids
             sector.Asteroids = GenerateAsteroids();
@@ -1080,7 +1085,14 @@ namespace Game2Test
         }
         private void SaveGame()
         {
-            data.score = score;
+            data.Score = score;
+            data.Health = currentShip.health;
+
+            data.DiscoveredSectors = sectors;
+            data.OwnedShips = ownedShips;
+
+            data.CurrentSectorName = currentSector.Name;
+            data.CurrentShipName = currentShip.Name;
 
             List<Data> _data = new List<Data>();
             _data.Add(data);
@@ -1097,7 +1109,8 @@ namespace Game2Test
 
             data = _data[0];
 
-            score = data.score;
+            score = data.Score;
+            currentShip.health = data.Health;
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

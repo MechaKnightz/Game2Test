@@ -11,17 +11,16 @@ using System.Runtime.Serialization;
 
 namespace Game2Test
 {
-    [DataContract]
     public class Ship : Sprite
     {
         public Dictionary<string, List<Turret>> turrets = new Dictionary<string, List<Turret>>();
+        [JsonIgnore]
         public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
         public string textureIndexCounter = "default";
         public int shipCurrentIndex = 0;
         public int shipPreviousIndex = 0;
 
         public string description;
-        [DataMember]
         public string Name { get; set; }
         public float cost;
 

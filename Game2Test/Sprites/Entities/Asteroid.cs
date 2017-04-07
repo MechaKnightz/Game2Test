@@ -12,7 +12,6 @@ namespace Game2Test
     {
         public float speed;
         public float acceleration = 1.1f;
-
         public float health;
         public float healthMax;
         public Bar bar;

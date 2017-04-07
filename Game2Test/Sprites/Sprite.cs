@@ -26,6 +26,7 @@ namespace Game2Test
         public Vector2 origin;
         public Rectangle rectangle;
         public float rotation;
+        public string TextureName { get; set; }
         [JsonIgnore]
         public Texture2D texture;
 
@@ -39,6 +40,7 @@ namespace Game2Test
             this.rectangle = rectangle;
             this.origin = origin;
             this.rotation = rotation;
+            TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle)
         {
@@ -49,6 +51,7 @@ namespace Game2Test
             this.texture = texture;
             this.rotation = 0f;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, Vector2 position)
         {
@@ -59,6 +62,7 @@ namespace Game2Test
             this._position = position;
             this.texture = texture;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, Vector2 position, float rotation)
         {
@@ -70,6 +74,7 @@ namespace Game2Test
             this.texture = texture;
             this.rotation = rotation;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, float rotation)
         {
@@ -80,11 +85,13 @@ namespace Game2Test
             this.texture = texture;
             this.rotation = rotation;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            TextureName = texture.Name;
         }
 
         public Sprite(Texture2D texture)
         {
             this.texture = texture;
+            TextureName = texture.Name;
         }
         public void SetPos(float x, float y)
         {

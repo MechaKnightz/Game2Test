@@ -251,7 +251,7 @@ namespace Game2Test
             viewXPos = new Vector2(0, 10);
             viewYPos = new Vector2(0, 40);
 
-            clearColor = Color.FromNonPremultiplied(22, 68, 39, 252);
+            clearColor = Color.FromNonPremultiplied(37, 40, 41, 255);
             viewMatrix = camera.GetViewMatrix();
 
             //rock textures
@@ -620,13 +620,19 @@ namespace Game2Test
                     mainMenuPanel = new Panel(new Vector2(300, 500));
                     UserInterface.AddEntity(mainMenuPanel);
                     mainMenuPlayButton = new Button("Play");
+                    var mainMenuControlsButton = new Button("Controls");
+
                     mainMenuSettingsButton = new Button("Settings");
                     mainMenuExitButton = new Button("Quit");
 
                     mainMenuPanel.AddChild(mainMenuPlayButton);
+                    mainMenuPanel.AddChild(mainMenuControlsButton);
                     mainMenuPanel.AddChild(mainMenuSettingsButton);
                     mainMenuPanel.AddChild(mainMenuExitButton);
 
+                    mainMenuControlsButton.OnClick = (Entity btn) => {
+                        ChangeState(GameState.ControlsMenu);
+                    };
                     mainMenuPlayButton.OnClick = (Entity btn) => {
                         ResetGame();
                         ChangeState(GameState.MainGame);

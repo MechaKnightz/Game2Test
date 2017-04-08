@@ -7,6 +7,7 @@
         MainMenu,
         SettingsMenu,
         ShopMenu,
-        PauseMenu
+        PauseMenu,
+        ControlsMenu
     }
 }

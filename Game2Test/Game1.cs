@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Reflection;
 using System.Web.Script.Serialization;
+using Game2Test.Input;
 using Newtonsoft.Json;
 
 namespace Game2Test
@@ -185,7 +186,7 @@ namespace Game2Test
             var turretStationCollection = new Dictionary<string, List<Turret>>();
             turretStationCollection.Add("primary", turretsStation);
 
-            var ship0 = new Ship(ship0Dictionary, defaultShipPos, turret0Collection, 10, 1000, 5);
+            var ship0 = new Ship(ship0Dictionary, defaultShipPos, turret0Collection, 10, 1000, 5, 0.05f);
             ship0.cost = 0f;
             ship0.description = "Human ship 1 description";
             ship0.Name = "Human ship 1";
@@ -199,7 +200,7 @@ namespace Game2Test
             ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
             ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
 
-            var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5);
+            var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5, 0.05f);
             ship1.cost = 15f;
             ship1.description = "Human ship 2 description";
             ship1.Name = "Human ship 2";
@@ -212,7 +213,7 @@ namespace Game2Test
             ship2Dictionary.Add("left", Content.Load<Texture2D>("ship2Texture1"));
             ship2Dictionary.Add("right", Content.Load<Texture2D>("ship2Texture2"));
 
-            var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5);
+            var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5, 0.05f);
             ship2.cost = 10f;
             ship2.description = "Alien ship 1 description";
             ship2.Name = "Alien ship 1";
@@ -224,7 +225,7 @@ namespace Game2Test
 
             stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
 
-            currentStationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15);
+            currentStationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f);
             
             //stationShip end
 
@@ -300,7 +301,7 @@ namespace Game2Test
             switch (gameState)
             {
                 case GameState.MainGame: //main game
-                    GameLogic();
+                    GameLogic(gameTime);
                     break;
                 case GameState.EndScreen: //gameover
                     EndScreenLogic();
@@ -314,7 +315,7 @@ namespace Game2Test
                     SettingsLogic();
                     break;
                 case GameState.ShopMenu:
-                    GameLogic();
+                    GameLogic(gameTime);
                     break;
                 case GameState.PauseMenu:
                     PauseMenuLogic(gameTime);
@@ -358,11 +359,11 @@ namespace Game2Test
 
             UserInterface.DrawMainRenderTarget(spriteBatch);
 
-            if (moving) movingDelayCounter = 5;
+            if (currentShip.Moving) movingDelayCounter = 5;
             else movingDelayCounter--;
             if (movingDelayCounter <= 0) drawParticles = false;
             else drawParticles = true;
-            moving = false;
+            currentShip.Moving = false;
 
             oldState = Keyboard.GetState();
             base.Draw(gameTime);
@@ -417,10 +418,14 @@ namespace Game2Test
                 }
             }
         }
-        void GameLogic()
+        void GameLogic(GameTime gameTime)
         {
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();
+
+            KeyboardInput.Update(gameTime);
+
+            distanceToStation = Vector2.Distance(currentShip.Position, currentStationShip.Position);
 
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
@@ -428,56 +433,45 @@ namespace Game2Test
                 tempPos.X += (float)System.Math.Cos(currentShip.rotation) * (speed * speedBoostConst);
                 tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * (speed * speedBoostConst);
                 currentShip.SetPos(tempPos);
-                moving = true;
+                currentShip.Moving = true;
             }
-            else if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
+            else if (KeyboardInput.TwoKeysDown(Keys.Up, Keys.W))
             {
                 tempPos = currentShip.Position;
                 tempPos.X += (float)(System.Math.Cos(currentShip.rotation)) * speed;
                 tempPos.Y += (float)(System.Math.Sin(currentShip.rotation)) * speed;
                 currentShip.SetPos(tempPos);
-                moving = true;
+                currentShip.Moving = true;
             }
 
-            if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
+            if (KeyboardInput.TwoKeysDown(Keys.Down, Keys.S))
             {
                 tempPos = currentShip.Position;
                 tempPos.X -= (float)(System.Math.Cos(currentShip.rotation)) * (speed / 5);
                 tempPos.Y -= (float)(System.Math.Sin(currentShip.rotation)) * (speed / 5);
                 currentShip.SetPos(tempPos);
-                moving = true;
+                currentShip.Moving = true;
             }
 
             if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
             {
-                currentShip.rotation -= 0.05f;
-                if(currentShip.textureDictionary.ContainsKey("left"))
-                {
-                    currentShip.textureIndexCounter = "left";
-                }
-                currentShip.Update();
-
+                currentShip.Turn(Direction.Left);
             }
             else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
             {
-                currentShip.rotation += 0.05f;
-                if (currentShip.textureDictionary.ContainsKey("right"))
-                {
-                    currentShip.textureIndexCounter = "right";
-                }
-                currentShip.Update();
+                currentShip.Turn(Direction.Right);
             }
 
-            distanceToStation = Vector2.Distance(currentShip.Position, currentStationShip.Position);
-
-            if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R))
-            {
-                currentShip.SetPos(defaultShipPos);
-            }
-            if (keyState.IsKeyDown(Keys.G) && !oldState.IsKeyDown(Keys.G) && distanceToStation < shopRadius)
+            if(gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) gameState = GameState.MainGame;
+            if (KeyboardInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
                 if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
                 else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
+            }
+
+            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape) && gameState == GameState.MainGame)
+            {
+                ChangeState(GameState.PauseMenu);
             }
 
             tempPos4 = camera.Position;
@@ -554,6 +548,7 @@ namespace Game2Test
                     t.MoveTowardsPosition(currentShip.Position);
                 }
             }
+
             currentShip.UpdateEnergy();
             currentStationShip.UpdateEnergy();
 
@@ -567,11 +562,6 @@ namespace Game2Test
 
             CollisionTest();
             CollisionTest2();
-
-            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape) && gameState == GameState.MainGame)
-            {
-                ChangeState(GameState.PauseMenu);
-            }
 
             oldState = Keyboard.GetState();
             oldMouseState = Mouse.GetState();

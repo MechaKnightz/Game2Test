@@ -24,6 +24,9 @@ namespace Game2Test
         public string Name { get; set; }
         public float cost;
 
+        public float TurnRate { get; set; }
+        public bool Moving { get; set; }
+
         public float health;
         public float healthMax;
 
@@ -40,7 +43,7 @@ namespace Game2Test
         /// <param Name="healthMax">ship max health</param>
         /// <param Name="energyMax">ship max energy</param>
         /// /// <param Name="energyRegen">energy regeneration per frame</param>
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen) : base(textureDictionary["default"], position)
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary["default"], position)
         {
             foreach (var t in turrets)
             {
@@ -55,6 +58,7 @@ namespace Game2Test
             this.energyMax = energyMax;
             this.energy = energyMax;
             this.energyRegen = energyRegen;
+            TurnRate = turnRate;
         }
 
         public new void Update()
@@ -77,6 +81,7 @@ namespace Game2Test
                     //y turret offset
                     temp.X -= (float)(tur.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
                     temp.Y -= (float)(tur.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+
                     tur.Position = temp;
                 }
             }
@@ -195,6 +200,30 @@ namespace Game2Test
                     }
                 }
             }
+        }
+
+        public void Turn(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+                    rotation -= 0.05f;
+                    if (textureDictionary.ContainsKey("left"))
+                    {
+                        textureIndexCounter = "left";
+                    }
+                    break;
+                case Direction.Right:
+                    rotation += 0.05f;
+                    if (textureDictionary.ContainsKey("right"))
+                    {
+                        textureIndexCounter = "right";
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+            Update();
         }
     }
 }

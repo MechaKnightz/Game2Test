@@ -21,7 +21,8 @@ namespace Game2Test.Input
 
         public static bool IsKeyClicked(Keys key)
         {
-            return _keyState.IsKeyDown(key) && !_oldKeyState.IsKeyDown(key);
+            if (_keyState.IsKeyDown(key) && !_oldKeyState.IsKeyDown(key)) return true;
+            return false;
         }
 
         public static bool TwoKeysDown(Keys key1, Keys key2)

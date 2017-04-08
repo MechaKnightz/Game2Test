@@ -63,8 +63,6 @@ namespace Game2Test
 
         public void Update()
         {
-            rectangle.X = (int)Position.X;
-            rectangle.Y = (int)Position.Y;
             foreach (var t in turrets)
             {
                 //sets the turrets at the position of the ship

@@ -296,6 +296,7 @@ namespace Game2Test
             if (!IsActive)
                 return;
 
+            KeyboardInput.Update(gameTime);
             UserInterface.Update(gameTime);
 
             switch (gameState)
@@ -423,10 +424,13 @@ namespace Game2Test
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();
 
-            KeyboardInput.Update(gameTime);
-
             distanceToStation = Vector2.Distance(currentShip.Position, currentStationShip.Position);
 
+
+            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape) && gameState == GameState.MainGame)
+            {
+                ChangeState(GameState.PauseMenu);
+            }
             if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
             {
                 tempPos = currentShip.Position;
@@ -462,16 +466,11 @@ namespace Game2Test
                 currentShip.Turn(Direction.Right);
             }
 
-            if(gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) gameState = GameState.MainGame;
+            if(gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
             if (KeyboardInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
                 if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
                 else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
-            }
-
-            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape) && gameState == GameState.MainGame)
-            {
-                ChangeState(GameState.PauseMenu);
             }
 
             tempPos4 = camera.Position;
@@ -536,7 +535,7 @@ namespace Game2Test
             {
                 shopHUDButton.Disabled = true;
             }
-            if (distanceToStation > shopRadius && gameState != GameState.MainGame)
+            if (distanceToStation > shopRadius && gameState == GameState.ShopMenu)
             {
                 ChangeState(GameState.MainGame);
             }
@@ -787,7 +786,7 @@ namespace Game2Test
         {
             keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape))
+            if (KeyboardInput.IsKeyClicked(Keys.Escape))
             {
                 if (gameState == GameState.PauseMenu) ChangeState(GameState.MainGame);
             }
@@ -866,7 +865,7 @@ namespace Game2Test
             spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y*2 - shieldIconTexture.Height)));
             spriteBatch.DrawString(font, currentShip.energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
 
-            if(gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
+            if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
 
         }
         void DrawMenu()

@@ -100,6 +100,7 @@ namespace Game2Test
         Sector currentSector;
         List<Texture2D> layer2 = new List<Texture2D>();
         Data data;
+        private const float _doublePI = (float)Math.PI*2;
         
 
         public Game1()
@@ -457,11 +458,11 @@ namespace Game2Test
                 currentShip.Moving = true;
             }
 
-            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
+            if (KeyboardInput.TwoKeysDown(Keys.Left, Keys.A))
             {
                 currentShip.Turn(Direction.Left);
             }
-            else if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
+            else if (KeyboardInput.TwoKeysDown(Keys.Right, Keys.D))
             {
                 currentShip.Turn(Direction.Right);
             }
@@ -469,8 +470,15 @@ namespace Game2Test
             if(gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
             if (KeyboardInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
-                if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
-                else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
+                switch (gameState)
+                {
+                    case GameState.MainGame:
+                        ChangeState(GameState.ShopMenu);
+                        break;
+                    case GameState.ShopMenu:
+                        ChangeState(GameState.MainGame);
+                        break;
+                }
             }
 
             tempPos4 = camera.Position;
@@ -551,8 +559,8 @@ namespace Game2Test
             currentShip.UpdateEnergy();
             currentStationShip.UpdateEnergy();
 
-            if (currentShip.rotation > (float)Math.PI * 2f) currentShip.rotation -= (float)Math.PI * 2f;
-            else if(currentShip.rotation < (float)-Math.PI * 2f) currentShip.rotation += (float)Math.PI * 2f;
+            if (currentShip.rotation > _doublePI) currentShip.rotation -= _doublePI;
+            else if(currentShip.rotation < -_doublePI) currentShip.rotation += _doublePI;
             currentShip.UpdateTurrets();
             currentStationShip.UpdateTurrets();
 

@@ -16,7 +16,7 @@ namespace Game2Test
         public Dictionary<string, List<Turret>> turrets = new Dictionary<string, List<Turret>>();
         [JsonIgnore]
         public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
-        public string textureIndexCounter = "default";
+        public string textureIndexCounter = "Default";
         public int shipCurrentIndex = 0;
         public int shipPreviousIndex = 0;
 
@@ -43,7 +43,7 @@ namespace Game2Test
         /// <param Name="healthMax">ship max health</param>
         /// <param Name="energyMax">ship max energy</param>
         /// /// <param Name="energyRegen">energy regeneration per frame</param>
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary["default"], position)
+        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary["Default"], position)
         {
             foreach (var t in turrets)
             {
@@ -61,7 +61,7 @@ namespace Game2Test
             TurnRate = turnRate;
         }
 
-        public new void Update()
+        public void Update()
         {
             rectangle.X = (int)Position.X;
             rectangle.Y = (int)Position.Y;
@@ -94,7 +94,7 @@ namespace Game2Test
         public new void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: origin, rotation: rotation);
-            textureIndexCounter = "default";
+            textureIndexCounter = "Default";
             DrawTurrets(spriteBatch);
         }
 
@@ -207,17 +207,17 @@ namespace Game2Test
             switch (direction)
             {
                 case Direction.Left:
-                    rotation -= 0.05f;
-                    if (textureDictionary.ContainsKey("left"))
+                    rotation -= TurnRate;
+                    if (textureDictionary.ContainsKey(direction.ToString()))
                     {
-                        textureIndexCounter = "left";
+                        textureIndexCounter = direction.ToString();
                     }
                     break;
                 case Direction.Right:
-                    rotation += 0.05f;
-                    if (textureDictionary.ContainsKey("right"))
+                    rotation += TurnRate;
+                    if (textureDictionary.ContainsKey(direction.ToString()))
                     {
-                        textureIndexCounter = "right";
+                        textureIndexCounter = direction.ToString();
                     }
                     break;
                 default:

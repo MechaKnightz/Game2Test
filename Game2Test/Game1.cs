@@ -170,9 +170,9 @@ namespace Game2Test
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150));
 
             //ship0
-            ship0Dictionary.Add("default", Content.Load<Texture2D>("ship0Texture0"));
-            ship0Dictionary.Add("left", Content.Load<Texture2D>("ship0Texture1"));
-            ship0Dictionary.Add("right", Content.Load<Texture2D>("ship0Texture2"));
+            ship0Dictionary.Add("Default", Content.Load<Texture2D>("ship0Texture0"));
+            ship0Dictionary.Add("Left", Content.Load<Texture2D>("ship0Texture1"));
+            ship0Dictionary.Add("Right", Content.Load<Texture2D>("ship0Texture2"));
 
             var turret0Collection = new Dictionary<string, List<Turret>>();
             turret0Collection.Add("primary",turrets0);
@@ -196,9 +196,9 @@ namespace Game2Test
             //ship0 end
 
             //ship1
-            ship1Dictionary.Add("default", Content.Load<Texture2D>("ship1Texture0"));
-            ship1Dictionary.Add("left", Content.Load<Texture2D>("ship1Texture1"));
-            ship1Dictionary.Add("right", Content.Load<Texture2D>("ship1Texture2"));
+            ship1Dictionary.Add("Default", Content.Load<Texture2D>("ship1Texture0"));
+            ship1Dictionary.Add("Left", Content.Load<Texture2D>("ship1Texture1"));
+            ship1Dictionary.Add("Right", Content.Load<Texture2D>("ship1Texture2"));
 
             var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5, 0.05f);
             ship1.cost = 15f;
@@ -209,9 +209,9 @@ namespace Game2Test
             //ship1 end
 
             //ship2
-            ship2Dictionary.Add("default", Content.Load<Texture2D>("ship2Texture0"));
-            ship2Dictionary.Add("left", Content.Load<Texture2D>("ship2Texture1"));
-            ship2Dictionary.Add("right", Content.Load<Texture2D>("ship2Texture2"));
+            ship2Dictionary.Add("Default", Content.Load<Texture2D>("ship2Texture0"));
+            ship2Dictionary.Add("Left", Content.Load<Texture2D>("ship2Texture1"));
+            ship2Dictionary.Add("Right", Content.Load<Texture2D>("ship2Texture2"));
 
             var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5, 0.05f);
             ship2.cost = 10f;
@@ -223,7 +223,7 @@ namespace Game2Test
 
             //stationShip
 
-            stationDictionary.Add("default", Content.Load<Texture2D>("stationTexture"));
+            stationDictionary.Add("Default", Content.Load<Texture2D>("stationTexture"));
 
             currentStationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f);
             

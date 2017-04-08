@@ -107,6 +107,12 @@ namespace Game2Test
             }
         }
 
+        public new void SetPosition(Vector2 position)
+        {
+            Position = position;
+            Update();
+        }
+
         public void DrawTurrets(SpriteBatch spriteBatch)
         {
             foreach (var t in turrets)
@@ -142,11 +148,6 @@ namespace Game2Test
         /// </summary>
         /// <param Name="vector">amount to move ship with</param>
         /// <param Name="rotation">adjust turret position for rotation</param>
-        public new void SetPos(Vector2 vector)
-        {
-            Position = vector;
-            Update();
-        }
         public bool TurretCollision(Rectangle rectangle, out Turret turret, out Shot tempShot)
         {
             foreach (var t in turrets)

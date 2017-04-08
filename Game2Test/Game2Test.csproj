@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Direction.cs" />
-    <Compile Include="Input\KeyboardInput.cs" />
+    <Compile Include="Input\KeyInput.cs" />
     <Compile Include="Sprites\Entities\Asteroid.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Game1.cs" />

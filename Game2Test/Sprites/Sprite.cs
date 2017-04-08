@@ -93,18 +93,6 @@ namespace Game2Test
             this.texture = texture;
             TextureName = texture.Name;
         }
-        public void SetPos(float x, float y)
-        {
-            rectangle.X = (int)_position.X;
-            rectangle.Y = (int)_position.Y;
-        }
-        public void SetPos(Vector2 pos)
-        {
-            _position.X = pos.X;
-            _position.Y = pos.Y;
-            rectangle.X = (int)pos.X;
-            rectangle.Y = (int)pos.Y;
-        }
         public void SetPos(float pos, int var)
         {
             if(var == 0)

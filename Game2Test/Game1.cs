@@ -297,7 +297,7 @@ namespace Game2Test
             if (!IsActive)
                 return;
 
-            KeyboardInput.Update(gameTime);
+            KeyInput.Update(gameTime);
             UserInterface.Update(gameTime);
 
             switch (gameState)
@@ -428,47 +428,47 @@ namespace Game2Test
             distanceToStation = Vector2.Distance(currentShip.Position, currentStationShip.Position);
 
 
-            if (keyState.IsKeyDown(Keys.Escape) && !oldState.IsKeyDown(Keys.Escape) && gameState == GameState.MainGame)
+            if (KeyInput.IsKeyClicked(Keys.Escape) && gameState == GameState.MainGame)
             {
                 ChangeState(GameState.PauseMenu);
             }
-            if ((keyState.IsKeyDown(Keys.Up) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))) || (keyState.IsKeyDown(Keys.W) && (keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))))
+            if (KeyInput.BothKeysDown(Keys.Up, Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift) || KeyInput.BothKeysDown(Keys.W, Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
             {
                 tempPos = currentShip.Position;
                 tempPos.X += (float)System.Math.Cos(currentShip.rotation) * (speed * speedBoostConst);
                 tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * (speed * speedBoostConst);
-                currentShip.SetPos(tempPos);
+                currentShip.SetPosition(tempPos);
                 currentShip.Moving = true;
             }
-            else if (KeyboardInput.TwoKeysDown(Keys.Up, Keys.W))
+            else if (KeyInput.TwoKeysDown(Keys.Up, Keys.W))
             {
                 tempPos = currentShip.Position;
-                tempPos.X += (float)(System.Math.Cos(currentShip.rotation)) * speed;
-                tempPos.Y += (float)(System.Math.Sin(currentShip.rotation)) * speed;
-                currentShip.SetPos(tempPos);
+                tempPos.X += (float)System.Math.Cos(currentShip.rotation) * speed;
+                tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * speed;
+                currentShip.SetPosition(tempPos);
                 currentShip.Moving = true;
             }
 
-            if (KeyboardInput.TwoKeysDown(Keys.Down, Keys.S))
+            if (KeyInput.TwoKeysDown(Keys.Down, Keys.S))
             {
                 tempPos = currentShip.Position;
                 tempPos.X -= (float)(System.Math.Cos(currentShip.rotation)) * (speed / 5);
                 tempPos.Y -= (float)(System.Math.Sin(currentShip.rotation)) * (speed / 5);
-                currentShip.SetPos(tempPos);
+                currentShip.SetPosition(tempPos);
                 currentShip.Moving = true;
             }
 
-            if (KeyboardInput.TwoKeysDown(Keys.Left, Keys.A))
+            if (KeyInput.TwoKeysDown(Keys.Left, Keys.A))
             {
                 currentShip.Turn(Direction.Left);
             }
-            else if (KeyboardInput.TwoKeysDown(Keys.Right, Keys.D))
+            else if (KeyInput.TwoKeysDown(Keys.Right, Keys.D))
             {
                 currentShip.Turn(Direction.Right);
             }
 
             if(gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
-            if (KeyboardInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
+            if (KeyInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
                 switch (gameState)
                 {
@@ -485,7 +485,7 @@ namespace Game2Test
             tempPos4 = currentShip.Position - halfScreen;
             camera.Position = tempPos4;
 
-            aimSprite.SetPos(camera.ScreenToWorld(mouseState.Position.ToVector2()));
+            aimSprite.Position = camera.ScreenToWorld(mouseState.Position.ToVector2());
 
             foreach (var t in currentStationShip.turrets)
             {
@@ -800,7 +800,7 @@ namespace Game2Test
         {
             keyState = Keyboard.GetState();
 
-            if (KeyboardInput.IsKeyClicked(Keys.Escape))
+            if (KeyInput.IsKeyClicked(Keys.Escape))
             {
                 if (gameState == GameState.PauseMenu) ChangeState(GameState.MainGame);
             }
@@ -1017,13 +1017,16 @@ namespace Game2Test
         public void BuyShip(Ship ship)
         {
             if(ownedShips.All(x => x.Name != ship.Name)) ownedShips.Add(ship);
+
             var tempRot = currentShip.rotation;
             var tempPos = currentStationShip.Position;
             var tempIndex = currentShip.shipCurrentIndex;
             var tempHealth = currentShip.health;
             var tempEnergy = currentShip.energy;
             currentShip = ship;
+
             currentShip.shipCurrentIndex = tempIndex;
+
             currentShip.Position = tempPos;
             currentShip.rotation = tempRot;
             currentShip.health = tempHealth;
@@ -1038,7 +1041,9 @@ namespace Game2Test
             var tempIndex = currentShip.shipCurrentIndex;
             var tempHealth = currentShip.health;
             var tempEnergy = currentShip.energy;
+
             currentShip = ships[currentShip.shipCurrentIndex];
+
             currentShip.shipCurrentIndex = tempIndex;
             currentShip.Position = tempPos;
             currentShip.rotation = tempRot;
@@ -1051,7 +1056,9 @@ namespace Game2Test
         {
             layer2.Add(Content.Load<Texture2D>("background2Green"));
             layer2.Add(Content.Load<Texture2D>("background2Blue"));
+
             var randomBackgroundList = new List<Texture2D>();
+
             randomBackgroundList.Add(Content.Load<Texture2D>("background1"));
 
             randomBackgroundList.Add(layer2[rnd.Next(0, layer2.Count)]);

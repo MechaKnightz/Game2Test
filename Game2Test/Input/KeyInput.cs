@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game2Test.Input
 {
-    public static class KeyboardInput
+    public static class KeyInput
     {
         private static KeyboardState _keyState;
         private static KeyboardState _oldKeyState;
@@ -21,13 +21,17 @@ namespace Game2Test.Input
 
         public static bool IsKeyClicked(Keys key)
         {
-            if (_keyState.IsKeyDown(key) && !_oldKeyState.IsKeyDown(key)) return true;
-            return false;
+            return _keyState.IsKeyDown(key) && !_oldKeyState.IsKeyDown(key);
         }
 
         public static bool TwoKeysDown(Keys key1, Keys key2)
         {
             return _keyState.IsKeyDown(key1) || _keyState.IsKeyDown(key2);
+        }
+
+        public static bool BothKeysDown(Keys key1, Keys key2)
+        {
+            return _keyState.IsKeyDown(Keys.Up) && _keyState.IsKeyDown(Keys.LeftShift);
         }
     }
 }

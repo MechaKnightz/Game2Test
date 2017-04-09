@@ -52,7 +52,6 @@ namespace Game2Test
         public List<Ship> ownedShips = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
-        Rectangle speedbarRectangle, speedbarRectangle2;
 
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
             redPixel, greenPixel, turretStationTexture;
@@ -198,9 +197,7 @@ namespace Game2Test
             aimTexture = Content.Load<Texture2D>("aimWhite");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
             font = Content.Load<SpriteFont>("font");
-            rnd = new System.Random();
-            speedbarRectangle = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
-            speedbarRectangle2 = new Rectangle((graphics.PreferredBackBufferWidth / 2) - 151, (graphics.PreferredBackBufferHeight / 2) + (int)font.MeasureString("Speed").Y, 301, 20);
+            rnd = new Random();
             speed = defaultSpeed;
             halfScreenPos = new Vector2(halfScreen.X, halfScreen.Y);
             transparent = Content.Load<Texture2D>("transparent");
@@ -230,6 +227,7 @@ namespace Game2Test
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
 
             currentSector = GenerateSector();
+            currentSector.CurrentShip = currentShip;
 
             //particles
             var textures = new List<Texture2D>

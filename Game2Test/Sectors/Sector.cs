@@ -15,8 +15,8 @@ namespace Game2Test
         public string Name;
         public Station SectorStation;
 
-        private List<Ship> NPCShips = new List<Ship>();
-        private Ship MainShip = new Ship();
+        public List<Ship> NPCShips = new List<Ship>();
+        public Ship CurrentShip = new Ship();
 
         [JsonIgnore]
         public List<Texture2D> Backgrounds = new List<Texture2D>();
@@ -27,7 +27,7 @@ namespace Game2Test
             {
                 ship.Moving = false;
             }
-            MainShip.Moving = false;
+            CurrentShip.Moving = false;
         }
     }
 }

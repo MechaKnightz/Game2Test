@@ -45,7 +45,7 @@ namespace Game2Test
         public new void Draw(SpriteBatch spriteBatch)
         {
             if(health < healthMax) bar.Draw(spriteBatch, Position, health, healthMax);
-            spriteBatch.Draw(texture, Position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(texture, Position, origin: origin, rotation: Rotation);
         }
     }
 }

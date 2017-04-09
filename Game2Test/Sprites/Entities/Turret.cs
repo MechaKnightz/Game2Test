@@ -45,8 +45,8 @@ namespace Game2Test
                 {
                     t.Value[i].duration--;
                     var temp = t.Value[i].Position;
-                    temp.X += (float)(System.Math.Cos(t.Value[i].rotation)) * t.Value[i].speed;
-                    temp.Y += (float)(System.Math.Sin(t.Value[i].rotation)) * t.Value[i].speed;
+                    temp.X += (float)(System.Math.Cos(t.Value[i].Rotation)) * t.Value[i].speed;
+                    temp.Y += (float)(System.Math.Sin(t.Value[i].Rotation)) * t.Value[i].speed;
                     t.Value[i].Position = temp;
 
                     if (t.Value[i].duration < 00)
@@ -60,7 +60,7 @@ namespace Game2Test
 
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(texture, Position, origin: origin, rotation: Rotation);
             foreach (var t in shotDictionary)
             {
                 foreach (var e in t.Value)
@@ -91,12 +91,12 @@ namespace Game2Test
 
         public void Fire() //fire the default shot
         {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, rotation, shots["default"].duration, shots["default"].speed, shots["default"].Damage));
+            shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, Rotation, shots["default"].duration, shots["default"].speed, shots["default"].Damage));
         }
         public float Fire(string name) //fire shot by Name
         {
             Shot shot = shots.FirstOrDefault(x => x.Value.name == name).Value;
-            shotDictionary[name].Add(new Shot(shot.texture, Position, rotation, shot.duration, shot.speed, shot.Damage));
+            shotDictionary[name].Add(new Shot(shot.texture, Position, Rotation, shot.duration, shot.speed, shot.Damage));
 
             return energyCost;
         }
@@ -105,10 +105,10 @@ namespace Game2Test
             switch (direction)
             {
                 case Direction.Left:
-                    rotation -= TurnRate;
+                    Rotation -= TurnRate;
                     break;
                 case Direction.Right:
-                    rotation += TurnRate;
+                    Rotation += TurnRate;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);

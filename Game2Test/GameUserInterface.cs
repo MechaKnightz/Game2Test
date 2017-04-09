@@ -336,7 +336,7 @@ namespace Game2Test
         {
             if (_game1.ownedShips.All(x => x.Name != ship.Name)) _game1.ownedShips.Add(ship);
 
-            var tempRot = _game1.currentShip.rotation;
+            var tempRot = _game1.currentShip.Rotation;
             var tempPos = _game1.currentStationShip.Position;
             var tempIndex = _game1.currentShip.shipCurrentIndex;
             var tempHealth = _game1.currentShip.health;
@@ -346,7 +346,7 @@ namespace Game2Test
 
             _game1.currentShip.shipCurrentIndex = tempIndex;
             _game1.currentShip.Position = tempPos;
-            _game1.currentShip.rotation = tempRot;
+            _game1.currentShip.Rotation = tempRot;
             _game1.currentShip.health = tempHealth;
             _game1.currentShip.energy = tempEnergy;
         }

@@ -25,17 +25,17 @@ namespace Game2Test.Sprites.Helpers
             var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);
             if (distanceToGoal > shortestRange) //change 500 to range of the shortest weapons
             {
-                float diff = Math.Abs(MathHelper.WrapAngle(ship.rotation - angleToGoal));
+                float diff = Math.Abs(MathHelper.WrapAngle(ship.Rotation - angleToGoal));
                 if (diff < 0.2) ship.Move(MoveDirection.Forward, false);
                 else
                 {
-                    if (ship.rotation > angleToGoal)
+                    if (ship.Rotation > angleToGoal)
                     {
-                        if (ship.rotation > angleToGoal) ship.Turn(Direction.Left);
+                        if (ship.Rotation > angleToGoal) ship.Turn(Direction.Left);
                     }
                     else
                     {
-                        if (ship.rotation < angleToGoal) ship.Turn(Direction.Right);
+                        if (ship.Rotation < angleToGoal) ship.Turn(Direction.Right);
                     }
                 }
             }
@@ -56,10 +56,10 @@ namespace Game2Test.Sprites.Helpers
                     {
                         var angleToTargetShip = AngleToOther(ship.Position, targetShip.Position);
 
-                        if (tur.rotation > angleToTargetShip) tur.Turn(Direction.Left);
-                        if (tur.rotation < angleToTargetShip) tur.Turn(Direction.Right);
+                        if (tur.Rotation > angleToTargetShip) tur.Turn(Direction.Left);
+                        if (tur.Rotation < angleToTargetShip) tur.Turn(Direction.Right);
 
-                        float diff = Math.Abs(MathHelper.WrapAngle(tur.rotation - angleToTargetShip));
+                        float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
                         if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
                     }
                 }

@@ -37,6 +37,34 @@ namespace Game2Test
         public float energyRegen;
 
         public Ship() { }
+
+        public Ship(Ship ship)
+        {
+            turrets = ship.turrets;
+            textureDictionary = ship.textureDictionary;
+            Rotation = ship.Rotation;
+            Position = ship.Position;
+            rectangle = ship.rectangle;
+            origin = ship.origin;
+            TextureName = ship.TextureName;
+            texture = ship.texture;
+            textureIndexCounter = ship.textureIndexCounter;
+            shipCurrentIndex = ship.shipCurrentIndex;
+            shipPreviousIndex = ship.shipPreviousIndex;
+            description = ship.description;
+            Name = ship.Name;
+            cost = ship.cost;
+            TurnRate = ship.TurnRate;
+            Speed = ship.Speed;
+            Boost = ship.Boost;
+            Moving = ship.Moving;
+            health = ship.health;
+            healthMax = ship.healthMax;
+            energy = ship.energy;
+            energyMax = ship.energyMax;
+            energyRegen = ship.energyRegen;
+
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -70,7 +98,7 @@ namespace Game2Test
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: origin, rotation: Rotation);
             textureIndexCounter = "Default";
             DrawTurrets(spriteBatch);
         }
@@ -86,6 +114,30 @@ namespace Game2Test
             }
         }
 
+        public void SetRotation(float rotation)
+        {
+            Rotation = rotation;
+            foreach (var t in turrets)
+            {
+                //sets the turrets at the position of the ship
+                foreach (var tur in t.Value)
+                {
+                    var temp = tur.Position;
+                    temp.X = Position.X;
+                    temp.Y = Position.Y;
+
+                    //x turret offset
+                    temp.X -= (float)(tur.offset.X * Math.Cos(Rotation - Math.PI));
+                    temp.Y -= (float)(tur.offset.X * Math.Sin(Rotation - Math.PI));
+
+                    //y turret offset
+                    temp.X -= (float)(tur.offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
+
+                    tur.Position = temp;
+                }
+            }
+        }
         public void SetPosition(Vector2 position)
         {
             Position = position;
@@ -99,12 +151,12 @@ namespace Game2Test
                     temp.Y = Position.Y;
 
                     //x turret offset
-                    temp.X -= (float)(tur.offset.X * Math.Cos(rotation - Math.PI));
-                    temp.Y -= (float)(tur.offset.X * Math.Sin(rotation - Math.PI));
+                    temp.X -= (float)(tur.offset.X * Math.Cos(Rotation - Math.PI));
+                    temp.Y -= (float)(tur.offset.X * Math.Sin(Rotation - Math.PI));
 
                     //y turret offset
-                    temp.X -= (float)(tur.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-                    temp.Y -= (float)(tur.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+                    temp.X -= (float)(tur.offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
 
                     tur.Position = temp;
                 }
@@ -132,12 +184,12 @@ namespace Game2Test
             position.Y = this.Position.Y;
 
             //x turret offset
-            position.X += (float)((texture.Width / 2) * Math.Cos(rotation - Math.PI));
-            position.Y += (float)((texture.Width / 2) * Math.Sin(rotation - Math.PI));
+            position.X += (float)((texture.Width / 2) * Math.Cos(Rotation - Math.PI));
+            position.Y += (float)((texture.Width / 2) * Math.Sin(Rotation - Math.PI));
 
             //y turret offset
-            //position.X -= (float)(turrets[i].offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-            //position.Y -= (float)(turrets[i].offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+            //position.X -= (float)(turrets[i].offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
+            //position.Y -= (float)(turrets[i].offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
 
             return position;
         }
@@ -145,7 +197,7 @@ namespace Game2Test
         /// same as above but with vector
         /// </summary>
         /// <param Name="vector">amount to moveDirection ship with</param>
-        /// <param Name="rotation">adjust turret position for rotation</param>
+        /// <param Name="Rotation">adjust turret position for Rotation</param>
         public bool TurretCollision(Rectangle rectangle, out Turret turret, out Shot tempShot)
         {
             foreach (var t in turrets)
@@ -204,14 +256,14 @@ namespace Game2Test
             switch (direction)
             {
                 case Direction.Left:
-                    rotation -= TurnRate;
+                    SetRotation(Rotation - TurnRate);
                     if (textureDictionary.ContainsKey(direction.ToString()))
                     {
                         textureIndexCounter = direction.ToString();
                     }
                     break;
                 case Direction.Right:
-                    rotation += TurnRate;
+                    SetRotation(Rotation + TurnRate);
                     if (textureDictionary.ContainsKey(direction.ToString()))
                     {
                         textureIndexCounter = direction.ToString();
@@ -230,22 +282,22 @@ namespace Game2Test
                     if (!speedBoost)
                     {
                         var tempPos = Position;
-                        tempPos.X += (float)Math.Cos(rotation) * Speed;
-                        tempPos.Y += (float)Math.Sin(rotation) * Speed;
+                        tempPos.X += (float)Math.Cos(Rotation) * Speed;
+                        tempPos.Y += (float)Math.Sin(Rotation) * Speed;
                         SetPosition(tempPos);
                     }
                     else if (speedBoost)
                     {
                         var tempPos = Position;
-                        tempPos.X += (float)Math.Cos(rotation) * Speed * Boost;
-                        tempPos.Y += (float)Math.Sin(rotation) * Speed * Boost;
+                        tempPos.X += (float)Math.Cos(Rotation) * Speed * Boost;
+                        tempPos.Y += (float)Math.Sin(Rotation) * Speed * Boost;
                         SetPosition(tempPos);
                     }
                     break;
                 case MoveDirection.Backward:
                     var tempPos2 = Position;
-                    tempPos2.X -= (float)Math.Cos(rotation) * (Speed / 5);
-                    tempPos2.Y -= (float)Math.Sin(rotation) * (Speed / 5);
+                    tempPos2.X -= (float)Math.Cos(Rotation) * (Speed / 5);
+                    tempPos2.Y -= (float)Math.Sin(Rotation) * (Speed / 5);
                     SetPosition(tempPos2);
                     break;
             }

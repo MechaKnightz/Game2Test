@@ -25,7 +25,7 @@ namespace Game2Test
 
         public Vector2 origin;
         public Rectangle rectangle;
-        public float rotation;
+        public float Rotation { get; set; }
         public string TextureName { get; set; }
         [JsonIgnore]
         public Texture2D texture;
@@ -39,7 +39,7 @@ namespace Game2Test
             this._position = position;
             this.rectangle = rectangle;
             this.origin = origin;
-            this.rotation = rotation;
+            this.Rotation = rotation;
             TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle)
@@ -49,7 +49,7 @@ namespace Game2Test
             this._position = position;
             this.rectangle = rectangle;
             this.texture = texture;
-            this.rotation = 0f;
+            this.Rotation = 0f;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
             TextureName = texture.Name;
         }
@@ -72,7 +72,7 @@ namespace Game2Test
             this.rectangle.Height = texture.Height;
             this._position = position;
             this.texture = texture;
-            this.rotation = rotation;
+            this.Rotation = rotation;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
             TextureName = texture.Name;
         }
@@ -83,7 +83,7 @@ namespace Game2Test
             this.rectangle.Width = texture.Width;
             this.rectangle.Height = texture.Height;
             this.texture = texture;
-            this.rotation = rotation;
+            this.Rotation = rotation;
             origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
             TextureName = texture.Name;
         }
@@ -109,7 +109,7 @@ namespace Game2Test
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, _position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(texture, _position, origin: origin, rotation: Rotation);
         }
         public void DrawRectangle(SpriteBatch spriteBatch)
         {
@@ -119,7 +119,7 @@ namespace Game2Test
         }
         public void Draw(SpriteBatch spriteBatch, Camera2D camera)
         {
-            spriteBatch.Draw(texture, _position + camera.Position, origin: origin, rotation: rotation);
+            spriteBatch.Draw(texture, _position + camera.Position, origin: origin, rotation: Rotation);
         }
     }
 }

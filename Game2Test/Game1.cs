@@ -50,7 +50,7 @@ namespace Game2Test
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
 
         List<Ship> ships = new List<Ship>();
-        public Ship testShip, testShip2, currentStationShip;
+        public Ship  testShip, currentStationShip;
         public List<Ship> availableShips = new List<Ship>();
         public List<Ship> ownedShips = new List<Ship>();
 
@@ -250,11 +250,8 @@ namespace Game2Test
 
             //test ships
 
-            testShip = ships[1];
-            testShip.SetPosition(new Vector2(1000, 400));
-
-            testShip2 = ships[2];
-            testShip2.SetPosition(new Vector2(-500, -500));
+            testShip = new Ship(ships[2]);
+            testShip.SetPosition(new Vector2(-500, -500));
 
             //bind default keys
 
@@ -512,7 +509,7 @@ namespace Game2Test
                         {
                             tempDistance = Vector2.Distance(currentSector.Asteroids[i].Position, tur.Position);
                             asteroid.Position = currentSector.Asteroids[i].Position;
-                            asteroid.rotation = currentSector.Asteroids[i].rotation;
+                            asteroid.Rotation = currentSector.Asteroids[i].Rotation;
                             asteroid.speed = currentSector.Asteroids[i].speed;
                             asteroid.acceleration = currentSector.Asteroids[i].acceleration;
                             var tempTime = tempDistance / tur.shots["default"].speed;
@@ -526,10 +523,10 @@ namespace Game2Test
                     {
                         var rot = AngleToOther(tur.Position, asteroid.Position);
                         const float rotConst = 0.03f; //TODO fix the if statements
-                        if (tur.rotation > rot) tur.rotation -= rotConst;
-                        if (tur.rotation < rot) tur.rotation += rotConst;
-                        //t.Value.rotation = AngleToOther(t.Value.position, asteroid.position));
-                        float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.rotation));
+                        if (tur.Rotation > rot) tur.Rotation -= rotConst;
+                        if (tur.Rotation < rot) tur.Rotation += rotConst;
+                        //t.Value.Rotation = AngleToOther(t.Value.position, asteroid.position));
+                        float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.Rotation));
                         if (diff < 0.2) currentStationShip.Fire("primary", "default");
                     }
                 }
@@ -540,7 +537,7 @@ namespace Game2Test
             {
                 foreach (var tur in t.Value)
                 {
-                    tur.rotation = AngleToMouse(tur.Position);
+                    tur.Rotation = AngleToMouse(tur.Position);
                 }
             }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
@@ -571,17 +568,17 @@ namespace Game2Test
 
             //testing
 
-            AI.MoveTowardsGoal(testShip2, currentShip);
-            testShip2.UpdateEnergy();
-            testShip2.UpdateTurrets();
+            AI.MoveTowardsGoal(testShip, currentShip);
+            testShip.UpdateEnergy();
+            testShip.UpdateTurrets();
 
             //testing end
 
             currentShip.UpdateEnergy();
             currentStationShip.UpdateEnergy();
 
-            if (currentShip.rotation > _doublePI) currentShip.rotation -= _doublePI;
-            else if (currentShip.rotation < -_doublePI) currentShip.rotation += _doublePI;
+            if (currentShip.Rotation > _doublePI) currentShip.Rotation -= _doublePI;
+            else if (currentShip.Rotation < -_doublePI) currentShip.Rotation += _doublePI;
             currentShip.UpdateTurrets();
             currentStationShip.UpdateTurrets();
 
@@ -646,13 +643,12 @@ namespace Game2Test
 
             BeginSpriteBatchCamera(spriteBatch);
 
-            //ship.rotationRender = (float)(Math.Round(ship.rotation / (Math.PI / 4)) * (Math.PI / 4));
-            //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), rotation: ship.rotation, origin: ship.Origin);
+            //ship.rotationRender = (float)(Math.Round(ship.Rotation / (Math.PI / 4)) * (Math.PI / 4));
+            //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), Rotation: ship.Rotation, origin: ship.Origin);
 
             currentStationShip.Draw(spriteBatch);
             currentShip.Draw(spriteBatch);
             testShip.Draw(spriteBatch);
-            testShip2.Draw(spriteBatch);
 
             currentShip.DrawTurrets(spriteBatch);
 
@@ -691,7 +687,7 @@ namespace Game2Test
             currentShip.health = currentShip.healthMax;
             score = defaultScore;
             currentShip.Position = defaultShipPos;
-            currentShip.rotation = 0;
+            currentShip.Rotation = 0;
             GenerateAsteroids();
         }
         void BeginSpriteBatchCamera(SpriteBatch spriteBatch)
@@ -799,7 +795,7 @@ namespace Game2Test
 
         public void ChangeShip()
         {
-            var tempRot = currentShip.rotation;
+            var tempRot = currentShip.Rotation;
             var tempPos = currentShip.Position;
             var tempIndex = currentShip.shipCurrentIndex;
             var tempHealth = currentShip.health;
@@ -809,7 +805,7 @@ namespace Game2Test
 
             currentShip.shipCurrentIndex = tempIndex;
             currentShip.Position = tempPos;
-            currentShip.rotation = tempRot;
+            currentShip.Rotation = tempRot;
             currentShip.health = tempHealth;
             currentShip.energy = tempEnergy;
         }

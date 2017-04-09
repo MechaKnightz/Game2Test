@@ -48,8 +48,6 @@ namespace Game2Test
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
         Ship currentStationShip;
 
-        Texture2D stationTexture;
-
         List<Ship> ships = new List<Ship>();
         List<Ship> availableShips = new List<Ship>();
         List<Ship> ownedShips = new List<Ship>();
@@ -70,12 +68,10 @@ namespace Game2Test
         int selected = 0;
         int defaultScore = 0;
         int defaultSpeed = 10;
-        int menuLength = 3;
         int settingsMenuLength = 2;
         ParticleEngine particleEngine;
-        bool moving = false;
-        bool drawParticles = false;
-        int movingDelayCounter = 0;
+        bool drawParticles;
+        int movingDelayCounter;
         GameState gameState = (GameState)2;
         Ship currentShip;
         Sprite aimSprite;
@@ -191,6 +187,8 @@ namespace Game2Test
             ship0.cost = 0f;
             ship0.description = "Human ship 1 description";
             ship0.Name = "Human ship 1";
+            ship0.Speed = 10f;
+            ship0.Boost = 1.5f;
             ships.Add(ship0);
             ownedShips.Add(ship0);
             availableShips.Add(ship0); //TODO REMOVE
@@ -205,6 +203,8 @@ namespace Game2Test
             ship1.cost = 15f;
             ship1.description = "Human ship 2 description";
             ship1.Name = "Human ship 2";
+            ship1.Speed = 10f;
+            ship1.Boost = 1.5f;
             ships.Add(ship1);
             availableShips.Add(ship1);
             //ship1 end
@@ -218,6 +218,8 @@ namespace Game2Test
             ship2.cost = 10f;
             ship2.description = "Alien ship 1 description";
             ship2.Name = "Alien ship 1";
+            ship2.Speed = 10f;
+            ship2.Boost = 1.5f;
             ships.Add(ship2);
             availableShips.Add(ship2);
             //ship2 end
@@ -274,10 +276,12 @@ namespace Game2Test
             currentSector = GenerateSector();
 
             //particles
-            List<Texture2D> textures = new List<Texture2D>();
-            textures.Add(Content.Load<Texture2D>("red"));
-            textures.Add(Content.Load<Texture2D>("orange"));
-            textures.Add(Content.Load<Texture2D>("yellow"));
+            var textures = new List<Texture2D>
+            {
+                Content.Load<Texture2D>("red"),
+                Content.Load<Texture2D>("orange"),
+                Content.Load<Texture2D>("yellow")
+            };
             particleEngine = new ParticleEngine(textures, new Vector2(0, 0));
 
             
@@ -432,29 +436,20 @@ namespace Game2Test
             {
                 ChangeState(GameState.PauseMenu);
             }
-            if (KeyInput.BothKeysDown(Keys.Up, Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift) || KeyInput.BothKeysDown(Keys.W, Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
+            if (KeyInput.BothKeysDown(Keys.Up, Keys.LeftShift) || KeyInput.BothKeysDown(Keys.W, Keys.LeftShift))
             {
-                tempPos = currentShip.Position;
-                tempPos.X += (float)System.Math.Cos(currentShip.rotation) * (speed * speedBoostConst);
-                tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * (speed * speedBoostConst);
-                currentShip.SetPosition(tempPos);
+                currentShip.Move(MoveDirection.Forward, true);
                 currentShip.Moving = true;
             }
             else if (KeyInput.TwoKeysDown(Keys.Up, Keys.W))
             {
-                tempPos = currentShip.Position;
-                tempPos.X += (float)System.Math.Cos(currentShip.rotation) * speed;
-                tempPos.Y += (float)System.Math.Sin(currentShip.rotation) * speed;
-                currentShip.SetPosition(tempPos);
+                currentShip.Move(MoveDirection.Forward, false);
                 currentShip.Moving = true;
             }
 
             if (KeyInput.TwoKeysDown(Keys.Down, Keys.S))
             {
-                tempPos = currentShip.Position;
-                tempPos.X -= (float)(System.Math.Cos(currentShip.rotation)) * (speed / 5);
-                tempPos.Y -= (float)(System.Math.Sin(currentShip.rotation)) * (speed / 5);
-                currentShip.SetPosition(tempPos);
+                currentShip.Move(MoveDirection.Backward, false);
                 currentShip.Moving = true;
             }
 
@@ -503,7 +498,7 @@ namespace Game2Test
                             asteroid.speed = currentSector.Asteroids[i].speed;
                             asteroid.acceleration = currentSector.Asteroids[i].acceleration;
                             var tempTime = tempDistance / tur.shots["default"].speed;
-                            for (int j = 0; j < tempTime; j++)
+                            for (var j = 0; j < tempTime; j++)
                             {
                                 asteroid.MoveTowardsPosition(currentShip.Position);
                             }
@@ -1075,13 +1070,13 @@ namespace Game2Test
 
             while(true)
             {
-                char[] array = new[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+                char[] array = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
                 string tempString = array[rnd.Next(0, array.Length)].ToString() +
                                     array[rnd.Next(0, array.Length)] +
                                     array[rnd.Next(0, array.Length)];
                 //Name
                 //AAA - 000
-                string name = tempString + " - " + rnd.Next(0, 1000).ToString();
+                string name = tempString + " - " + rnd.Next(0, 1000);
                 if (sectors.Any(x => x.Name == name)) continue;
                 sector.Name = name;
                 break;

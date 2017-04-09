@@ -25,6 +25,8 @@ namespace Game2Test
         public float cost;
 
         public float TurnRate { get; set; }
+        public float Speed { get; set; }
+        public float Boost { get; set; }
         public bool Moving { get; set; }
 
         public float health;
@@ -107,7 +109,7 @@ namespace Game2Test
             }
         }
 
-        public new void SetPosition(Vector2 position)
+        public void SetPosition(Vector2 position)
         {
             Position = position;
             Update();
@@ -146,7 +148,7 @@ namespace Game2Test
         /// <summary>
         /// same as above but with vector
         /// </summary>
-        /// <param Name="vector">amount to move ship with</param>
+        /// <param Name="vector">amount to moveDirection ship with</param>
         /// <param Name="rotation">adjust turret position for rotation</param>
         public bool TurretCollision(Rectangle rectangle, out Turret turret, out Shot tempShot)
         {
@@ -223,6 +225,35 @@ namespace Game2Test
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
             Update();
+        }
+
+        public void Move(MoveDirection moveDirection, bool speedBoost)
+        {
+            switch (moveDirection)
+            {
+                case MoveDirection.Forward:
+                    if (!speedBoost)
+                    {
+                        var tempPos = Position;
+                        tempPos.X += (float)Math.Cos(rotation) * Speed;
+                        tempPos.Y += (float)Math.Sin(rotation) * Speed;
+                        SetPosition(tempPos);
+                    }
+                    else if (speedBoost)
+                    {
+                        var tempPos = Position;
+                        tempPos.X += (float)Math.Cos(rotation) * Speed * Boost;
+                        tempPos.Y += (float)Math.Sin(rotation) * Speed * Boost;
+                        SetPosition(tempPos);
+                    }
+                    break;
+                case MoveDirection.Backward:
+                    var tempPos2 = Position;
+                    tempPos2.X -= (float)Math.Cos(rotation) * (Speed / 5);
+                    tempPos2.Y -= (float)Math.Sin(rotation) * (Speed / 5);
+                    SetPosition(tempPos2);
+                    break;
+            }
         }
     }
 }

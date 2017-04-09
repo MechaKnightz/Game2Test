@@ -41,7 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Direction.cs" />
+    <Compile Include="MoveEnums.cs" />
     <Compile Include="Input\KeyInput.cs" />
     <Compile Include="Sprites\Entities\Asteroid.cs" />
     <Compile Include="Data.cs" />

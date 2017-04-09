@@ -31,7 +31,7 @@ namespace Game2Test.Input
 
         public static bool BothKeysDown(Keys key1, Keys key2)
         {
-            return _keyState.IsKeyDown(Keys.Up) && _keyState.IsKeyDown(Keys.LeftShift);
+            return _keyState.IsKeyDown(key1) && _keyState.IsKeyDown(key2);
         }
     }
 }

@@ -11,4 +11,12 @@ namespace Game2Test
         Left,
         Right
     }
+
+    public enum MoveDirection
+    {
+        Forward,
+        Backward,
+        Left,
+        Right
+    }
 }

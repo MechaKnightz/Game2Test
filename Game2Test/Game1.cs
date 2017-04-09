@@ -41,9 +41,6 @@ namespace Game2Test
 
         public List<Sector> sectors = new List<Sector>();
 
-        Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
-        Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
-        Dictionary<string, Texture2D> ship2Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> stationDictionary = new Dictionary<string, Texture2D>();
 
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
@@ -269,17 +266,14 @@ namespace Game2Test
             var turret1Collection = InitialiseTurretCollection(turrets1);
             var turret2Collection = InitialiseTurretCollection(turrets2);
 
-            var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, ship0Dictionary,
-                turret0Collection);
-            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, ship1Dictionary,
-                turret1Collection);
-            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, ship2Dictionary,
-                turret2Collection);
+            var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, turret0Collection);
+            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, turret1Collection);
+            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, turret2Collection);
 
             var initiatedShips = new List<Ship> { ship0, ship1, ship2 };
 
             ships.AddRange(initiatedShips);
-            ownedShips.AddRange(initiatedShips);
+            ownedShips.Add(ship0);
             availableShips.AddRange(initiatedShips);
         }
 
@@ -297,12 +291,14 @@ namespace Game2Test
             float shipCost,
             float shipSpeed,
             float shipBoost,
-            Dictionary<string, Texture2D> shipDictionary,
             Dictionary<string, List<Turret>> turretCollection)
         {
-            shipDictionary.Add("Default", Content.Load<Texture2D>($"{shipName}Texture0"));
-            shipDictionary.Add("Left", Content.Load<Texture2D>($"{shipName}Texture1"));
-            shipDictionary.Add("Right", Content.Load<Texture2D>($"{shipName}Texture2"));
+            var shipDictionary = new Dictionary<string, Texture2D>
+            {
+                { "Default", Content.Load<Texture2D>($"{shipName}Texture0")},
+                { "Left", Content.Load<Texture2D>($"{shipName}Texture1")},
+                { "Right", Content.Load<Texture2D>($"{shipName}Texture2")}
+            };
 
             var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, 1000, 5, 0.05f)
             {

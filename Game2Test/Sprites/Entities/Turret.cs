@@ -14,19 +14,22 @@ namespace Game2Test
         //offset == turret position compared to ship position
         // TODO: add speed to shot class
         public Vector2 offset;
+        public float TurnRate { get; set; }
         public Dictionary<string, List<Shot>> shotDictionary = new Dictionary<string, List<Shot>>();
         public Dictionary<string, Shot> shots = new Dictionary<string, Shot>();
         public float energyCost;
         public Turret() { }
-        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost) : base(texture, position, rotation)
+        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate) : base(texture, position, rotation)
         {
             this.offset = offset;
             this.energyCost = energyCost;
+            TurnRate = turnRate;
             foreach(var t in shots)
             {
                 this.shots.Add(t.Key, t.Value);
                 shotDictionary.Add(t.Key, new List<Shot>());
             }
+
         }
 
         public void Update()
@@ -96,6 +99,21 @@ namespace Game2Test
             shotDictionary[name].Add(new Shot(shot.texture, Position, rotation, shot.duration, shot.speed, shot.Damage));
 
             return energyCost;
+        }
+        public void Turn(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+                    rotation -= TurnRate;
+                    break;
+                case Direction.Right:
+                    rotation += TurnRate;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+            Update();
         }
     }
 }

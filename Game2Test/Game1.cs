@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Web.Script.Serialization;
 using Game2Test.Input;
+using Game2Test.Sprites.Helpers;
 using Newtonsoft.Json;
 
 namespace Game2Test
@@ -154,16 +155,16 @@ namespace Game2Test
             shot1Dictionary = new Dictionary<string, Shot>();
             shot1Dictionary.Add(shot1.name, shot1);
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1Dictionary, 150));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1Dictionary, 150));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1Dictionary, 150, 0.05f));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1Dictionary, 150, 0.05f));
 
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150, 0.05f));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150, 0.05f));
 
-            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150));
+            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150, 0.05f));
 
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150));
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f));
 
             //ship0
             ship0Dictionary.Add("Default", Content.Load<Texture2D>("ship0Texture0"));
@@ -509,7 +510,7 @@ namespace Game2Test
                         var rot = AngleToOther(tur.Position, asteroid.Position);
                         const float rotConst = 0.03f; //TODO fix the if statements
                         if (tur.rotation > rot) tur.rotation -= rotConst;
-                        else if (tur.rotation < rot) tur.rotation += rotConst;
+                        if (tur.rotation < rot) tur.rotation += rotConst;
                         //t.Value.rotation = AngleToOther(t.Value.position, asteroid.position));
                         float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.rotation));
                         if (diff < 0.2) currentStationShip.Fire("primary", "default");
@@ -1055,7 +1056,7 @@ namespace Game2Test
         }
         public float AngleToMouse(Vector2 position)
         {
-            return (float)AngleToOther(position, aimSprite.Position);
+            return AngleToOther(position, aimSprite.Position);
         }
         public float AngleToOther(Vector2 main, Vector2 other)
         {

@@ -383,5 +383,32 @@ namespace Game2Test
             _game1.score = data.Score;
             _game1.currentShip.health = data.Health;
         }
+
+        public void RemoveInterface(GameState gameState, Game1 game1)
+        {
+            switch(gameState)
+            {
+                case GameState.MainMenu:
+                    game1.mainMenuPanel.Visible = false;
+                    break;
+                case GameState.ShopMenu:
+                    game1.shopPanel.Visible = false;
+                    game1.shopButtons.Clear();
+                    game1.shopDescriptions.Clear();
+                    break;
+                case GameState.MainGame:
+                    game1.shopHUDButton.Visible = false;
+                    break;
+                case GameState.PauseMenu:
+                    game1.pauseMenuPanel.Visible = false;
+                    break;
+                case GameState.SettingsMenu:
+                    game1.settingsMenuPanel.Visible = false;
+                    break;
+                case GameState.ControlsMenu:
+                    game1.controlsMenuPanel.Visible = false;
+                    break;
+            }
+        }
     }
 }

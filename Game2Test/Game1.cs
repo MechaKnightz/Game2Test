@@ -34,7 +34,7 @@ namespace Game2Test
 
         List<int> highscores = new List<int>();
 
-        List<Turret> turrets0 = new  List<Turret>();
+        List<Turret> turrets0 = new List<Turret>();
         List<Turret> turrets1 = new List<Turret>();
         List<Turret> turrets2 = new List<Turret>();
         List<Turret> turretsStation = new List<Turret>();
@@ -53,7 +53,7 @@ namespace Game2Test
         public Ship testShip, testShip2, currentStationShip;
         public List<Ship> availableShips = new List<Ship>();
         public List<Ship> ownedShips = new List<Ship>();
-            
+
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
         Rectangle speedbarRectangle, speedbarRectangle2;
 
@@ -103,7 +103,7 @@ namespace Game2Test
         private float shopRadius = 200;
         public Sector currentSector;
         List<Texture2D> layer2 = new List<Texture2D>();
-        private const float _doublePI = (float)Math.PI*2;
+        private const float _doublePI = (float)Math.PI * 2;
         public Keys forwardKey;
         public Keys forwardKey2;
 
@@ -176,70 +176,19 @@ namespace Game2Test
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f));
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f));
 
-            //ship0
-            ship0Dictionary.Add("Default", Content.Load<Texture2D>("ship0Texture0"));
-            ship0Dictionary.Add("Left", Content.Load<Texture2D>("ship0Texture1"));
-            ship0Dictionary.Add("Right", Content.Load<Texture2D>("ship0Texture2"));
 
-            var turret0Collection = new Dictionary<string, List<Turret>>();
-            turret0Collection.Add("primary",turrets0);
+            LoadShips(); //LOADS SHIPS
 
-            var turret1Collection = new Dictionary<string, List<Turret>>();
-            turret1Collection.Add("primary", turrets1);
-
-            var turret2Collection = new Dictionary<string, List<Turret>>();
-            turret2Collection.Add("primary", turrets2);
 
             var turretStationCollection = new Dictionary<string, List<Turret>>();
             turretStationCollection.Add("primary", turretsStation);
-
-            var ship0 = new Ship(ship0Dictionary, defaultShipPos, turret0Collection, 10, 1000, 5, 0.05f);
-            ship0.cost = 0f;
-            ship0.description = "Human ship 1 description";
-            ship0.Name = "Human ship 1";
-            ship0.Speed = 10f;
-            ship0.Boost = 1.5f;
-            ships.Add(ship0);
-            ownedShips.Add(ship0);
-            availableShips.Add(ship0); //TODO REMOVE
-            //ship0 end
-
-            //ship1
-            ship1Dictionary.Add("Default", Content.Load<Texture2D>("ship1Texture0"));
-            ship1Dictionary.Add("Left", Content.Load<Texture2D>("ship1Texture1"));
-            ship1Dictionary.Add("Right", Content.Load<Texture2D>("ship1Texture2"));
-
-            var ship1 = new Ship(ship1Dictionary, defaultShipPos, turret1Collection, 10, 1000, 5, 0.05f);
-            ship1.cost = 15f;
-            ship1.description = "Human ship 2 description";
-            ship1.Name = "Human ship 2";
-            ship1.Speed = 10f;
-            ship1.Boost = 1.5f;
-            ships.Add(ship1);
-            availableShips.Add(ship1);
-            //ship1 end
-
-            //ship2
-            ship2Dictionary.Add("Default", Content.Load<Texture2D>("ship2Texture0"));
-            ship2Dictionary.Add("Left", Content.Load<Texture2D>("ship2Texture1"));
-            ship2Dictionary.Add("Right", Content.Load<Texture2D>("ship2Texture2"));
-
-            var ship2 = new Ship(ship2Dictionary, defaultShipPos, turret2Collection, 10, 1000, 5, 0.05f);
-            ship2.cost = 10f;
-            ship2.description = "Alien ship 1 description";
-            ship2.Name = "Alien ship 1";
-            ship2.Speed = 10f;
-            ship2.Boost = 1.5f;
-            ships.Add(ship2);
-            availableShips.Add(ship2);
-            //ship2 end
 
             //stationShip
 
             stationDictionary.Add("Default", Content.Load<Texture2D>("stationTexture"));
 
             currentStationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f);
-            
+
             //stationShip end
 
             currentShip = ships[0];
@@ -301,10 +250,10 @@ namespace Game2Test
 
             //test ships
 
-            testShip = ship2;
-            testShip.Position = new Vector2(1000,400);
+            testShip = ships[1];
+            testShip.Position = new Vector2(1000, 400);
 
-            testShip2 = ship1;
+            testShip2 = ships[2];
             testShip2.Position = new Vector2(-500, -500);
 
             //bind default keys
@@ -312,6 +261,59 @@ namespace Game2Test
             forwardKey = Keys.W;
             forwardKey2 = Keys.Up;
 
+        }
+
+        private void LoadShips()
+        {
+            var turret0Collection = InitialiseTurretCollection(turrets0);
+            var turret1Collection = InitialiseTurretCollection(turrets1);
+            var turret2Collection = InitialiseTurretCollection(turrets2);
+
+            var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, ship0Dictionary,
+                turret0Collection);
+            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, ship1Dictionary,
+                turret1Collection);
+            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, ship2Dictionary,
+                turret2Collection);
+
+            var initiatedShips = new List<Ship> { ship0, ship1, ship2 };
+
+            ships.AddRange(initiatedShips);
+            ownedShips.AddRange(initiatedShips);
+            availableShips.AddRange(initiatedShips);
+        }
+
+        private Dictionary<string, List<Turret>> InitialiseTurretCollection(List<Turret> turretList)
+        {
+            return new Dictionary<string, List<Turret>>
+            {
+                {"primary", turretList }
+            };
+        }
+
+        private Ship InitialiseShip(
+            string shipName,
+            string shipDescription,
+            float shipCost,
+            float shipSpeed,
+            float shipBoost,
+            Dictionary<string, Texture2D> shipDictionary,
+            Dictionary<string, List<Turret>> turretCollection)
+        {
+            shipDictionary.Add("Default", Content.Load<Texture2D>($"{shipName}Texture0"));
+            shipDictionary.Add("Left", Content.Load<Texture2D>($"{shipName}Texture1"));
+            shipDictionary.Add("Right", Content.Load<Texture2D>($"{shipName}Texture2"));
+
+            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, 1000, 5, 0.05f)
+            {
+                cost = shipCost,
+                description = shipDescription,
+                Name = shipName,
+                Speed = shipSpeed,
+                Boost = shipBoost
+            };
+
+            return ship;
         }
 
         protected override void UnloadContent()
@@ -396,7 +398,7 @@ namespace Game2Test
 
         void CollisionTest() //kollar om shots intersects med asteroids
         {
-            for(int i = 0; i < currentSector.Asteroids.Count; i++)
+            for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
@@ -481,7 +483,7 @@ namespace Game2Test
                 currentShip.Turn(Direction.Right);
             }
 
-            if(gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
+            if (gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
             if (KeyInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
                 switch (gameState)
@@ -503,7 +505,7 @@ namespace Game2Test
 
             foreach (var t in currentStationShip.turrets)
             {
-                foreach(var tur in t.Value)
+                foreach (var tur in t.Value)
                 {
                     var asteroid = new Asteroid();
                     float tempDistance = 99999999;
@@ -539,7 +541,7 @@ namespace Game2Test
 
             foreach (var t in currentShip.turrets)
             {
-                foreach(var tur in t.Value)
+                foreach (var tur in t.Value)
                 {
                     tur.rotation = AngleToMouse(tur.Position);
                 }
@@ -573,7 +575,7 @@ namespace Game2Test
             //testing
 
             AI.MoveTowardsGoal(testShip2, testShip.Position);
-            if(Vector2.Distance(testShip2.Position, testShip.Position) < 700) AI.ShootAtShip(testShip2, testShip);
+            if (Vector2.Distance(testShip2.Position, testShip.Position) < 700) AI.ShootAtShip(testShip2, testShip);
             testShip2.UpdateEnergy();
 
             //testing end
@@ -582,7 +584,7 @@ namespace Game2Test
             currentStationShip.UpdateEnergy();
 
             if (currentShip.rotation > _doublePI) currentShip.rotation -= _doublePI;
-            else if(currentShip.rotation < -_doublePI) currentShip.rotation += _doublePI;
+            else if (currentShip.rotation < -_doublePI) currentShip.rotation += _doublePI;
             currentShip.UpdateTurrets();
             currentStationShip.UpdateTurrets();
 
@@ -597,41 +599,14 @@ namespace Game2Test
         }
         void MenuLogic(GameTime gameTime)
         {
-            
+
         }
 
         public void ChangeState(GameState tempGameState)
         {
             _gameUserInterface.GenerateUserInterface(tempGameState);
-            RemoveInterface(gameState);
+            _gameUserInterface.RemoveInterface(gameState, this);
             gameState = tempGameState;
-        }
-
-        private void RemoveInterface(GameState gameState)
-        {
-            switch(gameState)
-            {
-                case GameState.MainMenu:
-                    mainMenuPanel.Visible = false;
-                    break;
-                case GameState.ShopMenu:
-                    shopPanel.Visible = false;
-                    shopButtons.Clear();
-                    shopDescriptions.Clear();
-                    break;
-                case GameState.MainGame:
-                    shopHUDButton.Visible = false;
-                    break;
-                case GameState.PauseMenu:
-                    pauseMenuPanel.Visible = false;
-                    break;
-                case GameState.SettingsMenu:
-                    settingsMenuPanel.Visible = false;
-                    break;
-                case GameState.ControlsMenu:
-                    controlsMenuPanel.Visible = false;
-                    break;
-            }
         }
 
         private void PauseMenuLogic(GameTime gameTime)
@@ -665,7 +640,7 @@ namespace Game2Test
         }
         void DrawGame()
         {
-            
+
             spriteBatch.End();
 
             DrawBackground();
@@ -684,7 +659,7 @@ namespace Game2Test
 
             currentShip.DrawTurrets(spriteBatch);
 
-            for(int i = 0; i < currentSector.Asteroids.Count; i++)
+            for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
@@ -702,7 +677,7 @@ namespace Game2Test
             spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
             spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
 
-            spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y*2 - shieldIconTexture.Height)));
+            spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - shieldIconTexture.Height)));
             spriteBatch.DrawString(font, currentShip.energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
 
             if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
@@ -742,7 +717,7 @@ namespace Game2Test
                         Vector2 position = new Vector2((repeatIndex * backgroundSize.X) + rnd.Next(0, (int)backgroundSize.X + 1), (repeatIndex2 * backgroundSize.Y) + rnd.Next(0, (int)backgroundSize.Y + 1));
                         var rndInt = rnd.Next(asteroidTextures.Count);
                         var maxHealth = rndInt + 1;
-                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f/rndInt, maxHealth, new Bar(redHealth, greenHealth, position,50, 20, new Vector2(0,-30), maxHealth)));
+                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f / rndInt, maxHealth, new Bar(redHealth, greenHealth, position, 50, 20, new Vector2(0, -30), maxHealth)));
                     }
                 }
             }
@@ -811,7 +786,7 @@ namespace Game2Test
         //}
         public void NextShip()
         {
-            if (currentShip.shipCurrentIndex == ships.Count-1)
+            if (currentShip.shipCurrentIndex == ships.Count - 1)
             {
                 currentShip.shipPreviousIndex = currentShip.shipCurrentIndex;
                 currentShip.shipCurrentIndex = 0;
@@ -864,7 +839,7 @@ namespace Game2Test
             //background
             sector.Backgrounds = RandomizeBackground();
 
-            while(true)
+            while (true)
             {
                 char[] array = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
                 string tempString = array[rnd.Next(0, array.Length)].ToString() +

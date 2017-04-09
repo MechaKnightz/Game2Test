@@ -85,7 +85,7 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
-        private Panel mainMenuPanel, shopPanel, pauseMenuPanel;
+        private Panel mainMenuPanel, shopPanel, pauseMenuPanel, settingsMenuPanel;
         Button mainMenuPlayButton, mainMenuSettingsButton, mainMenuExitButton, warpButton, shopHUDButton;
         List<Button> shopButtons = new List<Button>();
         List<Paragraph> shopDescriptions = new List<Paragraph>();
@@ -123,21 +123,17 @@ namespace Game2Test
 
             camera = new Camera2D(GraphicsDevice);
 
-            //graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width; ;  // window width 801
-            //graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height; ;   // window height 701
+            graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // window width 801
+            graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;   // window height 701
             graphics.IsFullScreen = false;
 
-            //graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;
-            //graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;
-            //graphics.IsFullScreen = true;
-
-            graphics.PreferredBackBufferWidth = 801;  // window width 801
-            graphics.PreferredBackBufferHeight = 701;   // window height 701
+            //graphics.PreferredBackBufferWidth = 801;  // window width 801
+            //graphics.PreferredBackBufferHeight = 701;   // window height 701
             //graphics.IsFullScreen = false;
 
             graphics.ApplyChanges();
 
-            halfScreen = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            halfScreen = new Vector2(graphics.PreferredBackBufferWidth / 2f, graphics.PreferredBackBufferHeight / 2f);
 
             defaultShipPos = Vector2.Zero;
 
@@ -313,12 +309,10 @@ namespace Game2Test
                     EndScreenLogic();
                     break;
                 case GameState.MainMenu: //main menu
-                    ChangeColor();
                     MenuLogic(gameTime);
                     break;
                 case GameState.SettingsMenu: //settings
-                    ChangeColor();
-                    SettingsLogic();
+                    //SettingsLogic();
                     break;
                 case GameState.ShopMenu:
                     GameLogic(gameTime);
@@ -351,7 +345,6 @@ namespace Game2Test
                     DrawMenu();
                     break;
                 case GameState.SettingsMenu:
-                    DrawSettings();
                     break;
                 case GameState.ShopMenu:
                     DrawGame();
@@ -486,7 +479,7 @@ namespace Game2Test
             {
                 foreach(var tur in t.Value)
                 {
-                    Asteroid asteroid = new Asteroid();
+                    var asteroid = new Asteroid();
                     float tempDistance = 99999999;
                     for (int i = 0; i < currentSector.Asteroids.Count; i++) //TODO fix targetting
                     {
@@ -598,6 +591,9 @@ namespace Game2Test
                 case GameState.PauseMenu:
                     pauseMenuPanel.Visible = false;
                     break;
+                case GameState.SettingsMenu:
+                    settingsMenuPanel.Visible = false;
+                    break;
             }
         }
 
@@ -649,6 +645,18 @@ namespace Game2Test
                     break;
                 case GameState.SettingsMenu:
                     UserInterface.SetCursor(CursorType.Default);
+
+                    settingsMenuPanel = new Panel(new Vector2(700, 500));
+                    UserInterface.AddEntity(settingsMenuPanel);
+
+                    var fullscreenCheckbox = new CheckBox("Fullscreen");
+                    fullscreenCheckbox.OnValueChange = (Entity box) =>
+                    {
+                        graphics.IsFullScreen = fullscreenCheckbox.Checked;
+                        graphics.ApplyChanges();
+                    };
+                    settingsMenuPanel.AddChild(fullscreenCheckbox);
+
                     break;
                 case GameState.ShopMenu:
                     UserInterface.SetCursor(CursorType.Default);
@@ -813,23 +821,9 @@ namespace Game2Test
         }
         private void SettingsLogic()
         {
-            keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Up) && !oldState.IsKeyDown(Keys.Up)) selected--;
-            if (keyState.IsKeyDown(Keys.Down) && !oldState.IsKeyDown(Keys.Down)) selected++;
-            if (selected < 0) selected = settingsMenuLength - 1;
-            if (selected > settingsMenuLength - 1) selected = 0;
-
-            if (keyState.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter)) if (selected == 0) ChangeState(GameState.MainMenu);
-
-            if (keyState.IsKeyDown(Keys.Left) && selected == 1 && speed <= 101 && speed > 1) speed--;
-            if (keyState.IsKeyDown(Keys.Right) && selected == 1 && speed < 101 && speed >= 1) speed++;
-
-            speedbarRectangle.Width = speed;
-
-            oldState = Keyboard.GetState();
         }
-        void DrawEndScreen()
+        private void DrawEndScreen()
         {
             spriteBatch.DrawString(font, "Final Score: " + score.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2) - (font.MeasureString("Final Score: " + score.ToString()) / 2), Color.Black);
             spriteBatch.DrawString(font, "Press R to reset.", new Vector2(10, 10), Color.Black);
@@ -881,22 +875,7 @@ namespace Game2Test
         {
 
         }
-        void DrawSettings()
-        {
-            spriteBatch.DrawString(font, "Back", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Back").X / 2), (graphics.PreferredBackBufferHeight / 2) - font.MeasureString("Speed").Y), menuColor[0]);
-            spriteBatch.DrawString(font, "Speed", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("Speed").X / 2), (graphics.PreferredBackBufferHeight / 2)), menuColor[1]);
-            spriteBatch.Draw(currentShip.texture, speedbarRectangle2, Color.White);
-            spriteBatch.Draw(asteroidTextures[4], speedbarRectangle, Color.White);
-            spriteBatch.DrawString(font, speed.ToString(), new Vector2((graphics.PreferredBackBufferWidth / 2) - (font.MeasureString(speed.ToString()).X / 2), (graphics.PreferredBackBufferHeight / 2) + 20 + (font.MeasureString("Speed").Y)), Color.Black);
-        }
-        private void ChangeColor()
-        {
-            for (int i = 0; i < menuColor.Length; i++)
-            {
-                if (i == selected) menuColor[i] = Color.White;
-                else menuColor[i] = Color.Black;
-            }
-        }
+
         void ResetGame()
         {
             currentShip = ships[0];

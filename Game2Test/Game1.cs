@@ -48,11 +48,11 @@ namespace Game2Test
 
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
-        Ship currentStationShip;
 
         List<Ship> ships = new List<Ship>();
         List<Ship> availableShips = new List<Ship>();
         List<Ship> ownedShips = new List<Ship>();
+        private Ship testShip, testShip2, currentStationShip;
             
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
         Rectangle speedbarRectangle, speedbarRectangle2;
@@ -284,10 +284,18 @@ namespace Game2Test
             };
             particleEngine = new ParticleEngine(textures, new Vector2(0, 0));
 
-            
+
             //main menu
 
             GenerateInterface(GameState.MainMenu);
+
+            //test ships
+
+            testShip = ship2;
+            testShip.Position = new Vector2(1000,400);
+
+            testShip2 = ship1;
+            testShip2.Position = new Vector2(-500, -500);
 
             //bind default keys
 
@@ -551,6 +559,14 @@ namespace Game2Test
                     t.MoveTowardsPosition(currentShip.Position);
                 }
             }
+
+            //testing
+
+            AI.MoveTowardsGoal(testShip2, testShip.Position);
+            if(Vector2.Distance(testShip2.Position, testShip.Position) < 700) AI.ShootAtShip(testShip2, testShip);
+            testShip2.UpdateEnergy();
+
+            //testing end
 
             currentShip.UpdateEnergy();
             currentStationShip.UpdateEnergy();
@@ -938,6 +954,8 @@ namespace Game2Test
 
             currentStationShip.Draw(spriteBatch);
             currentShip.Draw(spriteBatch);
+            testShip.Draw(spriteBatch);
+            testShip2.Draw(spriteBatch);
 
             currentShip.DrawTurrets(spriteBatch);
 

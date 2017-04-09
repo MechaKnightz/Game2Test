@@ -9,10 +9,21 @@ namespace Game2Test.Sprites.Helpers
 {
     public static class AI
     {
-        public static void MoveTowardsGoal(Ship ship, Vector2 goal)
+        public static void MoveTowardsGoal(Ship ship, Ship goal)
         {
-            var angleToGoal = AngleToOther(ship.Position, goal);
-            if (Vector2.Distance(ship.Position, goal) > 500) //change 500 to range of weapons
+            var angleToGoal = AngleToOther(ship.Position, goal.Position);
+
+            float shortestRange = 9999999;
+            foreach (var turGroup in ship.turrets)
+            {
+                foreach (var tur in turGroup.Value)
+                {
+                    if (tur.shots["default"].speed * tur.shots["default"].duration < shortestRange)
+                        shortestRange = tur.shots["default"].speed * tur.shots["default"].duration;
+                }
+            }
+            var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);
+            if (distanceToGoal > shortestRange) //change 500 to range of the shortest weapons
             {
                 float diff = Math.Abs(MathHelper.WrapAngle(ship.rotation - angleToGoal));
                 if (diff < 0.2) ship.Move(MoveDirection.Forward, false);
@@ -28,6 +39,7 @@ namespace Game2Test.Sprites.Helpers
                     }
                 }
             }
+            if(distanceToGoal < shortestRange+10) ShootAtShip(ship, goal);
         }
         public static float AngleToOther(Vector2 main, Vector2 other)
         {

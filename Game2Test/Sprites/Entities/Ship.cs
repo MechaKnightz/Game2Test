@@ -36,6 +36,7 @@ namespace Game2Test
         public float energyMax;
         public float energyRegen;
 
+        public Ship() { }
         /// <summary>
         /// 
         /// </summary>
@@ -254,6 +255,7 @@ namespace Game2Test
                     SetPosition(tempPos2);
                     break;
             }
+            Moving = true;
         }
     }
 }

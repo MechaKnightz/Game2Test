@@ -251,10 +251,10 @@ namespace Game2Test
             //test ships
 
             testShip = ships[1];
-            testShip.Position = new Vector2(1000, 400);
+            testShip.SetPosition(new Vector2(1000, 400));
 
             testShip2 = ships[2];
-            testShip2.Position = new Vector2(-500, -500);
+            testShip2.SetPosition(new Vector2(-500, -500));
 
             //bind default keys
 
@@ -460,18 +460,15 @@ namespace Game2Test
             if (KeyInput.BothKeysDown(forwardKey, Keys.LeftShift) || KeyInput.BothKeysDown(forwardKey2, Keys.LeftShift))
             {
                 currentShip.Move(MoveDirection.Forward, true);
-                currentShip.Moving = true;
             }
             else if (KeyInput.EitherKeyDown(forwardKey, forwardKey2))
             {
                 currentShip.Move(MoveDirection.Forward, false);
-                currentShip.Moving = true;
             }
 
             if (KeyInput.EitherKeyDown(Keys.Down, Keys.S))
             {
                 currentShip.Move(MoveDirection.Backward, false);
-                currentShip.Moving = true;
             }
 
             if (KeyInput.EitherKeyDown(Keys.Left, Keys.A))
@@ -574,8 +571,7 @@ namespace Game2Test
 
             //testing
 
-            AI.MoveTowardsGoal(testShip2, testShip.Position);
-            if (Vector2.Distance(testShip2.Position, testShip.Position) < 700) AI.ShootAtShip(testShip2, testShip);
+            AI.MoveTowardsGoal(testShip2, currentShip);
             testShip2.UpdateEnergy();
 
             //testing end

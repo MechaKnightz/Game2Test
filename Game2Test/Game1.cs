@@ -48,9 +48,9 @@ namespace Game2Test
 
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
-        public Ship currentStationShip;
 
         List<Ship> ships = new List<Ship>();
+        public Ship testShip, testShip2, currentStationShip;
         public List<Ship> availableShips = new List<Ship>();
         public List<Ship> ownedShips = new List<Ship>();
             
@@ -294,10 +294,18 @@ namespace Game2Test
             };
             particleEngine = new ParticleEngine(textures, new Vector2(0, 0));
 
-            
+
             //main menu
 
             _gameUserInterface.GenerateUserInterface(GameState.MainMenu);
+
+            //test ships
+
+            testShip = ship2;
+            testShip.Position = new Vector2(1000,400);
+
+            testShip2 = ship1;
+            testShip2.Position = new Vector2(-500, -500);
 
             //bind default keys
 
@@ -562,6 +570,14 @@ namespace Game2Test
                 }
             }
 
+            //testing
+
+            AI.MoveTowardsGoal(testShip2, testShip.Position);
+            if(Vector2.Distance(testShip2.Position, testShip.Position) < 700) AI.ShootAtShip(testShip2, testShip);
+            testShip2.UpdateEnergy();
+
+            //testing end
+
             currentShip.UpdateEnergy();
             currentStationShip.UpdateEnergy();
 
@@ -663,6 +679,8 @@ namespace Game2Test
 
             currentStationShip.Draw(spriteBatch);
             currentShip.Draw(spriteBatch);
+            testShip.Draw(spriteBatch);
+            testShip2.Draw(spriteBatch);
 
             currentShip.DrawTurrets(spriteBatch);
 

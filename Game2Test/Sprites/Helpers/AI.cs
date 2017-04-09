@@ -14,13 +14,19 @@ namespace Game2Test.Sprites.Helpers
             var angleToGoal = AngleToOther(ship.Position, goal);
             if (Vector2.Distance(ship.Position, goal) > 500) //change 500 to range of weapons
             {
-
-                if (ship.rotation > angleToGoal) ship.Turn(Direction.Left);
-                if (ship.rotation < angleToGoal) ship.Turn(Direction.Right);
-
-
                 float diff = Math.Abs(MathHelper.WrapAngle(ship.rotation - angleToGoal));
                 if (diff < 0.2) ship.Move(MoveDirection.Forward, false);
+                else
+                {
+                    if (ship.rotation > angleToGoal)
+                    {
+                        if (ship.rotation > angleToGoal) ship.Turn(Direction.Left);
+                    }
+                    else
+                    {
+                        if (ship.rotation < angleToGoal) ship.Turn(Direction.Right);
+                    }
+                }
             }
         }
         public static float AngleToOther(Vector2 main, Vector2 other)
@@ -28,19 +34,24 @@ namespace Game2Test.Sprites.Helpers
             return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
         }
 
-        public static bool AimAtShip(Ship ship, Ship targetShip)
+        public static void ShootAtShip(Ship ship, Ship targetShip)
         {
-            var angleToTargetShip = AngleToOther(ship.Position, targetShip.Position);
             if (!ship.Moving)
             {
-                if (ship.rotation > angleToTargetShip) ship.Turn(Direction.Left);
-                if (ship.rotation < angleToTargetShip) ship.Turn(Direction.Right);
-            }
-        }
+                foreach (var turGroup in ship.turrets)
+                {
+                    foreach (var tur in turGroup.Value)
+                    {
+                        var angleToTargetShip = AngleToOther(ship.Position, targetShip.Position);
 
-        public static void ShootAtShip(Ship ship,Ship targetShip)
-        {
-            bool shoot = AimAtShip();
+                        if (tur.rotation > angleToTargetShip) tur.Turn(Direction.Left);
+                        if (tur.rotation < angleToTargetShip) tur.Turn(Direction.Right);
+
+                        float diff = Math.Abs(MathHelper.WrapAngle(tur.rotation - angleToTargetShip));
+                        if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
+                    }
+                }
+            }
         }
     }
 }

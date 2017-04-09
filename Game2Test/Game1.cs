@@ -649,6 +649,13 @@ namespace Game2Test
                     settingsMenuPanel = new Panel(new Vector2(700, 500));
                     UserInterface.AddEntity(settingsMenuPanel);
 
+                    var backButton = new Button("Back");
+                    backButton.OnClick = (Entity btn) =>
+                    {
+                        ChangeState(GameState.MainMenu);
+                    };
+                    settingsMenuPanel.AddChild(backButton);
+
                     var fullscreenCheckbox = new CheckBox("Fullscreen");
                     fullscreenCheckbox.OnValueChange = (Entity box) =>
                     {
@@ -656,6 +663,31 @@ namespace Game2Test
                         graphics.ApplyChanges();
                     };
                     settingsMenuPanel.AddChild(fullscreenCheckbox);
+
+                    var dropDown2 = new DropDown(new Vector2(0, 0));
+                    dropDown2.SelectedTextPanelParagraph.Text = graphics.PreferredBackBufferWidth + "x" + graphics.PreferredBackBufferHeight;
+                    dropDown2.AddItem("2560x1080");
+                    dropDown2.AddItem("1920x1080");
+                    dropDown2.AddItem("1680x1050");
+                    dropDown2.AddItem("1440x900");
+                    dropDown2.AddItem("1336x768");
+                    dropDown2.AddItem("1280x800");
+                    dropDown2.AddItem("800x480");
+
+                    dropDown2.OnValueChange = (Entity drop) =>
+                    {
+                        string selected = dropDown2.SelectedValue;
+                        var index = selected.IndexOf('x');
+
+                        var widthRes = selected.Substring(0, index);
+                        var heightRes = selected.Substring(index+1);
+
+                        graphics.PreferredBackBufferWidth = Convert.ToInt16(widthRes);
+                        graphics.PreferredBackBufferHeight = Convert.ToInt16(heightRes);
+                        graphics.ApplyChanges();
+                    };
+
+                    settingsMenuPanel.AddChild(dropDown2);
 
                     break;
                 case GameState.ShopMenu:

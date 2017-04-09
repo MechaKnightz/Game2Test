@@ -164,7 +164,7 @@ namespace Game2Test
                         var widthRes = selected.Substring(0, index);
                         var heightRes = selected.Substring(index + 1);
 
-                        _game1.graphics.PreferredBackBufferWidth = Convert.ToInt16(widthRes);
+                        CurrentScreenWidth = Convert.ToInt16(widthRes);
                         CurrentScreenHeight = Convert.ToInt16(heightRes);
                         _game1.graphics.ApplyChanges();
                     };

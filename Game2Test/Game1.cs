@@ -672,7 +672,7 @@ namespace Game2Test
                     dropDown2.AddItem("1440x900");
                     dropDown2.AddItem("1336x768");
                     dropDown2.AddItem("1280x800");
-                    dropDown2.AddItem("800x480");
+                    dropDown2.AddItem("1240x720");
 
                     dropDown2.OnValueChange = (Entity drop) =>
                     {

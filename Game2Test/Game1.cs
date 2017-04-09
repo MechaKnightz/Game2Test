@@ -114,6 +114,7 @@ namespace Game2Test
             UserInterface.UseRenderTarget = true;
             Paragraph.BaseSize = 1.0f;
             UserInterface.GlobalScale = 1.0f;
+            UserInterface.CursorScale = 0.7f;
 
             base.Initialize();
         }

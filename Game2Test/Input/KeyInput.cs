@@ -24,7 +24,7 @@ namespace Game2Test.Input
             return _keyState.IsKeyDown(key) && !_oldKeyState.IsKeyDown(key);
         }
 
-        public static bool TwoKeysDown(Keys key1, Keys key2)
+        public static bool EitherKeyDown(Keys key1, Keys key2)
         {
             return _keyState.IsKeyDown(key1) || _keyState.IsKeyDown(key2);
         }

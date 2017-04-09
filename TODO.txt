@@ -10,6 +10,8 @@ add speed to ship class
 add userinterface state 
 add proper collision
 fix intersect out, reference type
+rebind keys
+add upgrades
 
 DONE:
 

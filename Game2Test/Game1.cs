@@ -23,7 +23,7 @@ namespace Game2Test
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         MouseState mouseState, oldMouseState;
@@ -39,7 +39,7 @@ namespace Game2Test
         List<Turret> turrets2 = new List<Turret>();
         List<Turret> turretsStation = new List<Turret>();
 
-        List<Sector> sectors = new List<Sector>();
+        public List<Sector> sectors = new List<Sector>();
 
         Dictionary<string, Texture2D> ship0Dictionary = new Dictionary<string, Texture2D>();
         Dictionary<string, Texture2D> ship1Dictionary = new Dictionary<string, Texture2D>();
@@ -48,16 +48,19 @@ namespace Game2Test
 
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
-        Ship currentStationShip;
+        public Ship currentStationShip;
 
         List<Ship> ships = new List<Ship>();
-        List<Ship> availableShips = new List<Ship>();
-        List<Ship> ownedShips = new List<Ship>();
+        public List<Ship> availableShips = new List<Ship>();
+        public List<Ship> ownedShips = new List<Ship>();
             
         Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
         Rectangle speedbarRectangle, speedbarRectangle2;
+
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
-            redPixel, greenPixel, turretStationTexture, transparent;
+            redPixel, greenPixel, turretStationTexture;
+
+        public Texture2D transparent;
 
         Shot shot0, shot1;
         Sprite greenHealth;
@@ -65,7 +68,8 @@ namespace Game2Test
 
         SpriteFont font;
         Random rnd;
-        int score, speed;
+        public int score;
+        int speed;
         Color[] menuColor = new Color[3];
         int selected = 0;
         int defaultScore = 0;
@@ -74,8 +78,8 @@ namespace Game2Test
         ParticleEngine particleEngine;
         bool drawParticles;
         int movingDelayCounter;
-        GameState gameState = (GameState)2;
-        Ship currentShip;
+        public GameState gameState = (GameState)2;
+        public Ship currentShip;
         Sprite aimSprite;
         Camera2D camera;
         string xPosString, yPosString;
@@ -87,25 +91,31 @@ namespace Game2Test
         const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
-        private Panel mainMenuPanel, shopPanel, pauseMenuPanel, settingsMenuPanel, controlsMenuPanel;
-        Button mainMenuPlayButton, mainMenuSettingsButton, mainMenuExitButton, warpButton, shopHUDButton;
-        List<Button> shopButtons = new List<Button>();
-        List<Paragraph> shopDescriptions = new List<Paragraph>();
-        private PanelTabs tabs;
-        private PanelTabs.TabData tab0, tab1, tab2;
+        public Panel mainMenuPanel;
+        public Panel shopPanel;
+        public Panel pauseMenuPanel;
+        public Panel settingsMenuPanel;
+        public Panel controlsMenuPanel;
+        public Button shopHUDButton;
+        public List<Button> shopButtons = new List<Button>();
+        public List<Paragraph> shopDescriptions = new List<Paragraph>();
         private float distanceToStation;
         private float shopRadius = 200;
-        Sector currentSector;
+        public Sector currentSector;
         List<Texture2D> layer2 = new List<Texture2D>();
-        Data data;
         private const float _doublePI = (float)Math.PI*2;
-        private Keys forwardKey, forwardKey2;
-        
+        public Keys forwardKey;
+        public Keys forwardKey2;
+
+
+        private readonly GameUserInterface _gameUserInterface;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "..\\Content";
+            _gameUserInterface = new GameUserInterface(this);
         }
 
         protected override void Initialize()
@@ -287,7 +297,7 @@ namespace Game2Test
             
             //main menu
 
-            GenerateInterface(GameState.MainMenu);
+            _gameUserInterface.GenerateUserInterface(GameState.MainMenu);
 
             //bind default keys
 
@@ -574,9 +584,9 @@ namespace Game2Test
             
         }
 
-        private void ChangeState(GameState tempGameState)
+        public void ChangeState(GameState tempGameState)
         {
-            GenerateInterface(tempGameState);
+            _gameUserInterface.GenerateUserInterface(tempGameState);
             RemoveInterface(gameState);
             gameState = tempGameState;
         }
@@ -608,291 +618,6 @@ namespace Game2Test
             }
         }
 
-        private void GenerateInterface(GameState tempGameState)
-        {
-            switch (tempGameState)
-            {
-                case GameState.MainGame:
-                    UserInterface.SetCursor(transparent);
-                    shopHUDButton = new Button("Shop (G)", anchor: Anchor.BottomRight, size: new Vector2(150, 50), skin: ButtonSkin.Alternative);
-                    shopHUDButton.ButtonParagraph.Scale = 1.0f;
-                    shopHUDButton.ButtonParagraph.WrapWords = false;
-                    shopHUDButton.OnClick = (Entity btn) =>
-                    {
-                        if(gameState == GameState.MainGame) ChangeState(GameState.ShopMenu);
-                        else if(gameState == GameState.ShopMenu) ChangeState(GameState.MainGame);
-                    };
-                    UserInterface.AddEntity(shopHUDButton);
-                    break;
-                case GameState.EndScreen:
-                    UserInterface.SetCursor(CursorType.Default);
-                    break;
-                case GameState.MainMenu:
-                    mainMenuPanel = new Panel(new Vector2(300, 500));
-                    UserInterface.AddEntity(mainMenuPanel);
-                    mainMenuPlayButton = new Button("Play");
-                    mainMenuPlayButton.ButtonParagraph.Scale = 0.5f;
-                    var mainMenuControlsButton = new Button("Controls");
-                    mainMenuControlsButton.ButtonParagraph.Scale = 0.5f;
-                    mainMenuSettingsButton = new Button("Settings");
-                    mainMenuSettingsButton.ButtonParagraph.Scale = 0.5f;
-                    mainMenuExitButton = new Button("Quit");
-                    mainMenuExitButton.ButtonParagraph.Scale = 0.5f;
-
-                    mainMenuPanel.AddChild(mainMenuPlayButton);
-                    mainMenuPanel.AddChild(mainMenuControlsButton);
-                    mainMenuPanel.AddChild(mainMenuSettingsButton);
-                    mainMenuPanel.AddChild(mainMenuExitButton);
-
-                    mainMenuControlsButton.OnClick = (Entity btn) => {
-                        ChangeState(GameState.ControlsMenu);
-                    };
-                    mainMenuPlayButton.OnClick = (Entity btn) => {
-                        ResetGame();
-                        ChangeState(GameState.MainGame);
-                    };
-                    mainMenuSettingsButton.OnClick = (Entity btn) => {
-                        ChangeState(GameState.SettingsMenu);
-                    };
-                    mainMenuExitButton.OnClick = (Entity btn) => {
-                        Exit();
-                    };
-                    break;
-                case GameState.ControlsMenu:
-                    controlsMenuPanel = new Panel(new Vector2(700, 500));
-                    UserInterface.AddEntity(controlsMenuPanel);
-
-                    var backButton2 = new Button("Back");
-                    backButton2.ButtonParagraph.Scale = 0.5f;
-                    backButton2.OnClick = (Entity btn) =>
-                    {
-                        ChangeState(GameState.MainMenu);
-                    };
-                    controlsMenuPanel.AddChild(backButton2);
-
-                    var forwardKeyButton = new Button(forwardKey.ToString(), size: new Vector2(75, 75), anchor: Anchor.TopLeft, offset: new Vector2(0, 75+30));
-                    forwardKeyButton.ButtonParagraph.Scale = 1.0f;
-                    forwardKeyButton.ButtonParagraph.SetAnchor(Anchor.BottomCenter);
-                    forwardKeyButton.ButtonParagraph.SetOffset(new Vector2(0, -27));
-
-                    var forwardKeyButton2 = new Button(forwardKey2.ToString(), size: new Vector2(75,75), anchor: Anchor.TopLeft, offset: new Vector2(75+30, 75+30));
-                    forwardKeyButton2.ButtonParagraph.Scale = 1.0f;
-                    forwardKeyButton2.ButtonParagraph.SetAnchor(Anchor.BottomCenter);
-                    forwardKeyButton2.ButtonParagraph.SetOffset(new Vector2(0, -27));
-
-                    var forwardKeyParagraph = new Paragraph(" - Forward", anchor: Anchor.TopLeft, offset: new Vector2(150 + 30, 75 + 30 + 5));
-                    forwardKeyParagraph.Scale = 1.0f;
-                    controlsMenuPanel.AddChild(forwardKeyParagraph);
-                    controlsMenuPanel.AddChild(forwardKeyButton);
-                    controlsMenuPanel.AddChild(forwardKeyButton2);
-
-                    break;
-                case GameState.SettingsMenu:
-                    UserInterface.SetCursor(CursorType.Default);
-
-                    settingsMenuPanel = new Panel(new Vector2(700, 500));
-                    UserInterface.AddEntity(settingsMenuPanel);
-
-                    var backButton = new Button("Back");
-                    backButton.ButtonParagraph.Scale = 0.5f;
-                    backButton.OnClick = (Entity btn) =>
-                    {
-                        ChangeState(GameState.MainMenu);
-                    };
-                    settingsMenuPanel.AddChild(backButton);
-
-                    var fullscreenCheckbox = new CheckBox("Fullscreen");
-                    fullscreenCheckbox.TextParagraph.Scale = 0.5f;
-                    fullscreenCheckbox.OnValueChange = (Entity box) =>
-                    {
-                        graphics.IsFullScreen = fullscreenCheckbox.Checked;
-                        graphics.ApplyChanges();
-                    };
-                    settingsMenuPanel.AddChild(fullscreenCheckbox);
-
-                    var dropDown2 = new DropDown(new Vector2(0, 0));
-                    dropDown2.SelectedTextPanelParagraph.Text = graphics.PreferredBackBufferWidth + "x" + graphics.PreferredBackBufferHeight;
-                    dropDown2.AddItem("2560x1080");
-                    dropDown2.AddItem("1920x1080");
-                    dropDown2.AddItem("1680x1050");
-                    dropDown2.AddItem("1440x900");
-                    dropDown2.AddItem("1336x768");
-                    dropDown2.AddItem("1280x800");
-                    dropDown2.AddItem("1240x720");
-
-                    dropDown2.OnValueChange = (Entity drop) =>
-                    {
-                        string selected = dropDown2.SelectedValue;
-                        var index = selected.IndexOf('x');
-
-                        var widthRes = selected.Substring(0, index);
-                        var heightRes = selected.Substring(index+1);
-
-                        graphics.PreferredBackBufferWidth = Convert.ToInt16(widthRes);
-                        graphics.PreferredBackBufferHeight = Convert.ToInt16(heightRes);
-                        graphics.ApplyChanges();
-                    };
-
-                    settingsMenuPanel.AddChild(dropDown2);
-
-                    break;
-                case GameState.ShopMenu:
-                    UserInterface.SetCursor(CursorType.Default);
-                    shopPanel = new Panel(new Vector2(500, 300), anchor: Anchor.TopLeft, offset: new Vector2(0, 70));
-                    UserInterface.AddEntity(shopPanel);
-                    tabs = new PanelTabs();
-                    tab0 = tabs.AddTab("Warp");
-                    tab0.button.ButtonParagraph.Scale = 0.5f;
-                    tab1 = tabs.AddTab("Shop");
-                    tab1.button.ButtonParagraph.Scale = 0.5f;
-                    tab2 = tabs.AddTab("Upgrades");
-                    tab2.button.ButtonParagraph.Scale = 0.5f;
-                    tab2.button.ButtonParagraph.WrapWords = false;
-
-                    //first tab
-                    warpButton = new Button("Warp to new sector");
-                    warpButton.ButtonParagraph.Scale = 0.5f;
-                    warpButton.OnClick = (Entity btn) => {
-                        currentSector = GenerateSector();
-                        ChangeState(GameState.MainGame);
-                    };
-
-                    tab0.panel.AddChild(warpButton);
-                    tab0.panel.AddChild(new HorizontalLine());
-                    
-                    var dropDown = new DropDown(new Vector2(0, 0));
-                    dropDown.SelectedTextPanelParagraph.Scale = 0.5f;
-                    dropDown.SelectList.ItemsScale = 0.5f;
-                    dropDown.SelectedTextPanelParagraph.Text = "Warp to an old sector";
-                    for (int i = 0; i < sectors.Count; i++)
-                    {
-                        dropDown.AddItem(sectors[i].Name);
-                    }
-                    dropDown.AttachedData = dropDown.SelectedValue;
-                    dropDown.OnValueChange = (Entity drop) =>
-                    {
-                        currentSector = sectors.FirstOrDefault(x => x.Name == dropDown.SelectedValue);
-                    };
-                    tab0.panel.AddChild(dropDown);
-
-                    //for (int i = 0; i < sectors.Count; i++)
-                    //{
-                    //    var button = new Button("Sector: " + sectors[i].Name);
-                    //    button.Identifier = i.ToString();
-                    //    button.OnClick = (Entity btn) => {
-                    //        currentSector = sectors[Convert.ToInt16(btn.Identifier)];
-                    //        ChangeState(GameState.MainGame);
-                    //    };
-                    //    tab0.panel.AddChild(button);
-                    //    tab0.panel.AddChild(new HorizontalLine());
-                    //}
-
-                    //second tab
-
-                    int height = 200;
-                    //TODO: offset = text width, measurestring
-                    for (int i = 0; i < availableShips.Count; i++)
-                    {
-                        var offset = new Vector2(0, (height + 20) * i);
-                        var img = new Image(availableShips[i].texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
-                        img.SetOffset(offset);
-
-                        shopDescriptions.Add(new Paragraph(availableShips[i].description));
-                        img.Identifier = i.ToString();
-                        img.OnMouseEnter = (Entity entity) =>
-                        {
-                            UserInterface.AddEntity(shopDescriptions[Convert.ToUInt16(entity.Identifier)]);
-                        };
-                        img.OnMouseLeave = (Entity entity) =>
-                        {
-                            UserInterface.RemoveEntity(shopDescriptions[Convert.ToUInt16(entity.Identifier)]);
-                        };
-                        tab1.panel.AddChild(img);
-
-                        var name = new Paragraph(availableShips[i].Name, anchor: Anchor.TopRight);
-                        name.Scale = 0.5f;
-                        name.SetOffset(offset);
-                        tab1.panel.AddChild(name);
-
-                        var cost = new Paragraph("Cost: " + availableShips[i].cost, anchor: Anchor.CenterRight);
-                        cost.Scale = 0.5f;
-                        cost.SetOffset(offset - new Vector2(-25, 50));
-                        tab1.panel.AddChild(cost);
-
-                        var buttonlul = new Button("Buy", size: new Vector2(100, 50), anchor: Anchor.CenterRight);
-                        buttonlul.ButtonParagraph.Scale = 0.5f;
-                        shopButtons.Add(buttonlul);
-                        
-                        shopButtons[i].SetOffset(offset + new Vector2(0, 0));
-                        shopButtons[i].ButtonParagraph.SetOffset(new Vector2(0, -22));
-                        tab1.panel.AddChild(shopButtons[i]);
-                        tab1.panel.AddChild(new HorizontalLine());
-
-                        shopButtons[i].Identifier = i.ToString();
-                        shopButtons[i].OnClick = (Entity btn) => {
-                            BuyShip(availableShips[Convert.ToUInt16(btn.Identifier)]);
-                        };
-                    }
-
-                    tab1.panel.PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
-                    tab1.panel.Scrollbar.Max = Convert.ToUInt16((availableShips.Count * (height+20)) - shopPanel.Size.Y);
-                    tab1.panel.Scrollbar.StepsCount = (uint)availableShips.Count*5;
-
-                    //second tab end
-
-                    shopPanel.AddChild(tabs);
-                    break;
-                case GameState.PauseMenu:
-                    UserInterface.SetCursor(CursorType.Default);
-                    //panel
-                    pauseMenuPanel = new Panel(new Vector2(300, 500));
-                    UserInterface.AddEntity(pauseMenuPanel);
-                    //resumebutton
-                    var resumeButton = new Button("Resume");
-                    resumeButton.ButtonParagraph.Scale = 0.5f;
-                    resumeButton.OnClick = (Entity btn) =>
-                    {
-                        ChangeState(GameState.MainGame);
-                    };
-                    pauseMenuPanel.AddChild(resumeButton);
-                    //save button
-                    var saveButton = new Button("Save game");
-                    saveButton.ButtonParagraph.Scale = 0.5f;
-                    saveButton.OnClick = (Entity btn) =>
-                    {
-                        SaveGame();
-                    };
-                    pauseMenuPanel.AddChild(saveButton);
-                    //load button
-                    var loadButton = new Button("Load game");
-                    loadButton.ButtonParagraph.Scale = 0.5f;
-                    loadButton.OnClick = (Entity btn) =>
-                    {
-                        LoadGame();
-                    };
-                    pauseMenuPanel.AddChild(loadButton);
-                    //main menu button
-                    var mainMenuButton = new Button("Main Menu");
-                    mainMenuButton.ButtonParagraph.Scale = 0.5f;
-                    mainMenuButton.OnClick = (Entity btn) =>
-                    {
-                        ChangeState(GameState.MainMenu);
-                    };
-                    pauseMenuPanel.AddChild(mainMenuButton);
-                    //exit button
-                    var exitButton = new Button("Exit");
-                    exitButton.ButtonParagraph.Scale = 0.5f;
-                    exitButton.OnClick = (Entity btn) =>
-                    {
-                        Exit();
-                    };
-                    pauseMenuPanel.AddChild(exitButton);
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(tempGameState), tempGameState, null);
-            }
-        }
         private void PauseMenuLogic(GameTime gameTime)
         {
             keyState = Keyboard.GetState();
@@ -970,7 +695,7 @@ namespace Game2Test
 
         }
 
-        void ResetGame()
+        public void ResetGame()
         {
             currentShip = ships[0];
             currentShip.health = currentShip.healthMax;
@@ -1082,26 +807,6 @@ namespace Game2Test
             }
         }
 
-        public void BuyShip(Ship ship)
-        {
-            if(ownedShips.All(x => x.Name != ship.Name)) ownedShips.Add(ship);
-
-            var tempRot = currentShip.rotation;
-            var tempPos = currentStationShip.Position;
-            var tempIndex = currentShip.shipCurrentIndex;
-            var tempHealth = currentShip.health;
-            var tempEnergy = currentShip.energy;
-            currentShip = ship;
-
-            currentShip.shipCurrentIndex = tempIndex;
-
-            currentShip.Position = tempPos;
-            currentShip.rotation = tempRot;
-            currentShip.health = tempHealth;
-            currentShip.energy = tempEnergy;
-
-            currentShip.Update();
-        }
         public void ChangeShip()
         {
             var tempRot = currentShip.rotation;
@@ -1135,7 +840,7 @@ namespace Game2Test
             return randomBackgroundList;
         }
 
-        private Sector GenerateSector()
+        public Sector GenerateSector()
         {
             var sector = new Sector();
             //background
@@ -1160,35 +865,6 @@ namespace Game2Test
             //TODO make station dependant on sector
             sectors.Add(sector);
             return sector;
-        }
-        private void SaveGame()
-        {
-            data.Score = score;
-            data.Health = currentShip.health;
-
-            data.DiscoveredSectors = sectors;
-            data.OwnedShips = ownedShips;
-
-            data.CurrentSectorName = currentSector.Name;
-            data.CurrentShipName = currentShip.Name;
-
-            List<Data> _data = new List<Data>();
-            _data.Add(data);
-            string json = JsonConvert.SerializeObject(_data.ToArray(), Formatting.Indented);
-
-            File.WriteAllText("save.json", json);
-        }
-        public void LoadGame()
-        {
-            var text = File.ReadAllText("save.json");
-
-            List<Data> _data = new List<Data>();
-            _data = (JsonConvert.DeserializeObject<List<Data>>(text));
-
-            data = _data[0];
-
-            score = data.Score;
-            currentShip.health = data.Health;
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

@@ -1,6 +1,6 @@
 ﻿namespace Game2Test
 {
-    enum GameState
+    public enum GameState
     {
         MainGame,
         EndScreen,

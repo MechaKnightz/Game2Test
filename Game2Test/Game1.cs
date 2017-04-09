@@ -279,7 +279,7 @@ namespace Game2Test
             var initiatedShips = new List<Ship> { ship0, ship1, ship2 };
 
             ships.AddRange(initiatedShips);
-            ownedShips.AddRange(initiatedShips);
+            ownedShips.Add(ship0);
             availableShips.AddRange(initiatedShips);
         }
 
@@ -573,6 +573,7 @@ namespace Game2Test
 
             AI.MoveTowardsGoal(testShip2, currentShip);
             testShip2.UpdateEnergy();
+            testShip2.UpdateTurrets();
 
             //testing end
 
@@ -811,8 +812,6 @@ namespace Game2Test
             currentShip.rotation = tempRot;
             currentShip.health = tempHealth;
             currentShip.energy = tempEnergy;
-
-            currentShip.Update();
         }
         private List<Texture2D> RandomizeBackground()
         {

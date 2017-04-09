@@ -64,30 +64,6 @@ namespace Game2Test
             TurnRate = turnRate;
         }
 
-        public void Update()
-        {
-            foreach (var t in turrets)
-            {
-                //sets the turrets at the position of the ship
-                foreach(var tur in t.Value)
-                {
-                    var temp = tur.Position;
-                    temp.X = Position.X;
-                    temp.Y = Position.Y;
-
-                    //x turret offset
-                    temp.X -= (float)(tur.offset.X * Math.Cos(rotation - Math.PI));
-                    temp.Y -= (float)(tur.offset.X * Math.Sin(rotation - Math.PI));
-
-                    //y turret offset
-                    temp.X -= (float)(tur.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
-                    temp.Y -= (float)(tur.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
-
-                    tur.Position = temp;
-                }
-            }
-        }
-
         public void UpdateEnergy()
         {
             if (energy + energyRegen <= energyMax) energy += energyRegen;
@@ -113,7 +89,26 @@ namespace Game2Test
         public void SetPosition(Vector2 position)
         {
             Position = position;
-            Update();
+            foreach (var t in turrets)
+            {
+                //sets the turrets at the position of the ship
+                foreach (var tur in t.Value)
+                {
+                    var temp = tur.Position;
+                    temp.X = Position.X;
+                    temp.Y = Position.Y;
+
+                    //x turret offset
+                    temp.X -= (float)(tur.offset.X * Math.Cos(rotation - Math.PI));
+                    temp.Y -= (float)(tur.offset.X * Math.Sin(rotation - Math.PI));
+
+                    //y turret offset
+                    temp.X -= (float)(tur.offset.Y * Math.Cos(rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.offset.Y * Math.Sin(rotation - (Math.PI / 2)));
+
+                    tur.Position = temp;
+                }
+            }
         }
 
         public void DrawTurrets(SpriteBatch spriteBatch)
@@ -225,7 +220,6 @@ namespace Game2Test
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-            Update();
         }
 
         public void Move(MoveDirection moveDirection, bool speedBoost)

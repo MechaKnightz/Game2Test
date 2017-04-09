@@ -341,16 +341,14 @@ namespace Game2Test
             var tempIndex = _game1.currentShip.shipCurrentIndex;
             var tempHealth = _game1.currentShip.health;
             var tempEnergy = _game1.currentShip.energy;
+
             _game1.currentShip = ship;
 
             _game1.currentShip.shipCurrentIndex = tempIndex;
-
             _game1.currentShip.Position = tempPos;
             _game1.currentShip.rotation = tempRot;
             _game1.currentShip.health = tempHealth;
             _game1.currentShip.energy = tempEnergy;
-
-            _game1.currentShip.Update();
         }
 
         private void SaveGame()

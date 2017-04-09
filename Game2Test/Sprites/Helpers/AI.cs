@@ -14,13 +14,19 @@ namespace Game2Test.Sprites.Helpers
             var angleToGoal = AngleToOther(ship.Position, goal);
             if (Vector2.Distance(ship.Position, goal) > 500) //change 500 to range of weapons
             {
-
-                if (ship.rotation > angleToGoal) ship.Turn(Direction.Left);
-                if (ship.rotation < angleToGoal) ship.Turn(Direction.Right);
-
-
                 float diff = Math.Abs(MathHelper.WrapAngle(ship.rotation - angleToGoal));
                 if (diff < 0.2) ship.Move(MoveDirection.Forward, false);
+                else
+                {
+                    if (ship.rotation > angleToGoal)
+                    {
+                        if (ship.rotation > angleToGoal) ship.Turn(Direction.Left);
+                    }
+                    else
+                    {
+                        if (ship.rotation < angleToGoal) ship.Turn(Direction.Right);
+                    }
+                }
             }
         }
         public static float AngleToOther(Vector2 main, Vector2 other)

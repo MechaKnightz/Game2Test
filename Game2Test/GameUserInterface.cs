@@ -190,7 +190,7 @@ namespace Game2Test
                     warpButton.ButtonParagraph.Scale = 0.5f;
                     warpButton.OnClick = (Entity btn) =>
                     {
-                        _game1.currentSector = _game1.GenerateSector();
+                        ChangeSector(_game1.GenerateSector());
                         _game1.ChangeState(GameState.MainGame);
                     };
 
@@ -209,8 +209,7 @@ namespace Game2Test
                     dropDown.OnValueChange = (Entity drop) =>
                     {
                         var dropDownSector = _game1.sectors.FirstOrDefault(x => x.Name == dropDown.SelectedValue);
-                        dropDownSector.CurrentShip = _game1.currentSector.CurrentShip;
-                        _game1.currentSector = dropDownSector;
+                        ChangeSector(dropDownSector);
 
                     };
                     tab0.panel.AddChild(dropDown);
@@ -238,6 +237,7 @@ namespace Game2Test
                         img.SetOffset(offset);
 
                         _game1.shopDescriptions.Add(new Paragraph(_game1.availableShips[i].description));
+                        _game1.shopDescriptions[i].Scale = 0.5f;
                         img.Identifier = i.ToString();
                         img.OnMouseEnter = (Entity entity) =>
                         {
@@ -256,7 +256,7 @@ namespace Game2Test
 
                         var cost = new Paragraph("Cost: " + _game1.availableShips[i].cost, anchor: Anchor.CenterRight);
                         cost.Scale = 0.5f;
-                        cost.SetOffset(offset - new Vector2(-25, 50));
+                        cost.SetOffset(offset - new Vector2(-20, 50));
                         tab1.panel.AddChild(cost);
 
                         var buttonlul = new Button("Buy", size: new Vector2(100, 50), anchor: Anchor.CenterRight);
@@ -340,7 +340,7 @@ namespace Game2Test
             if (_game1.ownedShips.All(x => x.Name != ship.Name)) _game1.ownedShips.Add(ship);
 
             var tempRot = _game1.currentShip.Rotation;
-            var tempPos = _game1.currentStationShip.Position;
+            var tempPos = _game1.currentStation.Position;
             var tempIndex = _game1.currentShip.shipCurrentIndex;
             var tempHealth = _game1.currentShip.health;
             var tempEnergy = _game1.currentShip.energy;
@@ -410,6 +410,13 @@ namespace Game2Test
                     game1.controlsMenuPanel.Visible = false;
                     break;
             }
+        }
+
+        public void ChangeSector(Sector sector)
+        {
+            sector.CurrentShip = _game1.currentSector.CurrentShip;
+            sector.CurrentStation = _game1.currentSector.CurrentStation;
+            _game1.currentSector = sector;
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Game2Test
 
         public List<Ship> NPCShips = new List<Ship>();
         public Ship CurrentShip = new Ship();
+        public Station CurrentStation = new Station();
 
         [JsonIgnore]
         public List<Texture2D> Backgrounds = new List<Texture2D>();
@@ -25,8 +26,12 @@ namespace Game2Test
         {
             foreach (var ship in NPCShips)
             {
+                ship.UpdateTurrets();
+                ship.UpdateEnergy();
                 ship.Moving = false;
             }
+            CurrentShip.UpdateTurrets();
+            CurrentShip.UpdateEnergy();
             CurrentShip.Moving = false;
         }
     }

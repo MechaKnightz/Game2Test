@@ -47,7 +47,8 @@ namespace Game2Test
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
 
         List<Ship> ships = new List<Ship>();
-        public Ship  testShip, currentStationShip;
+        public Ship  testShip;
+        public Station currentStation;
         public List<Ship> availableShips = new List<Ship>();
         public List<Ship> ownedShips = new List<Ship>();
 
@@ -130,7 +131,7 @@ namespace Game2Test
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            rnd = new Random();
             camera = new Camera2D(GraphicsDevice);
 
             graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // window width 801
@@ -174,7 +175,7 @@ namespace Game2Test
 
 
             LoadShips(); //LOADS SHIPS
-
+            currentShip = ships[0];
 
             var turretStationCollection = new Dictionary<string, List<Turret>>();
             turretStationCollection.Add("primary", turretsStation);
@@ -183,21 +184,29 @@ namespace Game2Test
 
             stationDictionary.Add("Default", Content.Load<Texture2D>("stationTexture"));
 
-            currentStationShip = new Ship(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f);
+            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f);
 
             //stationShip end
 
-            currentShip = ships[0];
-
+            //asteroid textures
+            for (int i = 1; i < asteroidTextureAmount + 1; i++)
+            {
+                asteroidTextures.Add(Content.Load<Texture2D>("asteroid" + i));
+            }
             redPixel = Content.Load<Texture2D>("redPixel");
             greenPixel = Content.Load<Texture2D>("greenPixel");
             redHealth = new Sprite(redPixel);
             greenHealth = new Sprite(greenPixel);
+            //first sector
+            currentSector = GenerateSector();
+            currentSector.CurrentShip = currentShip;
+            currentSector.CurrentStation = currentStation;
+            //first sector end
+
             shieldIconTexture = Content.Load<Texture2D>("shieldIcon");
             aimTexture = Content.Load<Texture2D>("aimWhite");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
             font = Content.Load<SpriteFont>("font");
-            rnd = new Random();
             speed = defaultSpeed;
             halfScreenPos = new Vector2(halfScreen.X, halfScreen.Y);
             transparent = Content.Load<Texture2D>("transparent");
@@ -210,24 +219,14 @@ namespace Game2Test
             clearColor = Color.FromNonPremultiplied(37, 40, 41, 255);
             viewMatrix = camera.GetViewMatrix();
 
-            //rock textures
-            for (int i = 1; i < asteroidTextureAmount + 1; i++)
-            {
-                asteroidTextures.Add(Content.Load<Texture2D>("asteroid" + i));
-            }
-
             //map generation
 
             ResetGame();
-
 
             //backgrounds larger = front
 
 
             // TODO: https://msdn.microsoft.com/en-us/library/bb531208.aspx
-
-            currentSector = GenerateSector();
-            currentSector.CurrentShip = currentShip;
 
             //particles
             var textures = new List<Texture2D>
@@ -406,7 +405,7 @@ namespace Game2Test
                     }
                     var tempTurret2 = new Turret();
                     var tempShot2 = new Shot();
-                    if (currentStationShip.TurretCollision(currentSector.Asteroids[i].rectangle, out tempTurret2, out tempShot2))
+                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].rectangle, out tempTurret2, out tempShot2))
                     {
                         currentSector.Asteroids[i].health -= tempShot2.Damage;
                         if (currentSector.Asteroids[i].health <= 0)
@@ -441,7 +440,7 @@ namespace Game2Test
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();
 
-            distanceToStation = Vector2.Distance(currentShip.Position, currentStationShip.Position);
+            distanceToStation = Vector2.Distance(currentShip.Position, currentSector.CurrentStation.Position);
 
 
             if (KeyInput.IsKeyClicked(Keys.Escape) && gameState == GameState.MainGame)
@@ -491,7 +490,7 @@ namespace Game2Test
 
             aimSprite.Position = camera.ScreenToWorld(mouseState.Position.ToVector2());
 
-            foreach (var t in currentStationShip.turrets)
+            foreach (var t in currentSector.CurrentStation.turrets)
             {
                 foreach (var tur in t.Value)
                 {
@@ -521,7 +520,7 @@ namespace Game2Test
                         if (tur.Rotation < rot) tur.Rotation += rotConst;
                         //t.Value.Rotation = AngleToOther(t.Value.position, asteroid.position));
                         float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.Rotation));
-                        if (diff < 0.2) currentStationShip.Fire("primary", "default");
+                        if (diff < 0.2) currentSector.CurrentStation.Fire("primary", "default");
                     }
                 }
             }
@@ -569,12 +568,12 @@ namespace Game2Test
             //testing end
 
             currentShip.UpdateEnergy();
-            currentStationShip.UpdateEnergy();
+            currentSector.CurrentStation.UpdateEnergy();
 
             if (currentShip.Rotation > _doublePI) currentShip.Rotation -= _doublePI;
             else if (currentShip.Rotation < -_doublePI) currentShip.Rotation += _doublePI;
             currentShip.UpdateTurrets();
-            currentStationShip.UpdateTurrets();
+            currentSector.CurrentStation.UpdateTurrets();
 
             particleEngine.EmitterLocation = currentShip.GetBackOfShip();
             particleEngine.Update();
@@ -640,7 +639,7 @@ namespace Game2Test
             //ship.rotationRender = (float)(Math.Round(ship.Rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), Rotation: ship.Rotation, origin: ship.Origin);
 
-            currentStationShip.Draw(spriteBatch);
+            currentSector.CurrentStation.Draw(spriteBatch);
             currentShip.Draw(spriteBatch);
             testShip.Draw(spriteBatch);
 
@@ -710,7 +709,7 @@ namespace Game2Test
             }
             for (int i = 0; i < asteroids.Count; i++)
             {
-                if (Vector2.Distance(currentStationShip.Position, asteroids[i].Position) < 1100)
+                if (Vector2.Distance(Vector2.Zero, asteroids[i].Position) < 1100)
                 {
                     asteroids.RemoveAt(i);
                     i--;
@@ -840,7 +839,6 @@ namespace Game2Test
 
             //asteroids
             sector.Asteroids = GenerateAsteroids();
-            //TODO make station dependant on sector
             sectors.Add(sector);
             return sector;
         }

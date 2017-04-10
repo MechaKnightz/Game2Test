@@ -518,13 +518,6 @@ namespace Game2Test
             }
             //stationShip.turrets["primary"] = stationShip.ShuffleTurrets(stationShip.turrets["primary"]);
 
-            foreach (var t in currentShip.Turrets)
-            {
-                foreach (var tur in t.Value)
-                {
-                    tur.Rotation = AngleToMouse(tur.Position);
-                }
-            }
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
                 currentShip.Fire("primary", "default");
@@ -552,14 +545,16 @@ namespace Game2Test
             }
 
 
-            //VVV - UPDATE BELOW - VVV
+            //VVV - UPDATE BELOW -  VVV
+
+            currentShip.AimTurrets(aimSprite.Position);
+
             //testing
 
             AI.MoveTowardsGoal(testShip, currentShip);
             testShip.Update();
 
             //determines if should draw particles, must be after move/turn ship but before update
-
             if (currentShip.Moving) movingDelayCounter = 5;
             else movingDelayCounter--;
             if (movingDelayCounter <= 0) drawParticles = false;
@@ -760,7 +755,7 @@ namespace Game2Test
         {
             return AngleToOther(position, aimSprite.Position);
         }
-        public float AngleToOther(Vector2 main, Vector2 other)
+        public static float AngleToOther(Vector2 main, Vector2 other)
         {
             return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
         }

@@ -110,6 +110,20 @@ namespace Game2Test.Sprites.Entities
             DrawTurrets(spriteBatch);
         }
 
+        public void AimTurrets(Vector2 position)
+        {
+            foreach (var turGroup in Turrets)
+            {
+                foreach (var tur in turGroup.Value)
+                {
+                    tur.Rotation = Game1.AngleToOther(tur.Position, position);
+                    //var angle = Game1.AngleToOther(tur.Position, position);
+                    //if (tur.Rotation > angle) tur.Turn(Direction.Left); //fix angle calculation
+                    //if (tur.Rotation < angle) tur.Turn(Direction.Right);
+                }
+            }
+        }
+
         public void UpdateTurrets()
         {
             foreach (var t in Turrets)

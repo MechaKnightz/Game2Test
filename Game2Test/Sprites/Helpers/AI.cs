@@ -45,21 +45,11 @@ namespace Game2Test.Sprites.Helpers
 
         public static void ShootAtShip(Ship ship, Ship targetShip)
         {
-            if (!ship.Moving)
+            if (!targetShip.Moving)
             {
-                foreach (var turGroup in ship.Turrets)
-                {
-                    foreach (var tur in turGroup.Value)
-                    {
-                        var angleToTargetShip = AngleToOther(ship.Position, targetShip.Position);
-
-                        if (tur.Rotation > angleToTargetShip) tur.Turn(Direction.Left);
-                        if (tur.Rotation < angleToTargetShip) tur.Turn(Direction.Right);
-
-                        float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
-                        if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
-                    }
-                }
+                ship.AimTurrets(targetShip.Position);
+                //float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
+                //if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
             }
         }
     }

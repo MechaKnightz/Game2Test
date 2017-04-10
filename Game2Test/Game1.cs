@@ -517,7 +517,6 @@ namespace Game2Test
                     }
                 }
             }
-            //stationShip.turrets["primary"] = stationShip.ShuffleTurrets(stationShip.turrets["primary"]);
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {

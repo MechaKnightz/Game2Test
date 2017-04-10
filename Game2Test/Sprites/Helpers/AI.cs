@@ -63,6 +63,10 @@ namespace Game2Test.Sprites.Helpers
                 ship.AimTurrets(targetShip.Position);
                 ShootIfInAim(ship, targetShip.Position);
             }
+            else if (targetShip.Moving)
+            {
+                
+            }
         }
         public static void ShootAtAsteroid(Station station, Asteroid asteroid)
         {

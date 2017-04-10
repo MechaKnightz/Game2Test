@@ -209,8 +209,8 @@ namespace Game2Test
                     dropDown.OnValueChange = (Entity drop) =>
                     {
                         var dropDownSector = _game1.sectors.FirstOrDefault(x => x.Name == dropDown.SelectedValue);
+                        dropDownSector.CurrentShip = _game1.currentSector.CurrentShip;
                         _game1.currentSector = dropDownSector;
-                        dropDownSector.CurrentShip = null;
 
                     };
                     tab0.panel.AddChild(dropDown);

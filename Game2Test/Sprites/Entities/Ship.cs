@@ -116,12 +116,32 @@ namespace Game2Test.Sprites.Entities
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    tur.Rotation = Game1.AngleToOther(tur.Position, target);
-                    //var angle = Game1.AngleToOther(tur.Position, position);
-                    //if (tur.Rotation > angle) tur.Turn(Direction.Left); //fix angle calculation
-                    //if (tur.Rotation < angle) tur.Turn(Direction.Right);
+                    var angleToOther = Game1.AngleToOther(tur.Position, target);
+
+                    var direction = WayToTurn(tur.Rotation, angleToOther);
+
+                    tur.Turn(direction);
                 }
             }
+        }
+
+        public Direction WayToTurn(float angle, float angleToOther)
+        {
+            angleToOther -= angle;
+
+            while (true)
+            {
+
+                if (angleToOther > Game1.DoublePI) angleToOther -= Game1.DoublePI;
+                else if (angleToOther < 0f) angleToOther += Game1.DoublePI;
+
+                if (angleToOther > 0 && angleToOther < Game1.DoublePI) break;
+            }
+
+            if (angleToOther > Math.PI) return Direction.Left;
+            if (angleToOther < Math.PI) return Direction.Right;
+
+            return Direction.Left;
         }
 
         public void ShootIfInSight(Vector2 target)
@@ -152,8 +172,8 @@ namespace Game2Test.Sprites.Entities
         {
             Rotation = rotation;
 
-            //if (Rotation > Game1.DoublePI) Rotation = Rotation - Game1.DoublePI;
-            //if (Rotation < 0) Rotation = Game1.DoublePI - Rotation; //TODO rotation resetter
+            if (Rotation > Game1.DoublePI) Rotation -= Game1.DoublePI;
+            else if (Rotation < 0) Rotation += Game1.DoublePI;
 
             foreach (var t in Turrets)
             {

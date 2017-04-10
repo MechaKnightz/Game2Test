@@ -120,6 +120,8 @@ namespace Game2Test
             Paragraph.BaseSize = 1.0f;
             UserInterface.GlobalScale = 1.0f;
             UserInterface.CursorScale = 0.7f;
+            var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);
+            form.Location = new System.Drawing.Point(0, 0);
 
             base.Initialize();
         }

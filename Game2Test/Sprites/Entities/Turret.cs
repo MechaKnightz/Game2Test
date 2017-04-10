@@ -30,6 +30,13 @@ namespace Game2Test.Sprites.Entities
 
         }
 
+        public void SetRotation(float rotation)
+        {
+            Rotation = rotation;
+            if (Rotation > Game1.DoublePI) Rotation -= Game1.DoublePI;
+            else if (Rotation < 0) Rotation += Game1.DoublePI;
+        }
+
         public void Update()
         {
             UpdateShots();

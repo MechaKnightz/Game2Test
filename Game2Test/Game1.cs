@@ -374,12 +374,6 @@ namespace Game2Test
 
             UserInterface.DrawMainRenderTarget(spriteBatch);
 
-            if (currentShip.Moving) movingDelayCounter = 5;
-            else movingDelayCounter--;
-            if (movingDelayCounter <= 0) drawParticles = false;
-            else drawParticles = true;
-            currentShip.Moving = false;
-
             oldState = Keyboard.GetState();
             base.Draw(gameTime);
         }
@@ -518,7 +512,7 @@ namespace Game2Test
                         if (tur.Rotation < rot) tur.Rotation += rotConst;
                         //t.Value.Rotation = AngleToOther(t.Value.position, asteroid.position));
                         float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.Rotation));
-                        if (diff < 0.2) currentSector.CurrentStation.Fire("primary", "default");
+                        if (diff < 0.05) currentSector.CurrentStation.Fire("primary", "default");
                     }
                 }
             }
@@ -560,18 +554,21 @@ namespace Game2Test
             //testing
 
             AI.MoveTowardsGoal(testShip, currentShip);
-            testShip.UpdateEnergy();
-            testShip.UpdateTurrets();
+            testShip.Update();
 
-            //testing end
+            //determines if should draw particles, must be after move/turn ship but before update
+            if (currentShip.Moving) movingDelayCounter = 5;
+            else movingDelayCounter--;
+            if (movingDelayCounter <= 0) drawParticles = false;
+            else drawParticles = true;
+            currentShip.Moving = false;
 
-            currentShip.UpdateEnergy();
-            currentSector.CurrentStation.UpdateEnergy();
+            //end
+
+            currentSector.Update();
 
             if (currentShip.Rotation > _doublePI) currentShip.Rotation -= _doublePI;
             else if (currentShip.Rotation < -_doublePI) currentShip.Rotation += _doublePI;
-            currentShip.UpdateTurrets();
-            currentSector.CurrentStation.UpdateTurrets();
 
             particleEngine.EmitterLocation = currentShip.GetBackOfShip();
             particleEngine.Update();

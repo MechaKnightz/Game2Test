@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprites\Entities\Ship.cs" />
     <Compile Include="Sprites\Entities\Shot.cs" />
+    <Compile Include="Sprites\Helpers\TurretType.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\Entities\Station.cs" />
     <Compile Include="Sprites\Entities\Turret.cs" />

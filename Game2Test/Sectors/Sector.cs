@@ -27,13 +27,10 @@ namespace Game2Test
         {
             foreach (var ship in NPCShips)
             {
-                ship.UpdateTurrets();
-                ship.UpdateEnergy();
-                ship.Moving = false;
+                ship.Update();
             }
-            CurrentShip.UpdateTurrets();
-            CurrentShip.UpdateEnergy();
-            CurrentShip.Moving = false;
+            CurrentShip.Update();
+            CurrentStation.Update();
         }
     }
 }

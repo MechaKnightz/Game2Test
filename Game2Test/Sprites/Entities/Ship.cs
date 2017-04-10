@@ -92,6 +92,12 @@ namespace Game2Test.Sprites.Entities
             TurnRate = turnRate;
         }
 
+        public void Update()
+        {
+            UpdateEnergy();
+            UpdateTurrets();
+        }
+
         public void UpdateEnergy()
         {
             if (Energy + EnergyRegen <= EnergyMax) Energy += EnergyRegen;

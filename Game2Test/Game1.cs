@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Web.Script.Serialization;
 using Game2Test.Input;
+using Game2Test.Sprites;
 using Game2Test.Sprites.Helpers;
 using Newtonsoft.Json;
 
@@ -394,7 +395,7 @@ namespace Game2Test
                 {
                     var tempTurret = new Turret();
                     var tempShot = new Shot();
-                    if (currentShip.TurretCollision(currentSector.Asteroids[i].rectangle, out tempTurret, out tempShot))
+                    if (currentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempTurret, out tempShot))
                     {
                         currentSector.Asteroids[i].health -= tempShot.Damage;
                         if (currentSector.Asteroids[i].health <= 0)
@@ -405,7 +406,7 @@ namespace Game2Test
                     }
                     var tempTurret2 = new Turret();
                     var tempShot2 = new Shot();
-                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].rectangle, out tempTurret2, out tempShot2))
+                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempTurret2, out tempShot2))
                     {
                         currentSector.Asteroids[i].health -= tempShot2.Damage;
                         if (currentSector.Asteroids[i].health <= 0)
@@ -422,7 +423,7 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentSector.Asteroids[i].rectangle.Intersects(currentShip.rectangle))
+                    if (currentSector.Asteroids[i].Rectangle.Intersects(currentShip.Rectangle))
                     {
                         currentShip.health--;
                         currentSector.Asteroids.RemoveAt(i);
@@ -748,11 +749,11 @@ namespace Game2Test
         public bool IsInView(Sprite sprite)
         {
             // if not within the horizontal bounds of the screen
-            if (sprite.Position.X - sprite.texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.Position.X + sprite.texture.Width < camera.Position.X)
+            if (sprite.Position.X - sprite.Texture.Width > camera.Position.X + camera.GetBoundingRectangle().Width || sprite.Position.X + sprite.Texture.Width < camera.Position.X)
                 return false;
 
             // if not within the vertical bounds of the screen
-            if (sprite.Position.Y - sprite.texture.Height > camera.Position.Y + camera.GetBoundingRectangle().Height || sprite.Position.Y + sprite.texture.Height < camera.Position.Y)
+            if (sprite.Position.Y - sprite.Texture.Height > camera.Position.Y + camera.GetBoundingRectangle().Height || sprite.Position.Y + sprite.Texture.Height < camera.Position.Y)
                 return false;
 
             // if in view

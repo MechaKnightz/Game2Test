@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Game2Test.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -39,13 +40,13 @@ namespace Game2Test
 
             acceleration += 0.005f;
 
-            rectangle.X = (int)Position.X;
-            rectangle.Y = (int)Position.Y;
+            Rectangle.X = (int)Position.X;
+            Rectangle.Y = (int)Position.Y;
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
             if(health < healthMax) bar.Draw(spriteBatch, Position, health, healthMax);
-            spriteBatch.Draw(texture, Position, origin: origin, rotation: Rotation);
+            spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
         }
     }
 }

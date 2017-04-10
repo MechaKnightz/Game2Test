@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using Game2Test.Sprites;
 using MonoGame.Extended;
 
 namespace Game2Test
@@ -26,32 +27,32 @@ namespace Game2Test
             this.front = front;
             this.back = back;
 
-            front.rectangle.X = (int)position.X;
-            front.rectangle.Y = (int)position.Y;
+            front.Rectangle.X = (int)position.X;
+            front.Rectangle.Y = (int)position.Y;
 
-            back.rectangle.X = (int)position.X;
-            back.rectangle.Y = (int)position.Y;
+            back.Rectangle.X = (int)position.X;
+            back.Rectangle.Y = (int)position.Y;
 
-            front.rectangle.Width = width;
-            front.rectangle.Height = height;
+            front.Rectangle.Width = width;
+            front.Rectangle.Height = height;
 
-            back.rectangle.Width = width;
-            back.rectangle.Height = height;
+            back.Rectangle.Width = width;
+            back.Rectangle.Height = height;
         }
         public void Draw(SpriteBatch spriteBatch, Vector2 position, float current, float max)
         {
             position = position + offset;
 
-            front.rectangle.X = (int)position.X;
-            front.rectangle.Y = (int)position.Y;
+            front.Rectangle.X = (int)position.X;
+            front.Rectangle.Y = (int)position.Y;
 
-            back.rectangle.X = (int)position.X;
-            back.rectangle.Y = (int)position.Y;
+            back.Rectangle.X = (int)position.X;
+            back.Rectangle.Y = (int)position.Y;
 
-            front.rectangle.Width = (int)(((current) / max) * back.rectangle.Width);
+            front.Rectangle.Width = (int)(((current) / max) * back.Rectangle.Width);
 
-            spriteBatch.Draw(back.texture, back.rectangle, Color.White);
-            spriteBatch.Draw(front.texture, front.rectangle, Color.White);
+            spriteBatch.Draw(back.Texture, back.Rectangle, Color.White);
+            spriteBatch.Draw(front.Texture, front.Rectangle, Color.White);
         }
     }
 }

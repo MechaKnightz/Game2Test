@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using Game2Test.Sprites;
 
 namespace Game2Test
 {
@@ -44,10 +45,10 @@ namespace Game2Test
             textureDictionary = ship.textureDictionary;
             Rotation = ship.Rotation;
             Position = ship.Position;
-            rectangle = ship.rectangle;
-            origin = ship.origin;
+            Rectangle = ship.Rectangle;
+            Origin = ship.Origin;
             TextureName = ship.TextureName;
-            texture = ship.texture;
+            Texture = ship.Texture;
             textureIndexCounter = ship.textureIndexCounter;
             shipCurrentIndex = ship.shipCurrentIndex;
             shipPreviousIndex = ship.shipPreviousIndex;
@@ -98,7 +99,7 @@ namespace Game2Test
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: origin, rotation: Rotation);
+            spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: Origin, rotation: Rotation);
             textureIndexCounter = "Default";
             DrawTurrets(spriteBatch);
         }
@@ -184,8 +185,8 @@ namespace Game2Test
             position.Y = this.Position.Y;
 
             //x turret offset
-            position.X += (float)((texture.Width / 2) * Math.Cos(Rotation - Math.PI));
-            position.Y += (float)((texture.Width / 2) * Math.Sin(Rotation - Math.PI));
+            position.X += (float)((Texture.Width / 2) * Math.Cos(Rotation - Math.PI));
+            position.Y += (float)((Texture.Width / 2) * Math.Sin(Rotation - Math.PI));
 
             //y turret offset
             //position.X -= (float)(turrets[i].offset.Y * Math.Cos(Rotation - (Math.PI / 2)));

@@ -233,7 +233,7 @@ namespace Game2Test
                     for (int i = 0; i < _game1.availableShips.Count; i++)
                     {
                         var offset = new Vector2(0, (height + 20) * i);
-                        var img = new Image(_game1.availableShips[i].texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
+                        var img = new Image(_game1.availableShips[i].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
                         img.SetOffset(offset);
 
                         _game1.shopDescriptions.Add(new Paragraph(_game1.availableShips[i].description));

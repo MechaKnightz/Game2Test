@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using System.CodeDom;
 using System.Linq;
+using Game2Test.Sprites;
 
 
 namespace Game2Test
@@ -60,7 +61,7 @@ namespace Game2Test
 
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Position, origin: origin, rotation: Rotation);
+            spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
             foreach (var t in shotDictionary)
             {
                 foreach (var e in t.Value)
@@ -76,7 +77,7 @@ namespace Game2Test
             {
                 for (int i = 0; i < t.Value.Count; i++)
                 {
-                    if (t.Value[i].rectangle.Intersects(rectangle))
+                    if (t.Value[i].Rectangle.Intersects(rectangle))
                     {
                         tempShot = t.Value[i];
                         t.Value.RemoveAt(i);
@@ -91,12 +92,12 @@ namespace Game2Test
 
         public void Fire() //fire the default shot
         {
-            shotDictionary["default"].Add(new Shot(shots["default"].texture, Position, Rotation, shots["default"].duration, shots["default"].speed, shots["default"].Damage));
+            shotDictionary["default"].Add(new Shot(shots["default"].Texture, Position, Rotation, shots["default"].duration, shots["default"].speed, shots["default"].Damage));
         }
         public float Fire(string name) //fire shot by Name
         {
             Shot shot = shots.FirstOrDefault(x => x.Value.name == name).Value;
-            shotDictionary[name].Add(new Shot(shot.texture, Position, Rotation, shot.duration, shot.speed, shot.Damage));
+            shotDictionary[name].Add(new Shot(shot.Texture, Position, Rotation, shot.duration, shot.speed, shot.Damage));
 
             return energyCost;
         }

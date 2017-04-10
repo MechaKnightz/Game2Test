@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using System;
 using MonoGame.Extended;
 using Newtonsoft.Json;
 
-
-namespace Game2Test
+namespace Game2Test.Sprites
 {
     public class Sprite
     {
@@ -18,108 +14,98 @@ namespace Game2Test
             set
             {
                 _position = value;
-                rectangle.X = (int)_position.X;
-                rectangle.Y = (int)_position.Y;
+                Rectangle.X = (int)_position.X;
+                Rectangle.Y = (int)_position.Y;
             }
         }
 
-        public Vector2 origin;
-        public Rectangle rectangle;
+        public Vector2 Origin { get; set; }
+        public Rectangle Rectangle;
         public float Rotation { get; set; }
         public string TextureName { get; set; }
+
         [JsonIgnore]
-        public Texture2D texture;
+        public Texture2D Texture { get; set; }
 
         public Sprite() { }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle, float rotation, Vector2 origin)
         {
-            rectangle.X = (int)position.X;
-            rectangle.Y = (int)position.Y;
-            this.texture = texture;
-            this._position = position;
-            this.rectangle = rectangle;
-            this.origin = origin;
-            this.Rotation = rotation;
+            rectangle.X = (int) position.X;
+            rectangle.Y = (int) position.Y;
+            Texture = texture;
+            _position = position;
+            Rectangle = rectangle;
+            Origin = origin;
+            Rotation = rotation;
             TextureName = texture.Name;
         }
+
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle)
         {
-            rectangle.X = (int)position.X;
-            rectangle.Y = (int)position.Y;
-            this._position = position;
-            this.rectangle = rectangle;
-            this.texture = texture;
-            this.Rotation = 0f;
-            origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            rectangle.X = (int) position.X;
+            rectangle.Y = (int) position.Y;
+            _position = position;
+            Rectangle = rectangle;
+            Texture = texture;
+            Rotation = 0f;
+            Origin = new Vector2(rectangle.Width / 2f, rectangle.Height / 2f);
             TextureName = texture.Name;
         }
+
         public Sprite(Texture2D texture, Vector2 position)
         {
-            this.rectangle.X = (int)position.X;
-            this.rectangle.Y = (int)position.Y;
-            this.rectangle.Width = texture.Width;
-            this.rectangle.Height = texture.Height;
-            this._position = position;
-            this.texture = texture;
-            origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            Rectangle.X = (int) position.X;
+            Rectangle.Y = (int) position.Y;
+            Rectangle.Width = texture.Width;
+            Rectangle.Height = texture.Height;
+            _position = position;
+            Texture = texture;
+            Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
             TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, Vector2 position, float rotation)
         {
-            this.rectangle.X = (int)position.X;
-            this.rectangle.Y = (int)position.Y;
-            this.rectangle.Width = texture.Width;
-            this.rectangle.Height = texture.Height;
-            this._position = position;
-            this.texture = texture;
-            this.Rotation = rotation;
-            origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            Rectangle.X = (int) position.X;
+            Rectangle.Y = (int) position.Y;
+            Rectangle.Width = texture.Width;
+            Rectangle.Height = texture.Height;
+            _position = position;
+            Texture = texture;
+            Rotation = rotation;
+            Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
             TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, float rotation)
         {
-            this.rectangle.X = (int)_position.X;
-            this.rectangle.Y = (int)_position.Y;
-            this.rectangle.Width = texture.Width;
-            this.rectangle.Height = texture.Height;
-            this.texture = texture;
-            this.Rotation = rotation;
-            origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+            Rectangle.X = (int) _position.X;
+            Rectangle.Y = (int) _position.Y;
+            Rectangle.Width = texture.Width;
+            Rectangle.Height = texture.Height;
+            Texture = texture;
+            Rotation = rotation;
+            Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
             TextureName = texture.Name;
         }
 
         public Sprite(Texture2D texture)
         {
-            this.texture = texture;
+            this.Texture = texture;
             TextureName = texture.Name;
-        }
-        public void SetPos(float pos, int var)
-        {
-            if(var == 0)
-            {
-                _position.X = pos;
-                rectangle.X = (int)pos;
-            }
-            if(var == 1)
-            {
-                _position.Y = pos;
-                rectangle.Y = (int)pos;
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, _position, origin: origin, rotation: Rotation);
+            spriteBatch.Draw(Texture, _position, origin: Origin, rotation: Rotation);
         }
         public void DrawRectangle(SpriteBatch spriteBatch)
         {
-            rectangle.X = (int)_position.X;
-            rectangle.Y = (int) _position.Y;
-            spriteBatch.Draw(texture, rectangle, Color.White);
+            Rectangle.X = (int)_position.X;
+            Rectangle.Y = (int) _position.Y;
+            spriteBatch.Draw(Texture, Rectangle, Color.White);
         }
         public void Draw(SpriteBatch spriteBatch, Camera2D camera)
         {
-            spriteBatch.Draw(texture, _position + camera.Position, origin: origin, rotation: Rotation);
+            spriteBatch.Draw(Texture, _position + camera.Position, origin: Origin, rotation: Rotation);
         }
     }
 }

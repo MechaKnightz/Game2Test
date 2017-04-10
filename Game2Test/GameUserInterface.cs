@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Game2Test.Sprites.Entities;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
@@ -72,10 +73,19 @@ namespace Game2Test
                     mainMenuExitButton = new Button("Quit");
                     mainMenuExitButton.ButtonParagraph.Scale = 0.5f;
 
+                    //var LoadButton = new Button("Load names");
+                    //LoadButton.ButtonParagraph.Scale = 0.5f;
+
                     _game1.mainMenuPanel.AddChild(mainMenuPlayButton);
                     _game1.mainMenuPanel.AddChild(mainMenuControlsButton);
                     _game1.mainMenuPanel.AddChild(mainMenuSettingsButton);
                     _game1.mainMenuPanel.AddChild(mainMenuExitButton);
+
+                    //_game1.mainMenuPanel.AddChild(LoadButton);
+                    //LoadButton.OnClick = (Entity btn) =>
+                    //{
+                    //    _game1.LoadNames();
+                    //};
 
                     mainMenuControlsButton.OnClick = (Entity btn) =>
                     {

@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Web.Script.Serialization;
 using Game2Test.Input;
 using Game2Test.Sprites;
@@ -35,6 +36,9 @@ namespace Game2Test
         List<Texture2D> asteroidTextures = new List<Texture2D>();
 
         List<int> highscores = new List<int>();
+        private List<Name> names = new List<Name>();
+
+        private List<string> nameArray;
 
         List<Turret> turrets0 = new List<Turret>();
         List<Turret> turrets1 = new List<Turret>();
@@ -843,6 +847,37 @@ namespace Game2Test
             sector.Asteroids = GenerateAsteroids();
             sectors.Add(sector);
             return sector;
+        }
+        public void LoadNames()
+        {
+            nameArray = new List<string>();
+            const Int32 bufferSize = 128;
+            using (var fileStream = File.OpenRead("Names.txt"))
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, bufferSize))
+            {
+                String line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    nameArray.Add(line);
+                }
+            }
+        }
+
+        private Name GenerateFullName()
+        {
+            if (names == null) LoadNames();
+            Name name = new Name();
+            while (true)
+            {
+                name.FirstName = nameArray[rnd.Next(0, names.Count)];
+                name.LastName = nameArray[rnd.Next(0, names.Count)];
+                name.FullName = name.FirstName + " " + name.LastName;
+
+                if (names.All(x => x.FullName != name.FullName)) break;
+            }
+            names.Add(name);
+
+            return name;
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

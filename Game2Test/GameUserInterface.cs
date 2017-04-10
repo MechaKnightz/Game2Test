@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Game2Test.Sprites.Entities;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
@@ -236,7 +237,7 @@ namespace Game2Test
                         var img = new Image(_game1.availableShips[i].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
                         img.SetOffset(offset);
 
-                        _game1.shopDescriptions.Add(new Paragraph(_game1.availableShips[i].description));
+                        _game1.shopDescriptions.Add(new Paragraph(_game1.availableShips[i].Description));
                         _game1.shopDescriptions[i].Scale = 0.5f;
                         img.Identifier = i.ToString();
                         img.OnMouseEnter = (Entity entity) =>
@@ -254,7 +255,7 @@ namespace Game2Test
                         name.SetOffset(offset);
                         tab1.panel.AddChild(name);
 
-                        var cost = new Paragraph("Cost: " + _game1.availableShips[i].cost, anchor: Anchor.CenterRight);
+                        var cost = new Paragraph("Cost: " + _game1.availableShips[i].Cost, anchor: Anchor.CenterRight);
                         cost.Scale = 0.5f;
                         cost.SetOffset(offset - new Vector2(-20, 50));
                         tab1.panel.AddChild(cost);
@@ -341,23 +342,23 @@ namespace Game2Test
 
             var tempRot = _game1.currentShip.Rotation;
             var tempPos = _game1.currentStation.Position;
-            var tempIndex = _game1.currentShip.shipCurrentIndex;
-            var tempHealth = _game1.currentShip.health;
-            var tempEnergy = _game1.currentShip.energy;
+            var tempIndex = _game1.currentShip.ShipCurrentIndex;
+            var tempHealth = _game1.currentShip.Health;
+            var tempEnergy = _game1.currentShip.Energy;
 
             _game1.currentShip = ship;
 
-            _game1.currentShip.shipCurrentIndex = tempIndex;
+            _game1.currentShip.ShipCurrentIndex = tempIndex;
             _game1.currentShip.Position = tempPos;
             _game1.currentShip.Rotation = tempRot;
-            _game1.currentShip.health = tempHealth;
-            _game1.currentShip.energy = tempEnergy;
+            _game1.currentShip.Health = tempHealth;
+            _game1.currentShip.Energy = tempEnergy;
         }
 
         private void SaveGame()
         {
             data.Score = _game1.score;
-            data.Health = _game1.currentShip.health;
+            data.Health = _game1.currentShip.Health;
 
             data.DiscoveredSectors = _game1.sectors;
             data.OwnedShips = _game1.ownedShips;
@@ -382,7 +383,7 @@ namespace Game2Test
             data = _data[0];
 
             _game1.score = data.Score;
-            _game1.currentShip.health = data.Health;
+            _game1.currentShip.Health = data.Health;
         }
 
         public void RemoveInterface(GameState gameState, Game1 game1)

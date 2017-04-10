@@ -1,36 +1,32 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using System;
-using Game2Test.Sprites;
 
-namespace Game2Test
+namespace Game2Test.Sprites.Entities
 {
     public class Shot : Sprite
     {
-        public string name = "default";
-        public int duration;
-        public float speed;
-
+        public string Name { get; set; } = "default";
+        public int Duration { get; set; }
+        public float Speed { get; }
         public float Damage;
 
         public Shot() { }
         public Shot(Texture2D texture, Vector2 position, float rotation, int duration) : base(texture, position, rotation)
         {
-            this.duration = duration;
+            Duration = duration;
         }
         public Shot(Texture2D texture, Vector2 position, float rotation, int duration, float speed, float damage) : base(texture, position, rotation)
         {
-            this.duration = duration;
-            this.speed = speed;
+            Duration = duration;
+            Speed = speed;
             Damage = damage;
         }
         public Shot(Texture2D texture, int duration, string name, int speed, float damage) : base(texture)
         {
-            this.duration = duration;
-            this.speed = speed;
+            Duration = duration;
+            Speed = speed;
             Damage = damage;
+            Name = name;
         }
 
         public void Update()

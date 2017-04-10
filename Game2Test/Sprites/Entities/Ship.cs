@@ -1,113 +1,111 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices.ComTypes;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using Game2Test.Sprites;
-using Game2Test.Sprites.Entities;
 
-namespace Game2Test
+namespace Game2Test.Sprites.Entities
 {
     public class Ship : Sprite
     {
-        public Dictionary<string, List<Turret>> turrets = new Dictionary<string, List<Turret>>();
-        [JsonIgnore]
-        public Dictionary<string, Texture2D> textureDictionary = new Dictionary<string, Texture2D>();
-        public string textureIndexCounter = "Default";
-        public int shipCurrentIndex = 0;
-        public int shipPreviousIndex = 0;
+        public Dictionary<string, List<Turret>> Turrets { get; set; } = new Dictionary<string, List<Turret>>();
 
-        public string description;
+        [JsonIgnore]
+        public Dictionary<string, Texture2D> TextureDictionary { get; set; } = new Dictionary<string, Texture2D>();
+
+        public bool Moving { get; set; }
+        public string TextureIndexCounter { get; set; } = "Default";
+
+        public string Description { get; set; }
         public string Name { get; set; }
-        public float cost;
+
+        public int ShipCurrentIndex { get; set; }
+        public int ShipPreviousIndex { get; set; }
+        public float Cost { get; set; }
 
         public float TurnRate { get; set; }
         public float Speed { get; set; }
         public float Boost { get; set; }
-        public bool Moving { get; set; }
 
-        public float health;
-        public float healthMax;
+        public float Health { get; set; }
+        public float HealthMax { get; }
 
-        public float energy;
-        public float energyMax;
-        public float energyRegen;
+        public float Energy { get; set; }
+        public float EnergyMax { get; }
+        public float EnergyRegen { get; }
 
         public Ship() { }
 
         public Ship(Ship ship)
         {
-            turrets = ship.turrets;
-            textureDictionary = ship.textureDictionary;
+            Turrets = ship.Turrets;
+            TextureDictionary = ship.TextureDictionary;
             Rotation = ship.Rotation;
             Position = ship.Position;
             Rectangle = ship.Rectangle;
             Origin = ship.Origin;
             TextureName = ship.TextureName;
             Texture = ship.Texture;
-            textureIndexCounter = ship.textureIndexCounter;
-            shipCurrentIndex = ship.shipCurrentIndex;
-            shipPreviousIndex = ship.shipPreviousIndex;
-            description = ship.description;
+            TextureIndexCounter = ship.TextureIndexCounter;
+            ShipCurrentIndex = ship.ShipCurrentIndex;
+            ShipPreviousIndex = ship.ShipPreviousIndex;
+            Description = ship.Description;
             Name = ship.Name;
-            cost = ship.cost;
+            Cost = ship.Cost;
             TurnRate = ship.TurnRate;
             Speed = ship.Speed;
             Boost = ship.Boost;
             Moving = ship.Moving;
-            health = ship.health;
-            healthMax = ship.healthMax;
-            energy = ship.energy;
-            energyMax = ship.energyMax;
-            energyRegen = ship.energyRegen;
+            Health = ship.Health;
+            HealthMax = ship.HealthMax;
+            Energy = ship.Energy;
+            EnergyMax = ship.EnergyMax;
+            EnergyRegen = ship.EnergyRegen;
 
         }
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param Name="textureDictionary">all ship textures</param>
-        /// <param Name="position">position of the ship</param>
-        /// <param Name="turrets">all the turrets on the ship</param>
-        /// <param Name="healthMax">ship max health</param>
-        /// <param Name="energyMax">ship max energy</param>
-        /// /// <param Name="energyRegen">energy regeneration per frame</param>
-        public Ship(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary["Default"], position)
+        /// <param name="textureDictionary">all the different textures the ship uses, most used are Default, Left and Right</param>
+        /// <param name="position">position of the ship</param>
+        /// <param name="turrets">turrets on the ship</param>
+        /// <param name="healthMax">max health</param>
+        /// <param name="energyMax">max energy</param>
+        /// <param name="energyRegen">energy regen per frame</param>
+        /// <param name="turnRate">how fast the ship turns</param>
+        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary["Default"], position)
         {
             foreach (var t in turrets)
             {
-                this.turrets.Add(t.Key, t.Value);
+                Turrets.Add(t.Key, t.Value);
             }
-            foreach (KeyValuePair<string, Texture2D> entry in textureDictionary)
+            foreach (var entry in textureDictionary)
             {
-                this.textureDictionary.Add(entry.Key, entry.Value);
+                TextureDictionary.Add(entry.Key, entry.Value);
             }
-            this.healthMax = healthMax;
-            this.health = healthMax;
-            this.energyMax = energyMax;
-            this.energy = energyMax;
-            this.energyRegen = energyRegen;
+            HealthMax = healthMax;
+            Health = healthMax;
+            EnergyMax = energyMax;
+            Energy = energyMax;
+            EnergyRegen = energyRegen;
             TurnRate = turnRate;
         }
 
         public void UpdateEnergy()
         {
-            if (energy + energyRegen <= energyMax) energy += energyRegen;
+            if (Energy + EnergyRegen <= EnergyMax) Energy += EnergyRegen;
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(textureDictionary[textureIndexCounter], Position, origin: Origin, rotation: Rotation);
-            textureIndexCounter = "Default";
+            spriteBatch.Draw(TextureDictionary[TextureIndexCounter], Position, origin: Origin, rotation: Rotation);
+            TextureIndexCounter = "Default";
             DrawTurrets(spriteBatch);
         }
 
         public void UpdateTurrets()
         {
-            foreach (var t in turrets)
+            foreach (var t in Turrets)
             {
                 foreach(var tur in t.Value)
                 {
@@ -119,7 +117,7 @@ namespace Game2Test
         public void SetRotation(float rotation)
         {
             Rotation = rotation;
-            foreach (var t in turrets)
+            foreach (var t in Turrets)
             {
                 //sets the turrets at the position of the ship
                 foreach (var tur in t.Value)
@@ -143,7 +141,7 @@ namespace Game2Test
         public void SetPosition(Vector2 position)
         {
             Position = position;
-            foreach (var t in turrets)
+            foreach (var t in Turrets)
             {
                 //sets the turrets at the position of the ship
                 foreach (var tur in t.Value)
@@ -167,7 +165,7 @@ namespace Game2Test
 
         public void DrawTurrets(SpriteBatch spriteBatch)
         {
-            foreach (var t in turrets)
+            foreach (var t in Turrets)
             {
                 foreach (var tur in t.Value)
                 {
@@ -182,12 +180,12 @@ namespace Game2Test
         public Vector2 GetBackOfShip()
         {
             Vector2 position;
-            position.X = this.Position.X;
-            position.Y = this.Position.Y;
+            position.X = Position.X;
+            position.Y = Position.Y;
 
             //x turret offset
-            position.X += (float)((Texture.Width / 2) * Math.Cos(Rotation - Math.PI));
-            position.Y += (float)((Texture.Width / 2) * Math.Sin(Rotation - Math.PI));
+            position.X += (float)(Texture.Width / 2f * Math.Cos(Rotation - Math.PI));
+            position.Y += (float)(Texture.Width / 2f * Math.Sin(Rotation - Math.PI));
 
             //y turret offset
             //position.X -= (float)(turrets[i].offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
@@ -195,22 +193,15 @@ namespace Game2Test
 
             return position;
         }
-        /// <summary>
-        /// same as above but with vector
-        /// </summary>
-        /// <param Name="vector">amount to moveDirection ship with</param>
-        /// <param Name="Rotation">adjust turret position for Rotation</param>
         public bool TurretCollision(Rectangle rectangle, out Turret turret, out Shot tempShot)
         {
-            foreach (var t in turrets)
+            foreach (var t in Turrets)
             {
                 foreach(var tur in t.Value)
                 {
-                    if (tur.ShotCollision(rectangle, out tempShot))
-                    {
-                        turret = tur;
-                        return true;
-                    }
+                    if (!tur.ShotCollision(rectangle, out tempShot)) continue;
+                    turret = tur;
+                    return true;
                 }
             }
             turret = null;
@@ -229,24 +220,19 @@ namespace Game2Test
             return turrets;
         } //TODO: make dictionary with list of turrets, each list for each group so that you can shuffle them easier
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param Name="nameOfGunGroup">the turrets' Name et.c primary0, primary1 where Name is primary</param>
-        /// <param Name="nameOfShot">Name of the projectile you're firing</param>
         public void Fire(string nameOfGunGroup, string nameOfShot)
         {
-            foreach (var t in turrets)
+            foreach (var t in Turrets)
             {
                 if(t.Key == nameOfGunGroup)
                 {
                     foreach(var tur in t.Value)
                     {
                         //TODO fix energy cost
-                        if(energy - tur.EnergyCost > 0)
+                        if(Energy - tur.EnergyCost > 0)
                         {
                             tur.Fire();
-                            energy -= tur.EnergyCost;
+                            Energy -= tur.EnergyCost;
                         }
                     }
                 }
@@ -259,16 +245,16 @@ namespace Game2Test
             {
                 case Direction.Left:
                     SetRotation(Rotation - TurnRate);
-                    if (textureDictionary.ContainsKey(direction.ToString()))
+                    if (TextureDictionary.ContainsKey(direction.ToString()))
                     {
-                        textureIndexCounter = direction.ToString();
+                        TextureIndexCounter = direction.ToString();
                     }
                     break;
                 case Direction.Right:
                     SetRotation(Rotation + TurnRate);
-                    if (textureDictionary.ContainsKey(direction.ToString()))
+                    if (TextureDictionary.ContainsKey(direction.ToString()))
                     {
-                        textureIndexCounter = direction.ToString();
+                        TextureIndexCounter = direction.ToString();
                     }
                     break;
                 default:
@@ -281,18 +267,18 @@ namespace Game2Test
             switch (moveDirection)
             {
                 case MoveDirection.Forward:
-                    if (!speedBoost)
-                    {
-                        var tempPos = Position;
-                        tempPos.X += (float)Math.Cos(Rotation) * Speed;
-                        tempPos.Y += (float)Math.Sin(Rotation) * Speed;
-                        SetPosition(tempPos);
-                    }
-                    else if (speedBoost)
+                    if (speedBoost)
                     {
                         var tempPos = Position;
                         tempPos.X += (float)Math.Cos(Rotation) * Speed * Boost;
                         tempPos.Y += (float)Math.Sin(Rotation) * Speed * Boost;
+                        SetPosition(tempPos);
+                    }
+                    else 
+                    {
+                        var tempPos = Position;
+                        tempPos.X += (float)Math.Cos(Rotation) * Speed;
+                        tempPos.Y += (float)Math.Sin(Rotation) * Speed;
                         SetPosition(tempPos);
                     }
                     break;

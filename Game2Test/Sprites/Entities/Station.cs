@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices.ComTypes;
 using Game2Test.Sprites.Entities;
 
 namespace Game2Test

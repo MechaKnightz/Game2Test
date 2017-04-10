@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Game2Test.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game2Test
+namespace Game2Test.Sprites.Entities
 {
     public class Asteroid : Sprite
     {
-        public float speed;
-        public float acceleration = 1.1f;
-        public float health;
-        public float healthMax;
-        public Bar bar;
+        public float Speed { get; set; }
+        public float Acceleration { get; set; } = 1.1f;
+        public float Health { get; set; }
+        public float HealthMax { get; set; }
+        public Bar Bar1 { get; set; }
+
         public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax, Bar bar) :base(texture, position)
         {
-            this.speed = speed;
-            this.healthMax = healthMax;
-            health = healthMax;
-            this.bar = bar;
+            Speed = speed;
+            HealthMax = healthMax;
+            Health = healthMax;
+            Bar1 = bar;
         }
 
         public Asteroid()
@@ -31,21 +27,21 @@ namespace Game2Test
 
         public void MoveTowardsPosition(Vector2 towardsPosition)
         {
-            float angle = (float)Math.Atan2(towardsPosition.Y - Position.Y, towardsPosition.X - Position.X);
+            var angle = (float)Math.Atan2(towardsPosition.Y - Position.Y, towardsPosition.X - Position.X);
 
             var temp = Position;
-            temp.X += (float)(Math.Cos(angle)) * speed * acceleration;
-            temp.Y += (float)(Math.Sin(angle)) * speed * acceleration;
+            temp.X += (float)Math.Cos(angle) * Speed * Acceleration;
+            temp.Y += (float)Math.Sin(angle) * Speed * Acceleration;
             Position = temp;
 
-            acceleration += 0.005f;
+            Acceleration += 0.005f;
 
             Rectangle.X = (int)Position.X;
             Rectangle.Y = (int)Position.Y;
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            if(health < healthMax) bar.Draw(spriteBatch, Position, health, healthMax);
+            if(Health < HealthMax) Bar1.Draw(spriteBatch, Position, Health, HealthMax);
             spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
         }
     }

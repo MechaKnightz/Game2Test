@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game2Test.Sprites.Entities;
 
 namespace Game2Test
 {

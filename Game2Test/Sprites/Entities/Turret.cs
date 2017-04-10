@@ -41,13 +41,13 @@ namespace Game2Test.Sprites.Entities
             {
                 for (var i = 0; i < t.Value.Count; i++)
                 {
-                    t.Value[i].duration--;
+                    t.Value[i].Duration--;
                     var temp = t.Value[i].Position;
-                    temp.X += (float)Math.Cos(t.Value[i].Rotation) * t.Value[i].speed;
-                    temp.Y += (float)Math.Sin(t.Value[i].Rotation) * t.Value[i].speed;
+                    temp.X += (float)Math.Cos(t.Value[i].Rotation) * t.Value[i].Speed;
+                    temp.Y += (float)Math.Sin(t.Value[i].Rotation) * t.Value[i].Speed;
                     t.Value[i].Position = temp;
 
-                    if (t.Value[i].duration > 00) continue;
+                    if (t.Value[i].Duration > 00) continue;
                     t.Value.RemoveAt(i);
                     i--;
                 }
@@ -84,12 +84,12 @@ namespace Game2Test.Sprites.Entities
 
         public void Fire() //fire the default shot
         {
-            ShotDictionary["default"].Add(new Shot(Shots["default"].Texture, Position, Rotation, Shots["default"].duration, Shots["default"].speed, Shots["default"].Damage));
+            ShotDictionary["default"].Add(new Shot(Shots["default"].Texture, Position, Rotation, Shots["default"].Duration, Shots["default"].Speed, Shots["default"].Damage));
         }
         public float Fire(string name) //fire shot by Name
         {
-            Shot shot = Shots.FirstOrDefault(x => x.Value.name == name).Value;
-            ShotDictionary[name].Add(new Shot(shot.Texture, Position, Rotation, shot.duration, shot.speed, shot.Damage));
+            Shot shot = Shots.FirstOrDefault(x => x.Value.Name == name).Value;
+            ShotDictionary[name].Add(new Shot(shot.Texture, Position, Rotation, shot.Duration, shot.Speed, shot.Damage));
 
             return EnergyCost;
         }

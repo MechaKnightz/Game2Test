@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Game2Test.Sprites.Entities;
 using Microsoft.Xna.Framework;
 
 namespace Game2Test.Sprites.Helpers
@@ -14,12 +11,12 @@ namespace Game2Test.Sprites.Helpers
             var angleToGoal = AngleToOther(ship.Position, goal.Position);
 
             float shortestRange = 9999999;
-            foreach (var turGroup in ship.turrets)
+            foreach (var turGroup in ship.Turrets)
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    if (tur.Shots["default"].speed * tur.Shots["default"].duration < shortestRange)
-                        shortestRange = tur.Shots["default"].speed * tur.Shots["default"].duration;
+                    if (tur.Shots["default"].Speed * tur.Shots["default"].Duration < shortestRange)
+                        shortestRange = tur.Shots["default"].Speed * tur.Shots["default"].Duration;
                 }
             }
             var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);
@@ -50,7 +47,7 @@ namespace Game2Test.Sprites.Helpers
         {
             if (!ship.Moving)
             {
-                foreach (var turGroup in ship.turrets)
+                foreach (var turGroup in ship.Turrets)
                 {
                     foreach (var tur in turGroup.Value)
                     {

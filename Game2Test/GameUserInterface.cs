@@ -378,7 +378,7 @@ namespace Game2Test
             var text = File.ReadAllText("save.json");
 
             List<Data> _data = new List<Data>();
-            _data = (JsonConvert.DeserializeObject<List<Data>>(text));
+            _data = JsonConvert.DeserializeObject<List<Data>>(text);
 
             data = _data[0];
 

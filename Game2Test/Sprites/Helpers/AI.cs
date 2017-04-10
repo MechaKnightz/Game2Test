@@ -43,13 +43,30 @@ namespace Game2Test.Sprites.Helpers
             return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
         }
 
+        public static void ShootIfInAim(Ship ship, Vector2 target)
+        {
+            foreach (var turGroup in ship.Turrets)
+            {
+                foreach (var tur in turGroup.Value)
+                {
+                    var angleToTargetShip = Game1.AngleToOther(tur.Position, target);
+                    float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
+                    if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
+                }
+            }
+        }
+
         public static void ShootAtShip(Ship ship, Ship targetShip)
         {
             if (!targetShip.Moving)
             {
                 ship.AimTurrets(targetShip.Position);
-                ship.ShootIfInSight(targetShip.Position);
+                ShootIfInAim(ship, targetShip.Position);
             }
+        }
+        public static void ShootAtAsteroid(Station station, Asteroid asteroid)
+        {
+
         }
     }
 }

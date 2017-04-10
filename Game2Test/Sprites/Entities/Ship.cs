@@ -144,19 +144,6 @@ namespace Game2Test.Sprites.Entities
             return Direction.Left;
         }
 
-        public void ShootIfInSight(Vector2 target)
-        {
-            foreach (var turGroup in Turrets)
-            {
-                foreach (var tur in turGroup.Value)
-                {
-                    var angleToTargetShip = Game1.AngleToOther(tur.Position, target);
-                    float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
-                    if (diff < 0.05f) Fire(turGroup.Key, "default"); //TODO fix default
-                }
-            }
-        }
-
         public void UpdateTurrets()
         {
             foreach (var t in Turrets)

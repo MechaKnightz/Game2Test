@@ -89,7 +89,7 @@ namespace Game2Test.Sprites
 
         public Sprite(Texture2D texture)
         {
-            this.Texture = texture;
+            Texture = texture;
             TextureName = texture.Name;
         }
 

@@ -96,6 +96,7 @@ namespace Game2Test.Sprites.Entities
         {
             UpdateEnergy();
             UpdateTurrets();
+            Moving = false;
         }
 
         public void UpdateEnergy()

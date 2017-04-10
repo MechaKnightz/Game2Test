@@ -551,12 +551,15 @@ namespace Game2Test
                 }
             }
 
+
+            //VVV - UPDATE BELOW - VVV
             //testing
 
             AI.MoveTowardsGoal(testShip, currentShip);
             testShip.Update();
 
             //determines if should draw particles, must be after move/turn ship but before update
+
             if (currentShip.Moving) movingDelayCounter = 5;
             else movingDelayCounter--;
             if (movingDelayCounter <= 0) drawParticles = false;

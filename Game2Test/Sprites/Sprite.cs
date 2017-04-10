@@ -7,6 +7,14 @@ namespace Game2Test.Sprites
 {
     public class Sprite
     {
+        public Vector2 Origin { get; set; }
+        public Rectangle Rectangle;
+        public float Rotation { get; set; }
+        public string TextureName { get; set; }
+
+        [JsonIgnore]
+        public Texture2D Texture { get; set; }
+
         private Vector2 _position;
         public Vector2 Position
         {
@@ -18,14 +26,6 @@ namespace Game2Test.Sprites
                 Rectangle.Y = (int)_position.Y;
             }
         }
-
-        public Vector2 Origin { get; set; }
-        public Rectangle Rectangle;
-        public float Rotation { get; set; }
-        public string TextureName { get; set; }
-
-        [JsonIgnore]
-        public Texture2D Texture { get; set; }
 
         public Sprite() { }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle, float rotation, Vector2 origin)

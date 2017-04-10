@@ -5,22 +5,14 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using MonoGame.Extended;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices.ComTypes;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-using System.IO.IsolatedStorage;
-using System.Xml.Serialization;
 using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Web.Script.Serialization;
 using Game2Test.Input;
 using Game2Test.Sprites;
 using Game2Test.Sprites.Entities;
 using Game2Test.Sprites.Helpers;
-using Newtonsoft.Json;
 
 namespace Game2Test
 {
@@ -848,6 +840,7 @@ namespace Game2Test
             sectors.Add(sector);
             return sector;
         }
+
         public void LoadNames()
         {
             nameArray = new List<string>();

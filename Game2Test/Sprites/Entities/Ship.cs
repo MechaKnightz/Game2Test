@@ -110,16 +110,29 @@ namespace Game2Test.Sprites.Entities
             DrawTurrets(spriteBatch);
         }
 
-        public void AimTurrets(Vector2 position)
+        public void AimTurrets(Vector2 target)
         {
             foreach (var turGroup in Turrets)
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    tur.Rotation = Game1.AngleToOther(tur.Position, position);
+                    tur.Rotation = Game1.AngleToOther(tur.Position, target);
                     //var angle = Game1.AngleToOther(tur.Position, position);
                     //if (tur.Rotation > angle) tur.Turn(Direction.Left); //fix angle calculation
                     //if (tur.Rotation < angle) tur.Turn(Direction.Right);
+                }
+            }
+        }
+
+        public void ShootIfInSight(Vector2 target)
+        {
+            foreach (var turGroup in Turrets)
+            {
+                foreach (var tur in turGroup.Value)
+                {
+                    var angleToTargetShip = Game1.AngleToOther(tur.Position, target);
+                    float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
+                    if (diff < 0.05f) Fire(turGroup.Key, "default"); //TODO fix default
                 }
             }
         }
@@ -138,6 +151,10 @@ namespace Game2Test.Sprites.Entities
         public void SetRotation(float rotation)
         {
             Rotation = rotation;
+
+            //if (Rotation > Game1.DoublePI) Rotation = Rotation - Game1.DoublePI;
+            //if (Rotation < 0) Rotation = Game1.DoublePI - Rotation; //TODO rotation resetter
+
             foreach (var t in Turrets)
             {
                 //sets the turrets at the position of the ship

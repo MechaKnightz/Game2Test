@@ -48,8 +48,7 @@ namespace Game2Test.Sprites.Helpers
             if (!targetShip.Moving)
             {
                 ship.AimTurrets(targetShip.Position);
-                //float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
-                //if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
+                ship.ShootIfInSight(targetShip.Position);
             }
         }
     }

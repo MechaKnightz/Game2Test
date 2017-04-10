@@ -83,7 +83,6 @@ namespace Game2Test
         Vector2 backgroundSize = new Vector2(1920, 1920);
         int rocksPerBackground = 20;
         Color clearColor;
-        const float speedBoostConst = 1.5f;
         int asteroidTextureAmount = 8;
         Matrix viewMatrix;
         public Panel mainMenuPanel;
@@ -97,8 +96,8 @@ namespace Game2Test
         private float distanceToStation;
         private float shopRadius = 200;
         public Sector currentSector;
-        List<Texture2D> layer2 = new List<Texture2D>();
-        private const float _doublePI = (float)Math.PI * 2;
+        private List<Texture2D> layer2 = new List<Texture2D>();
+        public const float DoublePI = (float)Math.PI * 2;
         public Keys forwardKey;
         public Keys forwardKey2;
 
@@ -565,8 +564,8 @@ namespace Game2Test
 
             currentSector.Update();
 
-            if (currentShip.Rotation > _doublePI) currentShip.Rotation -= _doublePI;
-            else if (currentShip.Rotation < -_doublePI) currentShip.Rotation += _doublePI;
+            if (currentShip.Rotation > DoublePI) currentShip.Rotation -= DoublePI;
+            else if (currentShip.Rotation < -DoublePI) currentShip.Rotation += DoublePI;
 
             particleEngine.EmitterLocation = currentShip.GetBackOfShip();
             particleEngine.Update();

@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
+using Game2Test.Sprites.Entities;
 
 namespace Game2Test
 {

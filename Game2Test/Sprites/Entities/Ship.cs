@@ -9,6 +9,7 @@ using System.Runtime.InteropServices.ComTypes;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Game2Test.Sprites;
+using Game2Test.Sprites.Entities;
 
 namespace Game2Test
 {
@@ -128,12 +129,12 @@ namespace Game2Test
                     temp.Y = Position.Y;
 
                     //x turret offset
-                    temp.X -= (float)(tur.offset.X * Math.Cos(Rotation - Math.PI));
-                    temp.Y -= (float)(tur.offset.X * Math.Sin(Rotation - Math.PI));
+                    temp.X -= (float)(tur.Offset.X * Math.Cos(Rotation - Math.PI));
+                    temp.Y -= (float)(tur.Offset.X * Math.Sin(Rotation - Math.PI));
 
                     //y turret offset
-                    temp.X -= (float)(tur.offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
-                    temp.Y -= (float)(tur.offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
+                    temp.X -= (float)(tur.Offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.Offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
 
                     tur.Position = temp;
                 }
@@ -152,12 +153,12 @@ namespace Game2Test
                     temp.Y = Position.Y;
 
                     //x turret offset
-                    temp.X -= (float)(tur.offset.X * Math.Cos(Rotation - Math.PI));
-                    temp.Y -= (float)(tur.offset.X * Math.Sin(Rotation - Math.PI));
+                    temp.X -= (float)(tur.Offset.X * Math.Cos(Rotation - Math.PI));
+                    temp.Y -= (float)(tur.Offset.X * Math.Sin(Rotation - Math.PI));
 
                     //y turret offset
-                    temp.X -= (float)(tur.offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
-                    temp.Y -= (float)(tur.offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
+                    temp.X -= (float)(tur.Offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.Offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
 
                     tur.Position = temp;
                 }
@@ -242,10 +243,10 @@ namespace Game2Test
                     foreach(var tur in t.Value)
                     {
                         //TODO fix energy cost
-                        if(energy - tur.energyCost > 0)
+                        if(energy - tur.EnergyCost > 0)
                         {
                             tur.Fire();
-                            energy -= tur.energyCost;
+                            energy -= tur.EnergyCost;
                         }
                     }
                 }

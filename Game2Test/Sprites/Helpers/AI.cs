@@ -18,8 +18,8 @@ namespace Game2Test.Sprites.Helpers
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    if (tur.shots["default"].speed * tur.shots["default"].duration < shortestRange)
-                        shortestRange = tur.shots["default"].speed * tur.shots["default"].duration;
+                    if (tur.Shots["default"].speed * tur.Shots["default"].duration < shortestRange)
+                        shortestRange = tur.Shots["default"].speed * tur.Shots["default"].duration;
                 }
             }
             var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);

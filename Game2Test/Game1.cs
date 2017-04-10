@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using System.Web.Script.Serialization;
 using Game2Test.Input;
 using Game2Test.Sprites;
+using Game2Test.Sprites.Entities;
 using Game2Test.Sprites.Helpers;
 using Newtonsoft.Json;
 
@@ -506,7 +507,7 @@ namespace Game2Test
                             asteroid.Rotation = currentSector.Asteroids[i].Rotation;
                             asteroid.speed = currentSector.Asteroids[i].speed;
                             asteroid.acceleration = currentSector.Asteroids[i].acceleration;
-                            var tempTime = tempDistance / tur.shots["default"].speed;
+                            var tempTime = tempDistance / tur.Shots["default"].speed;
                             for (var j = 0; j < tempTime; j++)
                             {
                                 asteroid.MoveTowardsPosition(currentShip.Position);

@@ -6,8 +6,6 @@ change spawn point to just remove everything around the ship before it loads
 make menu look nicer
 particleengine color
 particles dissapear when ship stops
-add speed to ship class
-add userinterface state 
 add proper collision
 fix intersect out, reference type
 rebind keys
@@ -40,3 +38,5 @@ fix rotation resetter
 fix station targetting
 remove currentsector.currentsship.update ()
 refactor currentShip into sector
+add userinterface state 
+add speed to ship class

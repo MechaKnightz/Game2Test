@@ -564,7 +564,6 @@ namespace Game2Test
 
             //end
 
-            currentSector.CurrentShip.Update();
             currentSector.Update();
 
             if (currentSector.CurrentShip.Rotation > DoublePI) currentSector.CurrentShip.Rotation -= DoublePI;

@@ -13,7 +13,6 @@ fix intersect out, reference type
 rebind keys
 add upgrades
 add cooldown to turrets
-refactor currentShip into sector
 
 DONE:
 
@@ -39,3 +38,5 @@ refactor health class bar into asteroid class
 make bar ("healthbar, shieldbar") class (cyanpixel, whitepixel)
 fix rotation resetter
 fix station targetting
+remove currentsector.currentsship.update ()
+refactor currentShip into sector

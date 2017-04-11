@@ -75,7 +75,6 @@ namespace Game2Test
         bool drawParticles;
         int movingDelayCounter;
         public GameState gameState = (GameState)2;
-        public Ship currentShip;
         Sprite aimSprite;
         Camera2D camera;
         string xPosString, yPosString;
@@ -175,7 +174,6 @@ namespace Game2Test
 
 
             LoadShips(); //LOADS SHIPS
-            currentShip = ships[0];
 
             var turretStationCollection = new Dictionary<string, List<Turret>>();
             turretStationCollection.Add("primary", turretsStation);
@@ -198,9 +196,11 @@ namespace Game2Test
             redHealth = new Sprite(redPixel);
             greenHealth = new Sprite(greenPixel);
             //first sector
+
             currentSector = GenerateSector();
-            currentSector.CurrentShip = currentShip;
+            currentSector.CurrentShip = new Ship(ships[0]);
             currentSector.CurrentStation = currentStation;
+
             //first sector end
 
             shieldIconTexture = Content.Load<Texture2D>("shieldIcon");
@@ -388,7 +388,7 @@ namespace Game2Test
                 {
                     var tempTurret = new Turret();
                     var tempShot = new Shot();
-                    if (currentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempTurret, out tempShot))
+                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempTurret, out tempShot))
                     {
                         currentSector.Asteroids[i].Health -= tempShot.Damage;
                         if (currentSector.Asteroids[i].Health <= 0)
@@ -416,11 +416,11 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentSector.Asteroids[i].Rectangle.Intersects(currentShip.Rectangle))
+                    if (currentSector.Asteroids[i].Rectangle.Intersects(currentSector.CurrentShip.Rectangle))
                     {
-                        currentShip.Health--;
+                        currentSector.CurrentShip.Health--;
                         currentSector.Asteroids.RemoveAt(i);
-                        if (currentShip.Health <= 0)
+                        if (currentSector.CurrentShip.Health <= 0)
                         {
                             ChangeState(GameState.EndScreen);
                             highscores.Add(score);// TODO: add fixerino LEjalkafsdbd
@@ -434,7 +434,7 @@ namespace Game2Test
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();
 
-            distanceToStation = Vector2.Distance(currentShip.Position, currentSector.CurrentStation.Position);
+            distanceToStation = Vector2.Distance(currentSector.CurrentShip.Position, currentSector.CurrentStation.Position);
 
 
             if (KeyInput.IsKeyClicked(Keys.Escape) && gameState == GameState.MainGame)
@@ -443,25 +443,25 @@ namespace Game2Test
             }
             if (KeyInput.BothKeysDown(forwardKey, Keys.LeftShift) || KeyInput.BothKeysDown(forwardKey2, Keys.LeftShift))
             {
-                currentShip.Move(MoveDirection.Forward, true);
+                currentSector.CurrentShip.Move(MoveDirection.Forward, true);
             }
             else if (KeyInput.EitherKeyDown(forwardKey, forwardKey2))
             {
-                currentShip.Move(MoveDirection.Forward, false);
+                currentSector.CurrentShip.Move(MoveDirection.Forward, false);
             }
 
             if (KeyInput.EitherKeyDown(Keys.Down, Keys.S))
             {
-                currentShip.Move(MoveDirection.Backward, false);
+                currentSector.CurrentShip.Move(MoveDirection.Backward, false);
             }
 
             if (KeyInput.EitherKeyDown(Keys.Left, Keys.A))
             {
-                currentShip.Turn(Direction.Left);
+                currentSector.CurrentShip.Turn(Direction.Left);
             }
             else if (KeyInput.EitherKeyDown(Keys.Right, Keys.D))
             {
-                currentShip.Turn(Direction.Right);
+                currentSector.CurrentShip.Turn(Direction.Right);
             }
 
             if (gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
@@ -479,7 +479,7 @@ namespace Game2Test
             }
 
             tempPos4 = camera.Position;
-            tempPos4 = currentShip.Position - halfScreen;
+            tempPos4 = currentSector.CurrentShip.Position - halfScreen;
             camera.Position = tempPos4;
 
             aimSprite.Position = camera.ScreenToWorld(mouseState.Position.ToVector2());
@@ -502,7 +502,7 @@ namespace Game2Test
                             var tempTime = tempDistance / tur.Shots["default"].Speed;
                             for (var j = 0; j < tempTime; j++)
                             {
-                                asteroid.MoveTowardsPosition(currentShip.Position);
+                                asteroid.MoveTowardsPosition(currentSector.CurrentShip.Position);
                             }
                         }
                     }
@@ -521,7 +521,7 @@ namespace Game2Test
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
-                currentShip.Fire("primary", "default");
+                currentSector.CurrentShip.Fire("primary", "default");
             }
 
             if (distanceToStation < shopRadius)
@@ -539,38 +539,38 @@ namespace Game2Test
 
             foreach (var t in currentSector.Asteroids)
             {
-                if (Vector2.Distance(t.Position, currentShip.Position) < 1000)
+                if (Vector2.Distance(t.Position, currentSector.CurrentShip.Position) < 1000)
                 {
-                    t.MoveTowardsPosition(currentShip.Position);
+                    t.MoveTowardsPosition(currentSector.CurrentShip.Position);
                 }
             }
 
 
             //VVV - UPDATE BELOW -  VVV
 
-            currentShip.AimTurrets(aimSprite.Position);
+            currentSector.CurrentShip.AimTurrets(aimSprite.Position);
 
             //testing
 
-            AI.MoveTowardsGoal(testShip, currentShip);
+            AI.MoveTowardsGoal(testShip, currentSector.CurrentShip);
             testShip.Update();
 
             //determines if should draw particles, must be after move/turn ship but before update
-            if (currentShip.Moving) movingDelayCounter = 5;
+            if (currentSector.CurrentShip.Moving) movingDelayCounter = 5;
             else movingDelayCounter--;
             if (movingDelayCounter <= 0) drawParticles = false;
             else drawParticles = true;
-            currentShip.Moving = false;
+            currentSector.CurrentShip.Moving = false;
 
             //end
 
-            currentShip.Update();
+            currentSector.CurrentShip.Update();
             currentSector.Update();
 
-            if (currentShip.Rotation > DoublePI) currentShip.Rotation -= DoublePI;
-            else if (currentShip.Rotation < -DoublePI) currentShip.Rotation += DoublePI;
+            if (currentSector.CurrentShip.Rotation > DoublePI) currentSector.CurrentShip.Rotation -= DoublePI;
+            else if (currentSector.CurrentShip.Rotation < -DoublePI) currentSector.CurrentShip.Rotation += DoublePI;
 
-            particleEngine.EmitterLocation = currentShip.GetBackOfShip();
+            particleEngine.EmitterLocation = currentSector.CurrentShip.GetBackOfShip();
             particleEngine.Update();
 
             CollisionTest();
@@ -635,10 +635,10 @@ namespace Game2Test
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), Rotation: ship.Rotation, origin: ship.Origin);
 
             currentSector.CurrentStation.Draw(spriteBatch);
-            currentShip.Draw(spriteBatch);
+            currentSector.CurrentShip.Draw(spriteBatch);
             testShip.Draw(spriteBatch);
 
-            currentShip.DrawTurrets(spriteBatch);
+            currentSector.CurrentShip.DrawTurrets(spriteBatch);
 
             for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
@@ -649,17 +649,17 @@ namespace Game2Test
             }
 
             spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
-            spriteBatch.DrawString(font, "Lives: " + currentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
+            spriteBatch.DrawString(font, "Lives: " + currentSector.CurrentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
-            xPosString = "Xpos: " + currentShip.Position.X.ToString("F0");
-            yPosString = "Ypos: " + currentShip.Position.Y.ToString("F0");
+            xPosString = "Xpos: " + currentSector.CurrentShip.Position.X.ToString("F0");
+            yPosString = "Ypos: " + currentSector.CurrentShip.Position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
             spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
             spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
 
             spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - shieldIconTexture.Height)));
-            spriteBatch.DrawString(font, currentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
+            spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
 
             if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
 
@@ -671,11 +671,11 @@ namespace Game2Test
 
         public void ResetGame()
         {
-            currentShip = ships[0];
-            currentShip.Health = currentShip.HealthMax;
+            currentSector.CurrentShip = ships[0];
+            currentSector.CurrentShip.Health = currentSector.CurrentShip.HealthMax;
             score = defaultScore;
-            currentShip.Position = defaultShipPos;
-            currentShip.Rotation = 0;
+            currentSector.CurrentShip.Position = defaultShipPos;
+            currentSector.CurrentShip.Rotation = 0;
             GenerateAsteroids();
         }
         void BeginSpriteBatchCamera(SpriteBatch spriteBatch)
@@ -767,35 +767,35 @@ namespace Game2Test
         //}
         public void NextShip()
         {
-            if (currentShip.ShipCurrentIndex == ships.Count - 1)
+            if (currentSector.CurrentShip.ShipCurrentIndex == ships.Count - 1)
             {
-                currentShip.ShipPreviousIndex = currentShip.ShipCurrentIndex;
-                currentShip.ShipCurrentIndex = 0;
+                currentSector.CurrentShip.ShipPreviousIndex = currentSector.CurrentShip.ShipCurrentIndex;
+                currentSector.CurrentShip.ShipCurrentIndex = 0;
                 ChangeShip();
             }
             else
             {
-                currentShip.ShipPreviousIndex = currentShip.ShipCurrentIndex;
-                currentShip.ShipCurrentIndex++;
+                currentSector.CurrentShip.ShipPreviousIndex = currentSector.CurrentShip.ShipCurrentIndex;
+                currentSector.CurrentShip.ShipCurrentIndex++;
                 ChangeShip();
             }
         }
 
         public void ChangeShip()
         {
-            var tempRot = currentShip.Rotation;
-            var tempPos = currentShip.Position;
-            var tempIndex = currentShip.ShipCurrentIndex;
-            var tempHealth = currentShip.Health;
-            var tempEnergy = currentShip.Energy;
+            var tempRot = currentSector.CurrentShip.Rotation;
+            var tempPos = currentSector.CurrentShip.Position;
+            var tempIndex = currentSector.CurrentShip.ShipCurrentIndex;
+            var tempHealth = currentSector.CurrentShip.Health;
+            var tempEnergy = currentSector.CurrentShip.Energy;
 
-            currentShip = ships[currentShip.ShipCurrentIndex];
+            currentSector.CurrentShip = ships[currentSector.CurrentShip.ShipCurrentIndex];
 
-            currentShip.ShipCurrentIndex = tempIndex;
-            currentShip.Position = tempPos;
-            currentShip.Rotation = tempRot;
-            currentShip.Health = tempHealth;
-            currentShip.Energy = tempEnergy;
+            currentSector.CurrentShip.ShipCurrentIndex = tempIndex;
+            currentSector.CurrentShip.Position = tempPos;
+            currentSector.CurrentShip.Rotation = tempRot;
+            currentSector.CurrentShip.Health = tempHealth;
+            currentSector.CurrentShip.Energy = tempEnergy;
         }
         private List<Texture2D> RandomizeBackground()
         {

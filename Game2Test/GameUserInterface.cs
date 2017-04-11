@@ -197,6 +197,12 @@ namespace Game2Test
                     tab2.button.ButtonParagraph.WrapWords = false;
 
                     //first tab
+
+                    var para = new Paragraph("Current sector: " + _game1.currentSector.Name);
+                    para.Scale = 0.7f;
+                    para.WrapWords = false;
+                    tab0.panel.AddChild(para);
+
                     warpButton = new Button("Warp to new sector");
                     warpButton.ButtonParagraph.Scale = 0.5f;
                     warpButton.OnClick = (Entity btn) =>
@@ -214,6 +220,7 @@ namespace Game2Test
                     dropDown.SelectedTextPanelParagraph.Text = "Warp to an old sector";
                     for (int i = 0; i < _game1.sectors.Count; i++)
                     {
+                        if(_game1.sectors[i].Name == _game1.currentSector.Name) continue;
                         dropDown.AddItem(_game1.sectors[i].Name);
                     }
                     dropDown.AttachedData = dropDown.SelectedValue;
@@ -350,33 +357,32 @@ namespace Game2Test
         {
             if (_game1.ownedShips.All(x => x.Name != ship.Name)) _game1.ownedShips.Add(ship);
 
-            var tempRot = _game1.currentShip.Rotation;
+            var tempRot = _game1.currentSector.CurrentShip.Rotation;
             var tempPos = _game1.currentStation.Position;
-            var tempIndex = _game1.currentShip.ShipCurrentIndex;
-            var tempHealth = _game1.currentShip.Health;
-            var tempEnergy = _game1.currentShip.Energy;
+            var tempIndex = _game1.currentSector.CurrentShip.ShipCurrentIndex;
+            var tempHealth = _game1.currentSector.CurrentShip.Health;
+            var tempEnergy = _game1.currentSector.CurrentShip.Energy;
 
-            _game1.currentShip = ship;
+            _game1.currentSector.CurrentShip = ship;
 
-            _game1.currentShip.ShipCurrentIndex = tempIndex;
-            _game1.currentShip.Position = tempPos;
-            _game1.currentShip.Rotation = tempRot;
-            _game1.currentShip.Health = tempHealth;
-            _game1.currentShip.Energy = tempEnergy;
+            _game1.currentSector.CurrentShip.ShipCurrentIndex = tempIndex;
+            _game1.currentSector.CurrentShip.Position = tempPos;
+            _game1.currentSector.CurrentShip.Rotation = tempRot;
+            _game1.currentSector.CurrentShip.Health = tempHealth;
+            _game1.currentSector.CurrentShip.Energy = tempEnergy;
 
-            _game1.currentShip.Update();
+            _game1.currentSector.CurrentShip.Update();
         }
 
         private void SaveGame()
         {
             data.Score = _game1.score;
-            data.Health = _game1.currentShip.Health;
+            data.Health = _game1.currentSector.CurrentShip.Health;
 
             data.DiscoveredSectors = _game1.sectors;
             data.OwnedShips = _game1.ownedShips;
 
             data.CurrentSectorName = _game1.currentSector.Name;
-            data.CurrentShipName = _game1.currentShip.Name;
 
             List<Data> _data = new List<Data>();
             _data.Add(data);
@@ -395,7 +401,7 @@ namespace Game2Test
             data = _data[0];
 
             _game1.score = data.Score;
-            _game1.currentShip.Health = data.Health;
+            _game1.currentSector.CurrentShip.Health = data.Health;
         }
 
         public void RemoveInterface(GameState gameState, Game1 game1)
@@ -427,6 +433,7 @@ namespace Game2Test
 
         public void ChangeSector(Sector sector)
         {
+            _game1.ChangeState(GameState.MainGame);
             sector.CurrentShip = _game1.currentSector.CurrentShip;
             sector.CurrentStation = _game1.currentSector.CurrentStation;
             _game1.currentSector = sector;

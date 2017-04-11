@@ -22,7 +22,7 @@ namespace Game2Test.Sprites.Helpers
             var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);
             if (distanceToGoal > shortestRange) //change 500 to range of the shortest weapons
             {
-                float diff = Math.Abs(MathHelper.WrapAngle(ship.Rotation - angleToGoal));
+                var diff = Math.Abs(MathHelper.WrapAngle(ship.Rotation - angleToGoal));
                 if (diff < 0.2) ship.Move(MoveDirection.Forward, false);
                 else
                 {
@@ -65,12 +65,12 @@ namespace Game2Test.Sprites.Helpers
             }
             else if (targetShip.Moving)
             {
-                
+                //TODO
             }
         }
         public static void ShootAtAsteroid(Station station, Asteroid asteroid)
         {
-
+            //TODO
         }
     }
 }

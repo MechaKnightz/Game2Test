@@ -49,7 +49,7 @@ namespace Game2Test
                 case GameState.MainGame:
                     UserInterface.SetCursor(_game1.transparent);
                     _game1.shopHUDButton = new Button("Shop (G)", anchor: Anchor.BottomRight, size: new Vector2(150, 50), skin: ButtonSkin.Alternative);
-                    _game1.shopHUDButton.ButtonParagraph.Scale = 1.0f;
+                    _game1.shopHUDButton.ButtonParagraph.Scale = 0.5f;
                     _game1.shopHUDButton.ButtonParagraph.WrapWords = false;
                     _game1.shopHUDButton.OnClick = (Entity btn) =>
                     {

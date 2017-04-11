@@ -8,7 +8,6 @@ using MonoGame.Extended;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Game2Test.Input;
 using Game2Test.Sprites;
@@ -36,6 +35,7 @@ namespace Game2Test
         List<Turret> turrets0 = new List<Turret>();
         List<Turret> turrets1 = new List<Turret>();
         List<Turret> turrets2 = new List<Turret>();
+        List<Turret> turrets3 = new List<Turret>();
         List<Turret> turretsStation = new List<Turret>();
 
         public List<Sector> sectors = new List<Sector>();
@@ -169,6 +169,9 @@ namespace Game2Test
 
             turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
 
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5, -28), new Vector2(-5, -28), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5, 27), new Vector2(-5, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
+
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
 
@@ -259,12 +262,14 @@ namespace Game2Test
             var turret0Collection = InitialiseTurretCollection(turrets0);
             var turret1Collection = InitialiseTurretCollection(turrets1);
             var turret2Collection = InitialiseTurretCollection(turrets2);
+            var turret3Collection = InitialiseTurretCollection(turrets3);
 
-            var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, turret0Collection);
-            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, turret1Collection);
-            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, turret2Collection);
+            var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, turret0Collection, 0.05f, 1000, 5);
+            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, turret1Collection, 0.05f, 1000, 5);
+            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, turret2Collection, 0.05f, 1000, 5);
+            var ship3 = InitialiseShip("ship3", "Alien ship 1 description", 0f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10);
 
-            var initiatedShips = new List<Ship> { ship0, ship1, ship2 };
+            var initiatedShips = new List<Ship> { ship0, ship1, ship2, ship3 };
 
             ships.AddRange(initiatedShips);
             ownedShips.Add(ship0);
@@ -285,7 +290,10 @@ namespace Game2Test
             float shipCost,
             float shipSpeed,
             float shipBoost,
-            Dictionary<string, List<Turret>> turretCollection)
+            Dictionary<string, List<Turret>> turretCollection,
+            float turnRate,
+            float energyMax,
+            float energyRegen)
         {
             var shipDictionary = new Dictionary<string, Texture2D>
             {
@@ -294,7 +302,7 @@ namespace Game2Test
                 { "Right", Content.Load<Texture2D>($"{shipName}Texture2")}
             };
 
-            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, 1000, 5, 0.05f)
+            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate)
             {
                 Cost = shipCost,
                 Description = shipDescription,

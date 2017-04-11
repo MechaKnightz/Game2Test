@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -116,11 +117,21 @@ namespace Game2Test.Sprites.Entities
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    var angleToOther = Game1.AngleToOther(tur.Position, target);
+                    switch (tur.Type)
+                    {
+                        case TurretType.Rotating:
+                            var angleToOther = Game1.AngleToOther(tur.Position, target);
 
-                    var direction = WayToTurn(tur.Rotation, angleToOther);
+                            var direction = WayToTurn(tur.Rotation, angleToOther);
 
-                    tur.Turn(direction);
+                            tur.Turn(direction);
+                            break;
+                        case TurretType.Static:
+                            tur.Rotation = Rotation;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
         }

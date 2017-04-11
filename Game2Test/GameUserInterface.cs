@@ -363,6 +363,8 @@ namespace Game2Test
             _game1.currentShip.Rotation = tempRot;
             _game1.currentShip.Health = tempHealth;
             _game1.currentShip.Energy = tempEnergy;
+
+            _game1.currentShip.Update();
         }
 
         private void SaveGame()

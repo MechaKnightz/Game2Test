@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,13 +16,15 @@ namespace Game2Test.Sprites.Entities
         public Vector2 Offset { get; }
         public float EnergyCost { get; }
         public float TurnRate { get; set; }
+        public TurretType Type { get; set; }
 
         public Turret() { }
-        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate) : base(texture, position, rotation)
+        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate, TurretType type) : base(texture, position, rotation)
         {
             Offset = offset;
             EnergyCost = energyCost;
             TurnRate = turnRate;
+            Type = type;
             foreach(var t in shots)
             {
                 Shots.Add(t.Key, t.Value);

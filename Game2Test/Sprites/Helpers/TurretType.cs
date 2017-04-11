@@ -1,8 +1,8 @@
 ﻿namespace Game2Test.Sprites.Helpers
 {
-    enum TurretType
+    public enum TurretType
     {
-        Turnable,
+        Rotating,
         Static,
     }
 }

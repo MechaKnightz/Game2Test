@@ -372,6 +372,7 @@ namespace Game2Test
             _game1.currentSector.CurrentShip.Energy = tempEnergy;
 
             _game1.currentSector.CurrentShip.Update();
+            _game1.currentSector.CurrentShip.BuyTurrets();
         }
 
         private void SaveGame()

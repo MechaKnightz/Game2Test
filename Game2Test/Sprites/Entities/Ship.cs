@@ -208,6 +208,31 @@ namespace Game2Test.Sprites.Entities
                 }
             }
         }
+
+        public void BuyTurrets()
+        {
+            foreach (var t in Turrets)
+            {
+                //sets the turrets at the position of the ship
+                foreach (var tur in t.Value)
+                {
+                    var temp = tur.Position;
+                    temp.X = Position.X;
+                    temp.Y = Position.Y;
+
+                    //x turret offset
+                    temp.X -= (float)(tur.Offset.X * Math.Cos(Rotation - Math.PI));
+                    temp.Y -= (float)(tur.Offset.X * Math.Sin(Rotation - Math.PI));
+
+                    //y turret offset
+                    temp.X -= (float)(tur.Offset.Y * Math.Cos(Rotation - (Math.PI / 2)));
+                    temp.Y -= (float)(tur.Offset.Y * Math.Sin(Rotation - (Math.PI / 2)));
+
+                    tur.Position = temp;
+                }
+            }
+        }
+
         public void SetPosition(Vector2 position)
         {
             Position = position;

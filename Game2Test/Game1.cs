@@ -8,6 +8,7 @@ using MonoGame.Extended;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Game2Test.Input;
 using Game2Test.Sprites;

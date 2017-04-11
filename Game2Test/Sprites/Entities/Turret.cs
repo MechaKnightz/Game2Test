@@ -19,16 +19,36 @@ namespace Game2Test.Sprites.Entities
         public TurretType Type { get; set; }
 
         public Turret() { }
+
+        public Turret(Turret turret)
+        {
+            Offset = turret.Offset;
+            EnergyCost = turret.EnergyCost;
+            TurnRate = turret.TurnRate;
+            Type = turret.Type;
+            //Sprite
+            Rotation = turret.Rotation;
+            Position = turret.Position;
+            Rectangle = turret.Rectangle;
+            Origin = turret.Origin;
+            Texture = turret.Texture;
+            //End
+            foreach (var shot in turret.Shots)
+            {
+                Shots.Add(shot.Key,new Shot(shot.Value));
+                ShotDictionary.Add(shot.Key, new List<Shot>());
+            }
+        }
         public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate, TurretType type) : base(texture, position, rotation)
         {
             Offset = offset;
             EnergyCost = energyCost;
             TurnRate = turnRate;
             Type = type;
-            foreach(var t in shots)
+            foreach(var shot in shots)
             {
-                Shots.Add(t.Key, t.Value);
-                ShotDictionary.Add(t.Key, new List<Shot>());
+                Shots.Add(shot.Key, shot.Value);
+                ShotDictionary.Add(shot.Key, new List<Shot>());
             }
 
         }

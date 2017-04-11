@@ -39,14 +39,14 @@ namespace Game2Test.Sprites.Entities
 
         public Ship(Ship ship)
         {
-            Turrets = ship.Turrets;
             TextureDictionary = ship.TextureDictionary;
+            //Sprite
             Rotation = ship.Rotation;
             Position = ship.Position;
             Rectangle = ship.Rectangle;
             Origin = ship.Origin;
-            TextureName = ship.TextureName;
             Texture = ship.Texture;
+            //End
             TextureIndexCounter = ship.TextureIndexCounter;
             ShipCurrentIndex = ship.ShipCurrentIndex;
             ShipPreviousIndex = ship.ShipPreviousIndex;
@@ -63,6 +63,20 @@ namespace Game2Test.Sprites.Entities
             EnergyMax = ship.EnergyMax;
             EnergyRegen = ship.EnergyRegen;
 
+            foreach (var turretGroup in ship.Turrets)
+            {
+                Turrets.Add(turretGroup.Key, new List<Turret>());
+            }
+            foreach (var turretList in Turrets.Values)
+            {
+                foreach (var turretGroup in ship.Turrets)
+                {
+                    foreach (var turret in turretGroup.Value)
+                    {
+                        turretList.Add(new Turret(turret));
+                    }
+                }
+            }
         }
 
         /// <summary>

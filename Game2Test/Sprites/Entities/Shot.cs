@@ -11,6 +11,21 @@ namespace Game2Test.Sprites.Entities
         public float Damage;
 
         public Shot() { }
+
+        public Shot(Shot shot)
+        {
+            Name = shot.Name;
+            Duration = shot.Duration;
+            Speed = shot.Speed;
+            Damage = shot.Damage;
+            //Sprite
+            Rotation = shot.Rotation;
+            Position = shot.Position;
+            Rectangle = shot.Rectangle;
+            Origin = shot.Origin;
+            Texture = shot.Texture;
+            //End
+        }
         public Shot(Texture2D texture, Vector2 position, float rotation, int duration) : base(texture, position, rotation)
         {
             Duration = duration;

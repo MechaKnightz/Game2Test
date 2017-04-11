@@ -10,7 +10,6 @@ namespace Game2Test.Sprites
         public Vector2 Origin { get; set; }
         public Rectangle Rectangle;
         public float Rotation { get; set; }
-        public string TextureName { get; set; }
 
         [JsonIgnore]
         public Texture2D Texture { get; set; }
@@ -37,7 +36,6 @@ namespace Game2Test.Sprites
             Rectangle = rectangle;
             Origin = origin;
             Rotation = rotation;
-            TextureName = texture.Name;
         }
 
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle)
@@ -49,7 +47,6 @@ namespace Game2Test.Sprites
             Texture = texture;
             Rotation = 0f;
             Origin = new Vector2(rectangle.Width / 2f, rectangle.Height / 2f);
-            TextureName = texture.Name;
         }
 
         public Sprite(Texture2D texture, Vector2 position)
@@ -61,7 +58,6 @@ namespace Game2Test.Sprites
             _position = position;
             Texture = texture;
             Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
-            TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, Vector2 position, float rotation)
         {
@@ -73,7 +69,6 @@ namespace Game2Test.Sprites
             Texture = texture;
             Rotation = rotation;
             Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
-            TextureName = texture.Name;
         }
         public Sprite(Texture2D texture, float rotation)
         {
@@ -84,13 +79,11 @@ namespace Game2Test.Sprites
             Texture = texture;
             Rotation = rotation;
             Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
-            TextureName = texture.Name;
         }
 
         public Sprite(Texture2D texture)
         {
             Texture = texture;
-            TextureName = texture.Name;
         }
 
         public void Draw(SpriteBatch spriteBatch)

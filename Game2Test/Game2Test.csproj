@@ -51,6 +51,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Sprites\Entities\Crystal.cs" />
+    <Compile Include="Sprites\Entities\TractorBeam.cs" />
     <Compile Include="Sprites\Helpers\AI.cs" />
     <Compile Include="Sprites\Helpers\Bar.cs" />
     <Compile Include="Particles\Particle.cs" />

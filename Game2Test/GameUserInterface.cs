@@ -377,7 +377,7 @@ namespace Game2Test
 
         private void SaveGame()
         {
-            data.Score = _game1.score;
+            data.Score = (int)_game1.currentSector.CurrentShip.Money;
             data.Health = _game1.currentSector.CurrentShip.Health;
 
             data.DiscoveredSectors = _game1.sectors;
@@ -401,7 +401,7 @@ namespace Game2Test
 
             data = _data[0];
 
-            _game1.score = data.Score;
+            _game1.currentSector.CurrentShip.Money = data.Score;
             _game1.currentSector.CurrentShip.Health = data.Health;
         }
 

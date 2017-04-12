@@ -66,7 +66,6 @@ namespace Game2Test
 
         SpriteFont font;
         private static Random _rnd;
-        public int score;
         int speed;
         Color[] menuColor = new Color[3];
         int selected = 0;
@@ -440,7 +439,7 @@ namespace Game2Test
                         if (currentSector.CurrentShip.Health <= 0)
                         {
                             ChangeState(GameState.EndScreen);
-                            highscores.Add(score);// TODO: add fixerino LEjalkafsdbd
+                            highscores.Add((int)currentSector.CurrentShip.Money);// TODO: add fixerino LEjalkafsdbd
                         }
                     }
                 }
@@ -642,7 +641,7 @@ namespace Game2Test
         }
         private void DrawEndScreen()
         {
-            spriteBatch.DrawString(font, "Final Score: " + score.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2) - (font.MeasureString("Final Score: " + score.ToString()) / 2), Color.Black);
+            spriteBatch.DrawString(font, "Final Money: " + currentSector.CurrentShip.Money, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2) - (font.MeasureString("Final Score: " + currentSector.CurrentShip.Money) / 2), Color.Black);
             spriteBatch.DrawString(font, "Press R to reset.", new Vector2(10, 10), Color.Black);
         }
         void DrawGame()
@@ -674,7 +673,7 @@ namespace Game2Test
                 }
             }
 
-            spriteBatch.DrawString(font, "Score: " + score, camera.ScreenToWorld(viewScorePos), Color.White);
+            spriteBatch.DrawString(font, "Money: " + currentSector.CurrentShip.Money, camera.ScreenToWorld(viewScorePos), Color.White);
             spriteBatch.DrawString(font, "Lives: " + currentSector.CurrentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
             xPosString = "Xpos: " + currentSector.CurrentShip.Position.X.ToString("F0");
@@ -699,7 +698,7 @@ namespace Game2Test
         {
             currentSector.CurrentShip = ships[0];
             currentSector.CurrentShip.Health = currentSector.CurrentShip.HealthMax;
-            score = defaultScore;
+            currentSector.CurrentShip.Money = defaultScore;
             currentSector.CurrentShip.Position = defaultShipPos;
             currentSector.CurrentShip.Rotation = 0;
             GenerateAsteroids();

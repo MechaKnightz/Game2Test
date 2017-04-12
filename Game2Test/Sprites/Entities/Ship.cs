@@ -25,6 +25,7 @@ namespace Game2Test.Sprites.Entities
         public int ShipCurrentIndex { get; set; }
         public int ShipPreviousIndex { get; set; }
         public float Cost { get; set; }
+        public float Money { get; set; }
 
         public float TurnRate { get; set; }
 
@@ -32,7 +33,7 @@ namespace Game2Test.Sprites.Entities
         public float BackwardsSpeed { get; set; }
         public float StrafeSpeed { get; set; }
 
-        public bool BoostBool { get; set; } = false;
+        public bool BoostBool { get; set; }
         public float Boost { get; set; }
 
         public float Health { get; set; }
@@ -162,6 +163,7 @@ namespace Game2Test.Sprites.Entities
                     {
                         if (ship.Rectangle.Intersects(sector.Asteroids[i].Crystals[j].Rectangle))
                         {
+                            Money += sector.Asteroids[i].Crystals[j].Size;
                             sector.Asteroids[i].Crystals.RemoveAt(j);
                             _beamDelayCounter = 0;
                             j--;

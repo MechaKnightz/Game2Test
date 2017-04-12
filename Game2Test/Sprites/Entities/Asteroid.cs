@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 
 namespace Game2Test.Sprites.Entities
 {
-    public class Asteroid : Sprite
+    public class Asteroid : Sprite, ITargetable
     {
         public float Speed { get; set; }
         public float Acceleration { get; set; } = 1.1f;
@@ -99,6 +100,15 @@ namespace Game2Test.Sprites.Entities
         {
             Random random = new Random();
             return random.NextDouble() * (maximum - minimum) + minimum;
+        }
+
+        public void HitByShot(Shot shot)
+        {
+            Health -= shot.Damage;
+        }
+        public void HitByAsteroid(Asteroid asteroid)
+        {
+            Health -= asteroid.Size;
         }
     }
 }

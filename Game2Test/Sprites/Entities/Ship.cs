@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Game2Test.Sprites.Entities
 {
-    public class Ship : Sprite
+    public class Ship : Sprite, ITargetable
     {
         public Dictionary<string, List<Turret>> Turrets { get; set; } = new Dictionary<string, List<Turret>>();
 
@@ -452,6 +452,15 @@ namespace Game2Test.Sprites.Entities
                     break;
             }
             Moving = true;
+        }
+
+        public void HitByShot(Shot shot)
+        {
+            Health -= shot.Damage;
+        }
+        public void HitByAsteroid(Asteroid asteroid)
+        {
+            Health -= asteroid.Size;
         }
     }
 }

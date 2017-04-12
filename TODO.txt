@@ -10,10 +10,11 @@ add proper collision
 fix intersect out, reference type
 rebind keys
 add upgrades
-add cooldown to turrets
+refactor intersect method
 
 DONE:
 
+add cooldown to turrets
 space station at (0,0)
 fix particle engine
 turrets rotation with ship rotation

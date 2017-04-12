@@ -660,8 +660,8 @@ namespace Game2Test
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), Rotation: ship.Rotation, origin: ship.Origin);
 
             currentSector.CurrentStation.Draw(spriteBatch);
-            currentSector.CurrentShip.Draw(spriteBatch);
             currentSector.CurrentShip.DrawTractorBeam(spriteBatch);
+            currentSector.CurrentShip.Draw(spriteBatch);
             testShip.Draw(spriteBatch);
 
             currentSector.CurrentShip.DrawTurrets(spriteBatch);
@@ -674,7 +674,7 @@ namespace Game2Test
                 }
             }
 
-            spriteBatch.DrawString(font, "Score: " + score.ToString(), camera.ScreenToWorld(viewScorePos), Color.White);
+            spriteBatch.DrawString(font, "Score: " + score, camera.ScreenToWorld(viewScorePos), Color.White);
             spriteBatch.DrawString(font, "Lives: " + currentSector.CurrentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
             xPosString = "Xpos: " + currentSector.CurrentShip.Position.X.ToString("F0");

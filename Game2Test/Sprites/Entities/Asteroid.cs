@@ -10,8 +10,11 @@ namespace Game2Test.Sprites.Entities
         public float Acceleration { get; set; } = 1.1f;
         public float Health { get; set; }
         public float HealthMax { get; set; }
+
         public int Size { get; set; }
         public Bar Bar1 { get; set; }
+
+        public bool Destroyed { get; set; } = false;
 
         public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax, Bar bar, int size) :base(texture, position)
         {
@@ -43,8 +46,15 @@ namespace Game2Test.Sprites.Entities
         }
         public new void Draw(SpriteBatch spriteBatch)
         {
-            if(Health < HealthMax) Bar1.Draw(spriteBatch, Position, Health, HealthMax);
-            spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
+            if (Destroyed)
+            {
+                
+            }
+            else
+            {
+                if (Health < HealthMax) Bar1.Draw(spriteBatch, Position, Health, HealthMax);
+                spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Game2Test.Sprites.Entities
         public float TurnRate { get; set; }
         public TurretType Type { get; set; }
         public float Cooldown { get; set; }
+        private float _cooldownCounter;
 
         public Turret() { }
 
@@ -41,12 +42,13 @@ namespace Game2Test.Sprites.Entities
                 ShotDictionary.Add(shot.Key, new List<Shot>());
             }
         }
-        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate, TurretType type) : base(texture, position, rotation)
+        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, rotation)
         {
             Offset = offset;
             EnergyCost = energyCost;
             TurnRate = turnRate;
             Type = type;
+            Cooldown = cooldown;
             foreach(var shot in shots)
             {
                 Shots.Add(shot.Key, shot.Value);
@@ -64,6 +66,7 @@ namespace Game2Test.Sprites.Entities
 
         public void Update()
         {
+            if(_cooldownCounter != Cooldown) _cooldownCounter++;;
             UpdateShots();
         }
 
@@ -114,14 +117,17 @@ namespace Game2Test.Sprites.Entities
             return false;
         }
 
-        public void Fire() //fire the default shot
+        public float Fire() //fire the default shot
         {
-            ShotDictionary["default"].Add(new Shot(Shots["default"].Texture, Position, Rotation, Shots["default"].Duration, Shots["default"].Speed, Shots["default"].Damage));
+            return Fire("default");
         }
         public float Fire(string name) //fire shot by Name
         {
+            if (_cooldownCounter != Cooldown) return 0f;
+
             Shot shot = Shots.FirstOrDefault(x => x.Value.Name == name).Value;
             ShotDictionary[name].Add(new Shot(shot.Texture, Position, Rotation, shot.Duration, shot.Speed, shot.Damage));
+            _cooldownCounter = 0f;
 
             return EnergyCost;
         }

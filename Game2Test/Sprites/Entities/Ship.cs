@@ -326,8 +326,7 @@ namespace Game2Test.Sprites.Entities
                         //TODO fix energy cost
                         if(Energy - tur.EnergyCost > 0)
                         {
-                            tur.Fire();
-                            Energy -= tur.EnergyCost;
+                            Energy -= tur.Fire(nameOfShot);
                         }
                     }
                 }

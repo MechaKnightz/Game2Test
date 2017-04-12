@@ -163,19 +163,19 @@ namespace Game2Test
             shot1Dictionary = new Dictionary<string, Shot>();
             shot1Dictionary.Add(shot1.Name, shot1);
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1Dictionary, 150, 0.05f, TurretType.Rotating));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1Dictionary, 150, 0.05f, TurretType.Rotating));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1Dictionary, 100, 0.05f, TurretType.Rotating, 30f));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1Dictionary, 100, 0.05f, TurretType.Rotating, 30f));
 
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150, 0.05f, TurretType.Static));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150, 0.05f, TurretType.Static));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150, 0.05f, TurretType.Static, 30f));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150, 0.05f, TurretType.Static, 30f));
 
-            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
+            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-5, -28), new Vector2(-5, -28), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-5, 27), new Vector2(-5, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5, -28), new Vector2(-5, -28), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5, 27), new Vector2(-5, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
 
             LoadShips(); //LOADS SHIPS
@@ -399,7 +399,7 @@ namespace Game2Test
         {
             for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
-                if (IsInView(currentSector.Asteroids[i]))
+                if (IsInView(currentSector.Asteroids[i]) && !currentSector.Asteroids[i].Destroyed)
                 {
                     var tempTurret = new Turret();
                     var tempShot = new Shot();

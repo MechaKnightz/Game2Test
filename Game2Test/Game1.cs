@@ -65,7 +65,7 @@ namespace Game2Test
         Sprite redHealth;
 
         SpriteFont font;
-        Random rnd;
+        private static Random _rnd;
         public int score;
         int speed;
         Color[] menuColor = new Color[3];
@@ -133,7 +133,7 @@ namespace Game2Test
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            rnd = new Random();
+            _rnd = new Random();
             camera = new Camera2D(GraphicsDevice);
 
             graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // window width 801
@@ -721,8 +721,8 @@ namespace Game2Test
                 {
                     for (int i = 0; i < rocksPerBackground; i++)
                     {
-                        Vector2 position = new Vector2(repeatIndex * backgroundSize.X + rnd.Next(0, (int)backgroundSize.X + 1), repeatIndex2 * backgroundSize.Y + rnd.Next(0, (int)backgroundSize.Y + 1));
-                        var rndInt = rnd.Next(asteroidTextures.Count);
+                        Vector2 position = new Vector2(repeatIndex * backgroundSize.X + _rnd.Next(0, (int)backgroundSize.X + 1), repeatIndex2 * backgroundSize.Y + _rnd.Next(0, (int)backgroundSize.Y + 1));
+                        var rndInt = _rnd.Next(asteroidTextures.Count);
                         var maxHealth = rndInt + 1;
                         var crystalList = new List<Crystal>();
                         float crystalCounter = 0;
@@ -753,7 +753,7 @@ namespace Game2Test
 
         public Crystal GenerateCrystal()
         {
-            var rndInt = rnd.Next(1, crystalTextureAmount+1);
+            var rndInt = _rnd.Next(1, crystalTextureAmount+1);
             var crystal = new Crystal(crystalTextures[rndInt-1], rndInt);
             return crystal;
         }
@@ -851,7 +851,7 @@ namespace Game2Test
 
             randomBackgroundList.Add(Content.Load<Texture2D>("background1"));
 
-            randomBackgroundList.Add(layer2[rnd.Next(0, layer2.Count)]);
+            randomBackgroundList.Add(layer2[_rnd.Next(0, layer2.Count)]);
 
             randomBackgroundList.Add(Content.Load<Texture2D>("background3"));
             return randomBackgroundList;
@@ -866,12 +866,12 @@ namespace Game2Test
             while (true)
             {
                 char[] array = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-                string tempString = array[rnd.Next(0, array.Length)].ToString() +
-                                    array[rnd.Next(0, array.Length)] +
-                                    array[rnd.Next(0, array.Length)];
+                string tempString = array[_rnd.Next(0, array.Length)].ToString() +
+                                    array[_rnd.Next(0, array.Length)] +
+                                    array[_rnd.Next(0, array.Length)];
                 //Name
                 //AAA - 000
-                string name = tempString + " - " + rnd.Next(0, 1000);
+                string name = tempString + " - " + _rnd.Next(0, 1000);
                 if (sectors.Any(x => x.Name == name)) continue;
                 sector.Name = name;
                 break;
@@ -904,8 +904,8 @@ namespace Game2Test
             Name name = new Name();
             while (true)
             {
-                name.FirstName = nameArray[rnd.Next(0, names.Count)];
-                name.LastName = nameArray[rnd.Next(0, names.Count)];
+                name.FirstName = nameArray[_rnd.Next(0, names.Count)];
+                name.LastName = nameArray[_rnd.Next(0, names.Count)];
                 name.FullName = name.FirstName + " " + name.LastName;
 
                 if (names.All(x => x.FullName != name.FullName)) break;
@@ -913,6 +913,10 @@ namespace Game2Test
             names.Add(name);
 
             return name;
+        }
+        public static double GetRandomNumber(double minimum, double maximum)
+        {
+            return _rnd.NextDouble() * (maximum - minimum) + minimum;
         }
 
         //public int GetIndex(string queryString, OrderedDictionary dictionary)

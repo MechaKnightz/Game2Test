@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace Game2Test.Sprites.Entities
 {
@@ -37,15 +38,19 @@ namespace Game2Test.Sprites.Entities
             {
                 for (var i = 0; i < Crystals.Count; i++)
                 {
-                    Crystals[i].Duration--;
-                    var temp = Crystals[i].Position;
-                    temp.X += (float)Math.Cos(Crystals[i].Rotation) * Crystals[i].Speed;
-                    temp.Y += (float)Math.Sin(Crystals[i].Rotation) * Crystals[i].Speed;
-                    Crystals[i].Position = temp;
+                    if (!Crystals[i].BeingBeamed)
+                    {
+                        Crystals[i].Duration--;
+                        var temp = Crystals[i].Position;
+                        temp.X += (float)Math.Cos(Crystals[i].Rotation) * Crystals[i].Speed;
+                        temp.Y += (float)Math.Sin(Crystals[i].Rotation) * Crystals[i].Speed;
+                        Crystals[i].Position = temp;
 
-                    if (Crystals[i].Duration > 00) continue;
-                    Crystals.RemoveAt(i);
-                    i--;
+                        if (Crystals[i].Duration > 00) continue;
+                        Crystals.RemoveAt(i);
+                        i--;
+                    }
+                    else Crystals[i].BeingBeamed = false;
                 }
             }
             else MoveTowardsPosition(position);

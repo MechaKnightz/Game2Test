@@ -65,6 +65,8 @@ namespace Game2Test.Sprites.Entities
             temp.Y += (float)Math.Sin(angleFromCrystalToShip) * DragSpeed;
             closestCrystal.Position = temp;
 
+            closestCrystal.BeingBeamed = true;
+
             LockedOnCrystal = closestCrystal;
             Rotation = Game1.AngleToOther(Position, closestCrystal.Position);
             Rectangle.Width = (int)shortestDist;

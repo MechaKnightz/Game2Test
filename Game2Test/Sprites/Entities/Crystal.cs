@@ -15,6 +15,8 @@ namespace Game2Test.Sprites.Entities
         public float Duration { get; set; }
         private float _randomRot;
 
+        public bool BeingBeamed { get; set; }
+
         public Crystal() { }
         public Crystal(Texture2D texture, float size)
         {

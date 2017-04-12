@@ -35,6 +35,16 @@ namespace Game2Test
             CurrentShip.PickUpCrystals(currentSector, CurrentShip);
 
             CurrentStation.Update();
+
+            //updatesector needs to be after tractorbeam updates
+            for (int i = 0; i < currentSector.Asteroids.Count; i++)
+            {
+                if (currentSector.Asteroids[i].Crystals.Count <= 0) currentSector.Asteroids.RemoveAt(i);
+                if (Vector2.Distance(currentSector.Asteroids[i].Position, currentSector.CurrentShip.Position) < 1000)
+                {
+                    currentSector.Asteroids[i].Update(currentSector.CurrentShip.Position);
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

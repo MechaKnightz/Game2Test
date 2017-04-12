@@ -29,8 +29,11 @@ namespace Game2Test
             {
                 ship.Update();
             }
+
             CurrentShip.UpdateTractorBeam(currentSector, CurrentShip);
             CurrentShip.Update();
+            CurrentShip.PickUpCrystals(currentSector, CurrentShip);
+
             CurrentStation.Update();
         }
 

@@ -179,7 +179,7 @@ namespace Game2Test
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
             var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
-            testTractorBeam = new TractorBeam(tractorBeamTexture, 300);
+            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 30);
             LoadShips(); //LOADS SHIPS
 
             var turretStationCollection = new Dictionary<string, List<Turret>>();
@@ -433,7 +433,7 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentSector.Asteroids[i].Rectangle.Intersects(currentSector.CurrentShip.Rectangle))
+                    if (currentSector.Asteroids[i].Rectangle.Intersects(currentSector.CurrentShip.Rectangle) && !currentSector.Asteroids[i].Destroyed)
                     {
                         currentSector.CurrentShip.Health--;
                         currentSector.Asteroids.RemoveAt(i);

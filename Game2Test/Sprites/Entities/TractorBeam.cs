@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game2Test.Sprites.Entities
@@ -6,12 +7,16 @@ namespace Game2Test.Sprites.Entities
     public class TractorBeam : Sprite
     {
         public float Length { get; set; }
+        public float DragSpeed { get; set; }
+        public float BeamDelay { get; set; }
         public Crystal LockedOnCrystal { get; set; }
         public bool DrawBeam { get; set; }
 
         public TractorBeam(TractorBeam tractorBeam)
         {
             Length = tractorBeam.Length;
+            DragSpeed = tractorBeam.DragSpeed;
+            BeamDelay = tractorBeam.BeamDelay;
             //Sprite
             Rotation = tractorBeam.Rotation;
             Position = tractorBeam.Position;
@@ -21,11 +26,13 @@ namespace Game2Test.Sprites.Entities
             //End
         }
 
-        public TractorBeam(Texture2D texture, float length)
+        public TractorBeam(Texture2D texture, float length, float dragSpeed, float beamDelay)
         {
             Origin = new Vector2(0, texture.Height / 2f);
             Texture = texture;
             Length = length;
+            DragSpeed = dragSpeed;
+            BeamDelay = beamDelay;
             Rectangle = new Rectangle(0 ,0 , texture.Width, texture.Height);
         }
 
@@ -50,6 +57,14 @@ namespace Game2Test.Sprites.Entities
                     }
                 }
             }
+
+            var angleFromCrystalToShip = Game1.AngleToOther(closestCrystal.Position, Position);
+
+            var temp = closestCrystal.Position;
+            temp.X += (float)Math.Cos(angleFromCrystalToShip) * DragSpeed;
+            temp.Y += (float)Math.Sin(angleFromCrystalToShip) * DragSpeed;
+            closestCrystal.Position = temp;
+
             LockedOnCrystal = closestCrystal;
             Rotation = Game1.AngleToOther(Position, closestCrystal.Position);
             Rectangle.Width = (int)shortestDist;

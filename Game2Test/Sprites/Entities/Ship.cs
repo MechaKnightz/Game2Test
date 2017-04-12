@@ -42,7 +42,6 @@ namespace Game2Test.Sprites.Entities
         public float EnergyMax { get; }
         public float EnergyRegen { get; }
 
-        private int _beamDelay = 20;
         private int _beamDelayCounter;
 
         public Ship() { }
@@ -129,7 +128,7 @@ namespace Game2Test.Sprites.Entities
         {
             UpdateEnergy();
             UpdateTurrets();
-            if (!Moving && _beamDelayCounter != _beamDelay) _beamDelayCounter++;
+            if (!Moving && _beamDelayCounter != TractorBeam.BeamDelay) _beamDelayCounter++;
             Moving = false;
             BoostBool = false;
         }
@@ -147,14 +146,26 @@ namespace Game2Test.Sprites.Entities
 
         public void UpdateTractorBeam(Sector sector, Ship ship)
         {
-            if (!Moving && _beamDelayCounter == _beamDelay)
+            if (!Moving && _beamDelayCounter == TractorBeam.BeamDelay)
             {
                 TractorBeam.Update(sector);
-                if (TractorBeam.LockedOnCrystal != null)
+            }
+        }
+
+        public void PickUpCrystals(Sector sector, Ship ship)
+        {
+            for (int i = 0; i < sector.Asteroids.Count; i++)
+            {
+                if (sector.Asteroids[i].Destroyed)
                 {
-                    if (TractorBeam.LockedOnCrystal.Rectangle.Intersects(ship.Rectangle))
+                    for (int j = 0; j < sector.Asteroids[i].Crystals.Count; j++)
                     {
-                        TractorBeam.LockedOnCrystal = null;
+                        if (ship.Rectangle.Intersects(sector.Asteroids[i].Crystals[j].Rectangle))
+                        {
+                            sector.Asteroids[i].Crystals.RemoveAt(j);
+                            _beamDelayCounter = 0;
+                            j--;
+                        }
                     }
                 }
             }

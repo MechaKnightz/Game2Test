@@ -673,7 +673,7 @@ namespace Game2Test
                 }
             }
 
-            spriteBatch.DrawString(font, "Money: " + currentSector.CurrentShip.Money, camera.ScreenToWorld(viewScorePos), Color.White);
+            spriteBatch.DrawString(font, "Money: " + currentSector.CurrentShip.Money + "k $", camera.ScreenToWorld(viewScorePos), Color.White);
             spriteBatch.DrawString(font, "Lives: " + currentSector.CurrentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
             xPosString = "Xpos: " + currentSector.CurrentShip.Position.X.ToString("F0");

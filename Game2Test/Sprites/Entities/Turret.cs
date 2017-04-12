@@ -17,6 +17,7 @@ namespace Game2Test.Sprites.Entities
         public float EnergyCost { get; }
         public float TurnRate { get; set; }
         public TurretType Type { get; set; }
+        public float Cooldown { get; set; }
 
         public Turret() { }
 
@@ -26,6 +27,7 @@ namespace Game2Test.Sprites.Entities
             EnergyCost = turret.EnergyCost;
             TurnRate = turret.TurnRate;
             Type = turret.Type;
+            Cooldown = turret.Cooldown;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;

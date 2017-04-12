@@ -187,7 +187,7 @@ namespace Game2Test
 
             stationDictionary.Add("Default", Content.Load<Texture2D>("stationTexture"));
 
-            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f);
+            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f, 0);
 
             //stationShip end
 
@@ -309,12 +309,11 @@ namespace Game2Test
                 { "Right", Content.Load<Texture2D>($"{shipName}Texture2")}
             };
 
-            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate)
+            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate, shipSpeed)
             {
                 Cost = shipCost,
                 Description = shipDescription,
                 Name = shipName,
-                Speed = shipSpeed,
                 Boost = shipBoost
             };
 
@@ -480,6 +479,15 @@ namespace Game2Test
                 currentSector.CurrentShip.Turn(Direction.Right);
             }
 
+            if (keyState.IsKeyDown(Keys.E))
+            {
+                currentSector.CurrentShip.Move(MoveDirection.Right, false);
+            }
+            else if (keyState.IsKeyDown(Keys.Q))
+            {
+                currentSector.CurrentShip.Move(MoveDirection.Left, false);
+            }
+
             if (gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
             if (KeyInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
@@ -577,7 +585,6 @@ namespace Game2Test
             else movingDelayCounter--;
             if (movingDelayCounter <= 0) drawParticles = false;
             else drawParticles = true;
-            currentSector.CurrentShip.Moving = false;
 
             //end
 

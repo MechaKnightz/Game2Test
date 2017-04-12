@@ -14,7 +14,9 @@ namespace Game2Test.Sprites.Entities
         [JsonIgnore]
         public Dictionary<string, Texture2D> TextureDictionary { get; set; } = new Dictionary<string, Texture2D>();
 
-        public bool Moving { get; set; }
+        public TractorBeam TractorBeam { get; set; }
+
+        public bool Moving { get; private set; }
         public string TextureIndexCounter { get; set; } = "Default";
 
         public string Description { get; set; }
@@ -25,7 +27,11 @@ namespace Game2Test.Sprites.Entities
         public float Cost { get; set; }
 
         public float TurnRate { get; set; }
+
         public float Speed { get; set; }
+        public float BackwardsSpeed { get; set; }
+        public float StrafeSpeed { get; set; }
+
         public float Boost { get; set; }
 
         public float Health { get; set; }
@@ -55,6 +61,8 @@ namespace Game2Test.Sprites.Entities
             Cost = ship.Cost;
             TurnRate = ship.TurnRate;
             Speed = ship.Speed;
+            BackwardsSpeed = ship.BackwardsSpeed;
+            StrafeSpeed = ship.StrafeSpeed;
             Boost = ship.Boost;
             Moving = ship.Moving;
             Health = ship.Health;
@@ -62,6 +70,8 @@ namespace Game2Test.Sprites.Entities
             Energy = ship.Energy;
             EnergyMax = ship.EnergyMax;
             EnergyRegen = ship.EnergyRegen;
+
+            if(ship.TractorBeam != null) TractorBeam = new TractorBeam(ship.TractorBeam);
 
             foreach (var turretGroup in ship.Turrets)
             {
@@ -89,7 +99,7 @@ namespace Game2Test.Sprites.Entities
         /// <param name="energyMax">max energy</param>
         /// <param name="energyRegen">energy regen per frame</param>
         /// <param name="turnRate">how fast the ship turns</param>
-        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary["Default"], position)
+        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed) : base(textureDictionary["Default"], position)
         {
             foreach (var t in turrets)
             {
@@ -105,6 +115,9 @@ namespace Game2Test.Sprites.Entities
             Energy = energyMax;
             EnergyRegen = energyRegen;
             TurnRate = turnRate;
+            Speed = speed;
+            BackwardsSpeed = 1 / 5f * speed;
+            StrafeSpeed = 3 / 5f * speed;
         }
 
         public void Update()
@@ -378,9 +391,21 @@ namespace Game2Test.Sprites.Entities
                     break;
                 case MoveDirection.Backward:
                     var tempPos2 = Position;
-                    tempPos2.X -= (float)Math.Cos(Rotation) * (Speed / 5);
-                    tempPos2.Y -= (float)Math.Sin(Rotation) * (Speed / 5);
+                    tempPos2.X += (float)Math.Cos(Rotation + Math.PI) * BackwardsSpeed;
+                    tempPos2.Y += (float)Math.Sin(Rotation + Math.PI) * BackwardsSpeed;
                     SetPosition(tempPos2);
+                    break;
+                case MoveDirection.Left:
+                    var tempPos3 = Position;
+                    tempPos3.X += (float)Math.Cos(Rotation - Math.PI / 2) * BackwardsSpeed;
+                    tempPos3.Y += (float)Math.Sin(Rotation - Math.PI / 2) * BackwardsSpeed;
+                    SetPosition(tempPos3);
+                    break;
+                case MoveDirection.Right:
+                    var tempPos4 = Position;
+                    tempPos4.X += (float)Math.Cos(Rotation + Math.PI / 2) * BackwardsSpeed;
+                    tempPos4.Y += (float)Math.Sin(Rotation + Math.PI / 2) * BackwardsSpeed;
+                    SetPosition(tempPos4);
                     break;
             }
             Moving = true;

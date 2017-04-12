@@ -13,7 +13,7 @@ namespace Game2Test
         {
             
         }
-        public Station(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate) : base(textureDictionary, position, turrets, healthMax, energyMax, energyRegen, turnRate)
+        public Station(Dictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed) : base(textureDictionary, position, turrets, healthMax, energyMax, energyRegen, turnRate, speed)
         {
         }
     }

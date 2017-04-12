@@ -100,7 +100,7 @@ namespace Game2Test.Sprites.Entities
         /// <param name="energyMax">max energy</param>
         /// <param name="energyRegen">energy regen per frame</param>
         /// <param name="turnRate">how fast the ship turns</param>
-        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed) : base(textureDictionary["Default"], position)
+        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed, TractorBeam tractorBeam) : base(textureDictionary["Default"], position)
         {
             foreach (var t in turrets)
             {
@@ -110,6 +110,7 @@ namespace Game2Test.Sprites.Entities
             {
                 TextureDictionary.Add(entry.Key, entry.Value);
             }
+            TractorBeam = tractorBeam;
             HealthMax = healthMax;
             Health = healthMax;
             EnergyMax = energyMax;
@@ -138,6 +139,16 @@ namespace Game2Test.Sprites.Entities
             spriteBatch.Draw(TextureDictionary[TextureIndexCounter], Position, origin: Origin, rotation: Rotation);
             TextureIndexCounter = "Default";
             DrawTurrets(spriteBatch);
+        }
+
+        public void UpdateTractorBeam(Sector sector)
+        {
+            if (!Moving) TractorBeam.Update(sector);
+        }
+
+        public void DrawTractorBeam(SpriteBatch spriteBatch)
+        {
+            if (TractorBeam.DrawBeam) TractorBeam.Draw(spriteBatch);
         }
 
         public void AimTurrets(Vector2 target)
@@ -202,6 +213,8 @@ namespace Game2Test.Sprites.Entities
             if (Rotation > Game1.DoublePI) Rotation -= Game1.DoublePI;
             else if (Rotation < 0) Rotation += Game1.DoublePI;
 
+            TractorBeam.Position = Position;
+
             foreach (var t in Turrets)
             {
                 //sets the turrets at the position of the ship
@@ -251,6 +264,7 @@ namespace Game2Test.Sprites.Entities
         public void SetPosition(Vector2 position)
         {
             Position = position;
+            TractorBeam.Position = Position;
             foreach (var t in Turrets)
             {
                 //sets the turrets at the position of the ship

@@ -38,6 +38,7 @@ namespace Game2Test
         List<Turret> turrets2 = new List<Turret>();
         List<Turret> turrets3 = new List<Turret>();
         List<Turret> turretsStation = new List<Turret>();
+        private TractorBeam testTractorBeam;
 
         public List<Sector> sectors = new List<Sector>();
 
@@ -52,7 +53,7 @@ namespace Game2Test
         public List<Ship> availableShips = new List<Ship>();
         public List<Ship> ownedShips = new List<Ship>();
 
-        Vector2 defaultShipPos, tempPos, tempPos4, halfScreen, halfScreenPos;
+        Vector2 defaultShipPos, tempPos, halfScreen, halfScreenPos;
 
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
             redPixel, greenPixel, turretStationTexture;
@@ -177,7 +178,8 @@ namespace Game2Test
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
-
+            var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
+            testTractorBeam = new TractorBeam(tractorBeamTexture, 300);
             LoadShips(); //LOADS SHIPS
 
             var turretStationCollection = new Dictionary<string, List<Turret>>();
@@ -187,7 +189,7 @@ namespace Game2Test
 
             stationDictionary.Add("Default", Content.Load<Texture2D>("stationTexture"));
 
-            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f, 0);
+            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f, 0, testTractorBeam);
 
             //stationShip end
 
@@ -309,7 +311,7 @@ namespace Game2Test
                 { "Right", Content.Load<Texture2D>($"{shipName}Texture2")}
             };
 
-            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate, shipSpeed)
+            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate, shipSpeed, testTractorBeam)
             {
                 Cost = shipCost,
                 Description = shipDescription,
@@ -502,9 +504,9 @@ namespace Game2Test
                 }
             }
 
-            tempPos4 = camera.Position;
-            tempPos4 = currentSector.CurrentShip.Position - halfScreen;
-            camera.Position = tempPos4;
+            tempPos = camera.Position;
+            tempPos = currentSector.CurrentShip.Position - halfScreen;
+            camera.Position = tempPos;
 
             aimSprite.Position = camera.ScreenToWorld(mouseState.Position.ToVector2());
 
@@ -588,7 +590,7 @@ namespace Game2Test
 
             //end
 
-            currentSector.Update();
+            currentSector.Update(currentSector);
 
             if (currentSector.CurrentShip.Rotation > DoublePI) currentSector.CurrentShip.Rotation -= DoublePI;
             else if (currentSector.CurrentShip.Rotation < -DoublePI) currentSector.CurrentShip.Rotation += DoublePI;
@@ -659,6 +661,7 @@ namespace Game2Test
 
             currentSector.CurrentStation.Draw(spriteBatch);
             currentSector.CurrentShip.Draw(spriteBatch);
+            currentSector.CurrentShip.DrawTractorBeam(spriteBatch);
             testShip.Draw(spriteBatch);
 
             currentSector.CurrentShip.DrawTurrets(spriteBatch);

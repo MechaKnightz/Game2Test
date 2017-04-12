@@ -14,6 +14,7 @@ namespace Game2Test.Sprites.Entities
         public float Speed { get; set; }
         public float Duration { get; set; }
 
+        public Crystal() { }
         public Crystal(Texture2D texture, float size)
         {
             Texture = texture;

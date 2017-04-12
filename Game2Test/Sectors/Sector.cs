@@ -23,14 +23,26 @@ namespace Game2Test
         [JsonIgnore]
         public List<Texture2D> Backgrounds = new List<Texture2D>();
         public List<Asteroid> Asteroids = new List<Asteroid>();
-        public void Update()
+        public void Update(Sector currentSector)
         {
             foreach (var ship in NPCShips)
             {
                 ship.Update();
             }
             CurrentShip.Update();
+            CurrentShip.UpdateTractorBeam(currentSector);
             CurrentStation.Update();
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (var ship in NPCShips)
+            {
+                ship.Draw(spriteBatch);
+            }
+            CurrentShip.DrawTractorBeam(spriteBatch);
+            CurrentShip.Draw(spriteBatch);
+            CurrentStation.Draw(spriteBatch);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Game2Test.Sprites.Helpers
             if (distanceToGoal > shortestRange) //change 500 to range of the shortest weapons
             {
                 var diff = Math.Abs(MathHelper.WrapAngle(ship.Rotation - angleToGoal));
-                if (diff < 0.2) ship.Move(MoveDirection.Forward, false);
+                if (diff < 0.2) ship.Move(MoveDirection.Forward);
                 else
                 {
                     if (ship.Rotation > angleToGoal)

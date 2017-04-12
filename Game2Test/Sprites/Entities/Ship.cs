@@ -32,6 +32,7 @@ namespace Game2Test.Sprites.Entities
         public float BackwardsSpeed { get; set; }
         public float StrafeSpeed { get; set; }
 
+        public bool BoostBool { get; set; } = false;
         public float Boost { get; set; }
 
         public float Health { get; set; }
@@ -125,6 +126,7 @@ namespace Game2Test.Sprites.Entities
             UpdateEnergy();
             UpdateTurrets();
             Moving = false;
+            BoostBool = false;
         }
 
         public void UpdateEnergy()
@@ -369,12 +371,12 @@ namespace Game2Test.Sprites.Entities
             }
         }
 
-        public void Move(MoveDirection moveDirection, bool speedBoost)
+        public void Move(MoveDirection moveDirection)
         {
             switch (moveDirection)
             {
                 case MoveDirection.Forward:
-                    if (speedBoost)
+                    if (BoostBool)
                     {
                         var tempPos = Position;
                         tempPos.X += (float)Math.Cos(Rotation) * Speed * Boost;

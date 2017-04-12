@@ -274,7 +274,7 @@ namespace Game2Test
             var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, turret0Collection, 0.05f, 1000, 5);
             var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, turret1Collection, 0.05f, 1000, 5);
             var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, turret2Collection, 0.05f, 1000, 5);
-            var ship3 = InitialiseShip("ship3", "Alien ship 1 description", 0f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10);
+            var ship3 = InitialiseShip("ship3", "Himan ship 3 description", 0f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10);
 
             var initiatedShips = new List<Ship> { ship0, ship1, ship2, ship3 };
 
@@ -456,20 +456,20 @@ namespace Game2Test
             {
                 ChangeState(GameState.PauseMenu);
             }
-            if (KeyInput.BothKeysDown(forwardKey, Keys.LeftShift) || KeyInput.BothKeysDown(forwardKey2, Keys.LeftShift))
+            //moving forward
+            if (keyState.IsKeyDown(Keys.LeftShift))
             {
-                currentSector.CurrentShip.Move(MoveDirection.Forward, true);
+                currentSector.CurrentShip.BoostBool = true;
             }
-            else if (KeyInput.EitherKeyDown(forwardKey, forwardKey2))
+            if (KeyInput.EitherKeyDown(forwardKey, forwardKey2))
             {
-                currentSector.CurrentShip.Move(MoveDirection.Forward, false);
+                currentSector.CurrentShip.Move(MoveDirection.Forward);
             }
-
+            //moving 
             if (KeyInput.EitherKeyDown(Keys.Down, Keys.S))
             {
-                currentSector.CurrentShip.Move(MoveDirection.Backward, false);
+                currentSector.CurrentShip.Move(MoveDirection.Backward);
             }
-
             if (KeyInput.EitherKeyDown(Keys.Left, Keys.A))
             {
                 currentSector.CurrentShip.Turn(Direction.Left);
@@ -481,11 +481,11 @@ namespace Game2Test
 
             if (keyState.IsKeyDown(Keys.E))
             {
-                currentSector.CurrentShip.Move(MoveDirection.Right, false);
+                currentSector.CurrentShip.Move(MoveDirection.Right);
             }
             else if (keyState.IsKeyDown(Keys.Q))
             {
-                currentSector.CurrentShip.Move(MoveDirection.Left, false);
+                currentSector.CurrentShip.Move(MoveDirection.Left);
             }
 
             if (gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);

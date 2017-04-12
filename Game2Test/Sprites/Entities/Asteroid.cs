@@ -10,14 +10,16 @@ namespace Game2Test.Sprites.Entities
         public float Acceleration { get; set; } = 1.1f;
         public float Health { get; set; }
         public float HealthMax { get; set; }
+        public int Size { get; set; }
         public Bar Bar1 { get; set; }
 
-        public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax, Bar bar) :base(texture, position)
+        public Asteroid(Texture2D texture, Vector2 position, float speed, float healthMax, Bar bar, int size) :base(texture, position)
         {
             Speed = speed;
             HealthMax = healthMax;
             Health = healthMax;
             Bar1 = bar;
+            Size = size;
         }
 
         public Asteroid()

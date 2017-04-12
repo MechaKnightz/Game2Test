@@ -11,10 +11,10 @@ fix intersect out, reference type
 rebind keys
 add upgrades
 refactor intersect method
-boost bool in ship reset on update
 
 DONE:
 
+boost bool in ship reset on update
 add cooldown to turrets
 space station at (0,0)
 fix particle engine

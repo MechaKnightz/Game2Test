@@ -26,7 +26,8 @@ namespace Game2Test
 
         //lists
         List<Texture2D> asteroidTextures = new List<Texture2D>();
-
+        List<Texture2D> crystalTextures = new List<Texture2D>();
+        
         List<int> highscores = new List<int>();
         private List<Name> names = new List<Name>();
 
@@ -83,7 +84,8 @@ namespace Game2Test
         Vector2 backgroundSize = new Vector2(1920, 1920);
         int rocksPerBackground = 20;
         Color clearColor;
-        int asteroidTextureAmount = 8;
+        private int asteroidTextureAmount = 8;
+        private int crystalTextureAmount = 3;
         Matrix viewMatrix;
         public Panel mainMenuPanel;
         public Panel shopPanel;
@@ -194,6 +196,11 @@ namespace Game2Test
             {
                 asteroidTextures.Add(Content.Load<Texture2D>("asteroid" + i));
             }
+            for (int i = 1; i < crystalTextureAmount + 1; i++)
+            {
+                crystalTextures.Add(Content.Load<Texture2D>("crystal" + i));
+            }
+
             redPixel = Content.Load<Texture2D>("redPixel");
             greenPixel = Content.Load<Texture2D>("greenPixel");
             redHealth = new Sprite(redPixel);
@@ -401,8 +408,8 @@ namespace Game2Test
                         currentSector.Asteroids[i].Health -= tempShot.Damage;
                         if (currentSector.Asteroids[i].Health <= 0)
                         {
-                            currentSector.Asteroids.RemoveAt(i);
-                            score++;
+                            currentSector.Asteroids[i].Destroy();
+                            i--;
                         }
                     }
                     var tempTurret2 = new Turret();
@@ -412,7 +419,8 @@ namespace Game2Test
                         currentSector.Asteroids[i].Health -= tempShot2.Damage;
                         if (currentSector.Asteroids[i].Health <= 0)
                         {
-                            currentSector.Asteroids.RemoveAt(i);
+                            currentSector.Asteroids[i].Destroy();
+                            i--;
                         }
                     }
                 }
@@ -500,7 +508,7 @@ namespace Game2Test
                     float tempDistance = 99999999;
                     for (int i = 0; i < currentSector.Asteroids.Count; i++) //TODO fix targetting
                     {
-                        if (Vector2.Distance(currentSector.Asteroids[i].Position, tur.Position) < tempDistance)
+                        if (Vector2.Distance(currentSector.Asteroids[i].Position, tur.Position) < tempDistance && !currentSector.Asteroids[i].Destroyed)
                         {
                             tempDistance = Vector2.Distance(currentSector.Asteroids[i].Position, tur.Position);
                             asteroid.Position = currentSector.Asteroids[i].Position;
@@ -545,11 +553,12 @@ namespace Game2Test
                 ChangeState(GameState.MainGame);
             }
 
-            foreach (var t in currentSector.Asteroids)
+            for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
-                if (Vector2.Distance(t.Position, currentSector.CurrentShip.Position) < 1000)
+                if (currentSector.Asteroids[i].Crystals.Count <= 0) currentSector.Asteroids.RemoveAt(i);
+                if (Vector2.Distance(currentSector.Asteroids[i].Position, currentSector.CurrentShip.Position) < 1000)
                 {
-                    t.MoveTowardsPosition(currentSector.CurrentShip.Position);
+                    currentSector.Asteroids[i].Update(currentSector.CurrentShip.Position);
                 }
             }
 
@@ -693,7 +702,7 @@ namespace Game2Test
         /// <summary>
         /// Generate all the astroids
         /// </summary>
-        List<Asteroid> GenerateAsteroids()
+        private List<Asteroid> GenerateAsteroids()
         {
             var asteroids = new List<Asteroid>();
             for (int repeatIndex2 = -mapSize; repeatIndex2 <= mapSize; repeatIndex2++)
@@ -705,7 +714,19 @@ namespace Game2Test
                         Vector2 position = new Vector2(repeatIndex * backgroundSize.X + rnd.Next(0, (int)backgroundSize.X + 1), repeatIndex2 * backgroundSize.Y + rnd.Next(0, (int)backgroundSize.Y + 1));
                         var rndInt = rnd.Next(asteroidTextures.Count);
                         var maxHealth = rndInt + 1;
-                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f / rndInt, maxHealth, new Bar(redHealth, greenHealth, position, 50, 20, new Vector2(0, -30), maxHealth), rndInt));
+                        var crystalList = new List<Crystal>();
+                        float crystalCounter = 0;
+                        while (true)
+                        {
+                            var crystal = GenerateCrystal();
+
+                            if ((int)crystalCounter == rndInt+1) break;
+                            if (crystal.Size + crystalCounter > rndInt+1) continue;
+
+                            crystalList.Add(crystal);
+                            crystalCounter += crystal.Size;
+                        }
+                        asteroids.Add(new Asteroid(asteroidTextures[rndInt], position, 1.5f / rndInt, maxHealth, new Bar(redHealth, greenHealth, position, 50, 20, new Vector2(0, -30), maxHealth), rndInt, crystalList));
                     }
                 }
             }
@@ -718,6 +739,13 @@ namespace Game2Test
                 }
             }
             return asteroids;
+        }
+
+        public Crystal GenerateCrystal()
+        {
+            var rndInt = rnd.Next(1, crystalTextureAmount+1);
+            var crystal = new Crystal(crystalTextures[rndInt-1], rndInt);
+            return crystal;
         }
         /// <summary>
         /// call when spritebatch has ended

@@ -43,10 +43,5 @@ namespace Game2Test.Sprites.Entities
             Damage = damage;
             Name = name;
         }
-
-        public void Update()
-        {
-            
-        }
     }
 }

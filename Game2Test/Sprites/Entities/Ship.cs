@@ -42,6 +42,9 @@ namespace Game2Test.Sprites.Entities
         public float EnergyMax { get; }
         public float EnergyRegen { get; }
 
+        private int _beamDelay = 20;
+        private int _beamDelayCounter;
+
         public Ship() { }
 
         public Ship(Ship ship)
@@ -126,6 +129,7 @@ namespace Game2Test.Sprites.Entities
         {
             UpdateEnergy();
             UpdateTurrets();
+            if (!Moving && _beamDelayCounter != _beamDelay) _beamDelayCounter++;
             Moving = false;
             BoostBool = false;
         }
@@ -141,9 +145,19 @@ namespace Game2Test.Sprites.Entities
             DrawTurrets(spriteBatch);
         }
 
-        public void UpdateTractorBeam(Sector sector)
+        public void UpdateTractorBeam(Sector sector, Ship ship)
         {
-            if (!Moving) TractorBeam.Update(sector);
+            if (!Moving && _beamDelayCounter == _beamDelay)
+            {
+                TractorBeam.Update(sector);
+                if (TractorBeam.LockedOnCrystal != null)
+                {
+                    if (TractorBeam.LockedOnCrystal.Rectangle.Intersects(ship.Rectangle))
+                    {
+                        TractorBeam.LockedOnCrystal = null;
+                    }
+                }
+            }
         }
 
         public void DrawTractorBeam(SpriteBatch spriteBatch)

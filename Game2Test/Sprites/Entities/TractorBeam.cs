@@ -5,17 +5,8 @@ namespace Game2Test.Sprites.Entities
 {
     public class TractorBeam : Sprite
     {
-        private float _length;
-        public float Length
-        {
-            get { return _length; }
-            set
-            {
-                _length = value;
-                Rectangle.Width = (int)value;
-            }
-        }
-
+        public float Length { get; set; }
+        public Crystal LockedOnCrystal { get; set; }
         public bool DrawBeam { get; set; }
 
         public TractorBeam(TractorBeam tractorBeam)
@@ -40,7 +31,7 @@ namespace Game2Test.Sprites.Entities
 
         public void Update(Sector sector)
         {
-            var shortestDist = Length + 1;
+            var shortestDist = float.MaxValue;
             var closestCrystal = new Crystal();
             foreach (var asteroid in sector.Asteroids)
             {
@@ -59,8 +50,9 @@ namespace Game2Test.Sprites.Entities
                     }
                 }
             }
+            LockedOnCrystal = closestCrystal;
             Rotation = Game1.AngleToOther(Position, closestCrystal.Position);
-            Length = shortestDist;
+            Rectangle.Width = (int)shortestDist;
         }
 
         public new void Draw(SpriteBatch spriteBatch)

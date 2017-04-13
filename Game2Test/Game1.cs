@@ -56,7 +56,7 @@ namespace Game2Test
 
         Vector2 defaultShipPos, tempPos, halfScreen, halfScreenPos;
 
-        Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, shieldIconTexture,
+        Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, energyIconTexture,
             redPixel, greenPixel, turretStationTexture;
 
         public Texture2D transparent;
@@ -220,7 +220,7 @@ namespace Game2Test
 
             //first sector end
 
-            shieldIconTexture = Content.Load<Texture2D>("shieldIcon");
+            energyIconTexture = Content.Load<Texture2D>("batteryIcon");
             aimTexture = Content.Load<Texture2D>("aimWhite");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
             font = Content.Load<SpriteFont>("font");
@@ -680,8 +680,8 @@ namespace Game2Test
             spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
             spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
 
-            spriteBatch.Draw(shieldIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - shieldIconTexture.Height)));
-            spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(shieldIconTexture.Width, halfScreen.Y * 2 - shieldIconTexture.Height)), Color.White);
+            spriteBatch.Draw(energyIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height)));
+            spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(energyIconTexture.Width, halfScreen.Y * 2 - energyIconTexture.Height)), Color.White);
 
             if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
 

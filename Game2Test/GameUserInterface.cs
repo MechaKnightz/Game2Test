@@ -279,7 +279,7 @@ namespace Game2Test
                 case GameState.PauseMenu:
                     UserInterface.SetCursor(CursorType.Default);
                     //panel
-                    _game1.pauseMenuPanel = new Panel(new Vector2(300, 500));
+                    _game1.pauseMenuPanel = new Panel(new Vector2(300, 520));
                     UserInterface.AddEntity(_game1.pauseMenuPanel);
                     //resumebutton
                     var resumeButton = new Button("Resume");
@@ -305,6 +305,14 @@ namespace Game2Test
                         LoadGame();
                     };
                     _game1.pauseMenuPanel.AddChild(loadButton);
+                    //settings button
+                    var settingsMenuButton = new Button("Settings");
+                    settingsMenuButton.ButtonParagraph.Scale = 0.5f;
+                    settingsMenuButton.OnClick = (Entity btn) =>
+                    {
+                        _game1.ChangeState(GameState.SettingsMenu);
+                    };
+                    _game1.pauseMenuPanel.AddChild(settingsMenuButton);
                     //main menu button
                     var mainMenuButton = new Button("Main Menu");
                     mainMenuButton.ButtonParagraph.Scale = 0.5f;

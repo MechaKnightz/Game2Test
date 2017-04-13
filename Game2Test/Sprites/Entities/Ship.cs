@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +16,7 @@ namespace Game2Test.Sprites.Entities
         public Dictionary<string, Texture2D> TextureDictionary { get; set; } = new Dictionary<string, Texture2D>();
 
         public TractorBeam TractorBeam { get; set; }
+        public Upgrade[] Upgrades { get; set; }
 
         public bool Moving { get; private set; }
         public string TextureIndexCounter { get; set; } = "Default";
@@ -36,12 +38,16 @@ namespace Game2Test.Sprites.Entities
         public bool BoostBool { get; set; }
         public float Boost { get; set; }
 
+        public float BaseHealth { get; set; }
         public float Health { get; set; }
-        public float HealthMax { get; }
+        public float HealthMax { get; set; }
 
+        public float BaseEnergy { get; set; }
         public float Energy { get; set; }
-        public float EnergyMax { get; }
-        public float EnergyRegen { get; }
+        public float EnergyMax { get; set; }
+
+        public float BaseEnergyRegen { get; set; }
+        public float EnergyRegen { get; set; }
 
         private int _beamDelayCounter;
 
@@ -69,11 +75,21 @@ namespace Game2Test.Sprites.Entities
             StrafeSpeed = ship.StrafeSpeed;
             Boost = ship.Boost;
             Moving = ship.Moving;
+            BaseHealth = ship.BaseHealth;
             Health = ship.Health;
             HealthMax = ship.HealthMax;
+            BaseEnergy = ship.BaseEnergy;
             Energy = ship.Energy;
             EnergyMax = ship.EnergyMax;
+            BaseEnergyRegen = ship.BaseEnergyRegen;
             EnergyRegen = ship.EnergyRegen;
+
+            Upgrades = new Upgrade[ship.Upgrades.Length];
+            for (int i = 0; i < ship.Upgrades.Length; i++)
+            {
+                if(ship.Upgrades[i] == null) continue;
+                Upgrades[i] = new Upgrade(ship.Upgrades[i]);
+            }
 
             if(ship.TractorBeam != null) TractorBeam = new TractorBeam(ship.TractorBeam);
 
@@ -103,7 +119,7 @@ namespace Game2Test.Sprites.Entities
         /// <param name="energyMax">max energy</param>
         /// <param name="energyRegen">energy regen per frame</param>
         /// <param name="turnRate">how fast the ship turns</param>
-        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed, TractorBeam tractorBeam) : base(textureDictionary["Default"], position)
+        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed, TractorBeam tractorBeam, int upgradeCount) : base(textureDictionary["Default"], position)
         {
             foreach (var t in turrets)
             {
@@ -113,11 +129,15 @@ namespace Game2Test.Sprites.Entities
             {
                 TextureDictionary.Add(entry.Key, entry.Value);
             }
+            Upgrades = new Upgrade[upgradeCount];
             TractorBeam = tractorBeam;
             HealthMax = healthMax;
+            BaseHealth = healthMax;
             Health = healthMax;
+            BaseEnergy = energyMax;
             EnergyMax = energyMax;
             Energy = energyMax;
+            BaseEnergyRegen = energyRegen;
             EnergyRegen = energyRegen;
             TurnRate = turnRate;
             Speed = speed;
@@ -201,6 +221,54 @@ namespace Game2Test.Sprites.Entities
                     }
                 }
             }
+        }
+
+        public Upgrade ReplaceUpgrade(Upgrade upgrade, int index)
+        {
+            var tempUpgrade = Upgrades[index];
+            Upgrades[index] = upgrade;
+            return tempUpgrade;
+        }
+
+        public void AddUpgrade(Upgrade upgrade)
+        {
+            for (int i = 0; i < Upgrades.Length; i++)
+            {
+                if (Upgrades[i] == null)
+                {
+                    Upgrades[i] = upgrade;
+                    return;
+                }
+            }
+            ApplyUpgrades();
+        }
+
+        public void ApplyUpgrades()
+        {
+            var percentageHealth = Health / HealthMax;
+            var percentageEnergy = Energy / EnergyMax;
+
+            HealthMax = BaseHealth;
+            EnergyMax = BaseEnergy;
+            EnergyRegen = BaseEnergyRegen;
+
+            float healthMaxSum = 0;
+            float energyMaxSum = 0;
+            float energyRegenSum = 0;
+            foreach (var upgrade in Upgrades)
+            {
+                if (upgrade == null) continue;
+                healthMaxSum += upgrade.HealthBoost;
+                energyMaxSum += upgrade.EnergyBoost;
+                energyRegenSum += upgrade.EnergyRegenBoost;
+            }
+            HealthMax += healthMaxSum;
+            EnergyMax += energyMaxSum;
+            EnergyRegen += energyRegenSum;
+
+            Health = percentageHealth * HealthMax;
+            Energy = percentageEnergy * EnergyMax;
+
         }
 
         public Direction WayToTurn(float angle, float angleToOther)

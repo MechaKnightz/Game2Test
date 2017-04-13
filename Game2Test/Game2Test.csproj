@@ -63,6 +63,7 @@
     <Compile Include="Sprites\Helpers\ITargetable.cs" />
     <Compile Include="Sprites\Helpers\RotatedRectangle.cs" />
     <Compile Include="Sprites\Helpers\TurretType.cs" />
+    <Compile Include="Sprites\Helpers\Upgrade.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\Entities\Station.cs" />
     <Compile Include="Sprites\Entities\Turret.cs" />

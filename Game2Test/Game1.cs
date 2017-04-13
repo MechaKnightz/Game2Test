@@ -188,7 +188,7 @@ namespace Game2Test
 
             stationDictionary.Add("Default", Content.Load<Texture2D>("stationTexture"));
 
-            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f, 0, testTractorBeam);
+            currentStation = new Station(stationDictionary, defaultShipPos, turretStationCollection, 100, 500, 15, 0.05f, 0, testTractorBeam, 5);
 
             //stationShip end
 
@@ -310,7 +310,7 @@ namespace Game2Test
                 { "Right", Content.Load<Texture2D>($"{shipName}Texture2")}
             };
 
-            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate, shipSpeed, testTractorBeam)
+            var ship = new Ship(shipDictionary, defaultShipPos, turretCollection, 10, energyMax, energyRegen, turnRate, shipSpeed, testTractorBeam, 5)
             {
                 Cost = shipCost,
                 Description = shipDescription,

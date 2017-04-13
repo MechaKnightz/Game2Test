@@ -7,11 +7,12 @@ particles dissapear when ship stops
 add proper collision
 fix intersect out, reference type
 rebind keys
-add upgrades
 refactor intersect method
+upgrades in shop
 
 DONE:
 
+add upgrades
 asteroid explosion dropping minerals with own class
 change spawn point to just remove everything around the ship before it loads
 boost bool in ship reset on update

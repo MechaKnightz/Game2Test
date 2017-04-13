@@ -107,7 +107,7 @@ namespace Game2Test.Sprites.Entities
             {
                 for (var i = 0; i < t.Value.Count; i++)
                 {
-                    if (!t.Value[i].Rectangle.Intersects(rectangle)) continue;
+                    if (!t.Value[i].RotatedRectangle.Intersects(rectangle)) continue;
                     tempShot = t.Value[i];
                     t.Value.RemoveAt(i);
                     return true;

@@ -26,10 +26,6 @@ namespace Game2Test.Sprites.Entities
             Texture = shot.Texture;
             //End
         }
-        public Shot(Texture2D texture, Vector2 position, float rotation, int duration) : base(texture, position, rotation)
-        {
-            Duration = duration;
-        }
         public Shot(Texture2D texture, Vector2 position, float rotation, int duration, float speed, float damage) : base(texture, position, rotation)
         {
             Duration = duration;

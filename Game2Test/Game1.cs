@@ -432,7 +432,7 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentSector.Asteroids[i].Rectangle.Intersects(currentSector.CurrentShip.Rectangle) && !currentSector.Asteroids[i].Destroyed)
+                    if (currentSector.Asteroids[i].RotatedRectangle.Intersects(currentSector.CurrentShip.RotatedRectangle) && !currentSector.Asteroids[i].Destroyed)
                     {
                         currentSector.CurrentShip.Health--;
                         currentSector.Asteroids.RemoveAt(i);

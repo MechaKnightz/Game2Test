@@ -1,8 +1,6 @@
 ﻿TODO:
 
-asteroid explosion dropping minerals with own class
 health and extra shots pickup
-change spawn point to just remove everything around the ship before it loads
 make menu look nicer
 particleengine color
 particles dissapear when ship stops
@@ -14,6 +12,8 @@ refactor intersect method
 
 DONE:
 
+asteroid explosion dropping minerals with own class
+change spawn point to just remove everything around the ship before it loads
 boost bool in ship reset on update
 add cooldown to turrets
 space station at (0,0)

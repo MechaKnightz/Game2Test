@@ -57,5 +57,10 @@ namespace Game2Test
             CurrentShip.Draw(spriteBatch);
             CurrentStation.Draw(spriteBatch);
         }
+
+        public void CheckIntersect(Sector sector)
+        {
+
+        }
     }
 }

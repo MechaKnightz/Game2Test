@@ -47,10 +47,11 @@ namespace Game2Test
         Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
         Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
 
-        List<Ship> ships = new List<Ship>();
+        public List<Ship> ships = new List<Ship>();
         public Ship  testShip;
         public Station currentStation;
         public List<Ship> availableShips = new List<Ship>();
+        public List<Upgrade> availableUpgrades = new List<Upgrade>();
         public List<Ship> ownedShips = new List<Ship>();
 
         Vector2 defaultShipPos, tempPos, halfScreen, halfScreenPos;
@@ -95,6 +96,7 @@ namespace Game2Test
         public Button shopHUDButton;
         public List<Button> shopButtons = new List<Button>();
         public List<Paragraph> shopDescriptions = new List<Paragraph>();
+        public List<Paragraph> shopDescriptions2 = new List<Paragraph>();
         private float distanceToStation;
         private float shopRadius = 200;
         public Sector currentSector;
@@ -180,6 +182,10 @@ namespace Game2Test
             var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
             testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 30);
             LoadShips(); //LOADS SHIPS
+
+            availableUpgrades.Add(new Upgrade(0, 0, 15, 10));
+            availableUpgrades.Add(new Upgrade(0, 400, 0, 15));
+            availableUpgrades.Add(new Upgrade(10, 0, 10, 25));
 
             var turretStationCollection = new Dictionary<string, List<Turret>>();
             turretStationCollection.Add("primary", turretsStation);

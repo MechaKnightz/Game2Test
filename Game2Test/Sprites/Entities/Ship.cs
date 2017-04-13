@@ -237,6 +237,7 @@ namespace Game2Test.Sprites.Entities
                 if (Upgrades[i] == null)
                 {
                     Upgrades[i] = upgrade;
+                    ApplyUpgrades();
                     return;
                 }
             }
@@ -268,7 +269,6 @@ namespace Game2Test.Sprites.Entities
 
             Health = percentageHealth * HealthMax;
             Energy = percentageEnergy * EnergyMax;
-
         }
 
         public Direction WayToTurn(float angle, float angleToOther)

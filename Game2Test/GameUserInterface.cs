@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Game2Test.Sprites.Entities;
+using Game2Test.Sprites.Helpers;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
@@ -250,54 +251,27 @@ namespace Game2Test
                     //TODO: offset = text width, measurestring
                     for (int i = 0; i < _game1.availableShips.Count; i++)
                     {
-                        var offset = new Vector2(0, (height + 20) * i);
-                        var img = new Image(_game1.availableShips[i].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
-                        img.SetOffset(offset);
-
-                        _game1.shopDescriptions.Add(new Paragraph(_game1.availableShips[i].Description));
-                        _game1.shopDescriptions[i].Scale = 0.5f;
-                        img.Identifier = i.ToString();
-                        img.OnMouseEnter = (Entity entity) =>
-                        {
-                            UserInterface.AddEntity(_game1.shopDescriptions[Convert.ToUInt16(entity.Identifier)]);
-                        };
-                        img.OnMouseLeave = (Entity entity) =>
-                        {
-                            UserInterface.RemoveEntity(_game1.shopDescriptions[Convert.ToUInt16(entity.Identifier)]);
-                        };
-                        tab1.panel.AddChild(img);
-
-                        var name = new Paragraph(_game1.availableShips[i].Name, anchor: Anchor.TopRight);
-                        name.Scale = 0.5f;
-                        name.SetOffset(offset);
-                        tab1.panel.AddChild(name);
-
-                        var cost = new Paragraph("Cost: " + _game1.availableShips[i].Cost, anchor: Anchor.CenterRight);
-                        cost.Scale = 0.5f;
-                        cost.SetOffset(offset - new Vector2(-20, 50));
-                        tab1.panel.AddChild(cost);
-
-                        var buttonlul = new Button("Buy", size: new Vector2(100, 50), anchor: Anchor.CenterRight);
-                        buttonlul.ButtonParagraph.Scale = 0.5f;
-                        _game1.shopButtons.Add(buttonlul);
-
-                        _game1.shopButtons[i].SetOffset(offset + new Vector2(0, 0));
-                        _game1.shopButtons[i].ButtonParagraph.SetOffset(new Vector2(0, -22));
-                        tab1.panel.AddChild(_game1.shopButtons[i]);
-                        tab1.panel.AddChild(new HorizontalLine());
-
-                        _game1.shopButtons[i].Identifier = i.ToString();
-                        _game1.shopButtons[i].OnClick = (Entity btn) =>
-                        {
-                            BuyShip(_game1.availableShips[Convert.ToUInt16(btn.Identifier)]);
-                        };
+                        CreateShopSection(tab1, height, i);
                     }
 
                     tab1.panel.PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
                     tab1.panel.Scrollbar.Max = Convert.ToUInt16((int)((_game1.availableShips.Count * (height + 20)) - _game1.shopPanel.Size.Y));
                     tab1.panel.Scrollbar.StepsCount = (uint)_game1.availableShips.Count * 5;
 
-                    //second tab end
+                    //third tab
+
+                    int height2 = 200;
+                    //TODO: offset = text width, measurestring
+                    for (int i = 0; i < _game1.availableUpgrades.Count; i++) //TODO change max to randomly generated upgrades
+                    {
+                        CreateUpgradeShopSection(tab2, height2, i);
+                    }
+
+                    tab2.panel.PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
+                    tab2.panel.Scrollbar.Max = Convert.ToUInt16((int)((_game1.availableShips.Count * (height + 20)) - _game1.shopPanel.Size.Y));
+                    tab2.panel.Scrollbar.StepsCount = (uint)_game1.availableShips.Count * 5;
+
+                    //third tab end
 
                     _game1.shopPanel.AddChild(tabs);
                     break;
@@ -353,6 +327,90 @@ namespace Game2Test
             }
         }
 
+        private void CreateShopSection(PanelTabs.TabData tab, int height, int i)
+        {
+            var offset = new Vector2(0, (height + 20) * i);
+            var img = new Image(_game1.availableShips[i].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
+            img.SetOffset(offset);
+
+            _game1.shopDescriptions.Add(new Paragraph(_game1.availableShips[i].Description));
+            _game1.shopDescriptions[i].Scale = 0.5f;
+            img.Identifier = i.ToString();
+            img.OnMouseEnter =
+                (Entity entity) => { UserInterface.AddEntity(_game1.shopDescriptions[Convert.ToUInt16(entity.Identifier)]); };
+            img.OnMouseLeave =
+                (Entity entity) => { UserInterface.RemoveEntity(_game1.shopDescriptions[Convert.ToUInt16(entity.Identifier)]); };
+            tab1.panel.AddChild(img);
+
+            var name = new Paragraph(_game1.availableShips[i].Name, anchor: Anchor.TopRight);
+            name.Scale = 0.5f;
+            name.SetOffset(offset);
+            tab.panel.AddChild(name);
+
+            var cost = new Paragraph("Cost: " + _game1.availableShips[i].Cost, anchor: Anchor.CenterRight);
+            cost.Scale = 0.5f;
+            cost.SetOffset(offset - new Vector2(-20, 50));
+            tab1.panel.AddChild(cost);
+
+            var buttonlul = new Button("Buy", size: new Vector2(100, 50), anchor: Anchor.CenterRight);
+            buttonlul.ButtonParagraph.Scale = 0.5f;
+            _game1.shopButtons.Add(buttonlul);
+
+            _game1.shopButtons[i].SetOffset(offset + new Vector2(0, 0));
+            _game1.shopButtons[i].ButtonParagraph.SetOffset(new Vector2(0, -22));
+            tab.panel.AddChild(_game1.shopButtons[i]);
+            tab.panel.AddChild(new HorizontalLine());
+
+            _game1.shopButtons[i].Identifier = i.ToString();
+            _game1.shopButtons[i].OnClick =
+                (Entity btn) => { BuyShip(_game1.availableShips[Convert.ToUInt16(btn.Identifier)]); };
+        }
+        private void CreateUpgradeShopSection(PanelTabs.TabData tab, int height, int i)
+        {
+            var offset = new Vector2(0, (height + 20) * i);
+            var img = new Image(_game1.ships[3].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
+            img.SetOffset(offset);
+
+            _game1.shopDescriptions2.Add(new Paragraph(_game1.availableUpgrades[i].Description));
+            _game1.shopDescriptions2[i].Scale = 0.5f;
+            img.Identifier = i.ToString();
+            img.OnMouseEnter =
+                (Entity entity) =>
+                {
+                    UserInterface.AddEntity(_game1.shopDescriptions2[Convert.ToUInt16(entity.Identifier)]);
+                };
+            img.OnMouseLeave =
+                (Entity entity) => { UserInterface.RemoveEntity(_game1.shopDescriptions2[Convert.ToUInt16(entity.Identifier)]); };
+            tab.panel.AddChild(img);
+
+            var name = new Paragraph(_game1.availableUpgrades[i].Name, Anchor.TopRight);
+            name.Scale = 0.5f;
+            name.SetOffset(offset);
+            tab.panel.AddChild(name);
+
+            var cost = new Paragraph("Cost: " + _game1.availableUpgrades[i].Cost, Anchor.CenterRight);
+            cost.Scale = 0.5f;
+            cost.SetOffset(offset - new Vector2(-20, 50));
+            tab.panel.AddChild(cost);
+
+            var buttonlul = new Button("Buy", size: new Vector2(100, 50), anchor: Anchor.CenterRight);
+            buttonlul.ButtonParagraph.Scale = 0.5f;
+
+            buttonlul.SetOffset(offset + new Vector2(0, 0));
+            buttonlul.ButtonParagraph.SetOffset(new Vector2(0, -22));
+            tab.panel.AddChild(buttonlul);
+            tab.panel.AddChild(new HorizontalLine());
+
+            buttonlul.Identifier = i.ToString();
+            buttonlul.OnClick =
+                (Entity btn) =>
+                {
+                    _game1.currentSector.CurrentShip.AddUpgrade(_game1.availableUpgrades[Convert.ToUInt16(btn.Identifier)]);
+                    btn.Disabled = true;
+                    _game1.availableUpgrades.RemoveAt(i);
+                };
+        }
+
         public void BuyShip(Ship ship)
         {
             if (_game1.ownedShips.All(x => x.Name != ship.Name)) _game1.ownedShips.Add(ship);
@@ -360,16 +418,22 @@ namespace Game2Test
             var tempRot = _game1.currentSector.CurrentShip.Rotation;
             var tempPos = _game1.currentStation.Position;
             var tempIndex = _game1.currentSector.CurrentShip.ShipCurrentIndex;
-            var tempHealth = _game1.currentSector.CurrentShip.Health;
-            var tempEnergy = _game1.currentSector.CurrentShip.Energy;
+            var tempUpgrades = new List<Upgrade>();
+            foreach (var upgrade in _game1.currentSector.CurrentShip.Upgrades)
+            {
+                tempUpgrades.Add(upgrade);
+            }
 
             _game1.currentSector.CurrentShip = ship;
 
             _game1.currentSector.CurrentShip.ShipCurrentIndex = tempIndex;
             _game1.currentSector.CurrentShip.Position = tempPos;
             _game1.currentSector.CurrentShip.Rotation = tempRot;
-            _game1.currentSector.CurrentShip.Health = tempHealth;
-            _game1.currentSector.CurrentShip.Energy = tempEnergy;
+
+            for (int i = 0; i < tempUpgrades.Count; i++)
+            {
+                _game1.currentSector.CurrentShip.AddUpgrade(tempUpgrades[i]);
+            }
 
             _game1.currentSector.CurrentShip.Update();
             _game1.currentSector.CurrentShip.BuyTurrets();
@@ -416,6 +480,7 @@ namespace Game2Test
                     game1.shopPanel.Visible = false;
                     game1.shopButtons.Clear();
                     game1.shopDescriptions.Clear();
+                    game1.shopDescriptions2.Clear();
                     break;
                 case GameState.MainGame:
                     game1.shopHUDButton.Visible = false;

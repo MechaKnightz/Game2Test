@@ -150,6 +150,7 @@ namespace Game2Test
                     _game1.settingsMenuPanel.AddChild(backButton);
 
                     var fullscreenCheckbox = new CheckBox("Fullscreen");
+                    fullscreenCheckbox.Checked = _game1.graphics.IsFullScreen;
                     fullscreenCheckbox.TextParagraph.Scale = 0.5f;
                     fullscreenCheckbox.OnValueChange = box =>
                     {

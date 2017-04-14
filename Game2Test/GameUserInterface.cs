@@ -145,7 +145,7 @@ namespace Game2Test
                     backButton.ButtonParagraph.Scale = 0.5f;
                     backButton.OnClick = btn =>
                     {
-                        _game1.ChangeState(GameState.MainMenu);
+                        _game1.ChangeState(_game1.oldGameState);
                     };
                     _game1.settingsMenuPanel.AddChild(backButton);
 

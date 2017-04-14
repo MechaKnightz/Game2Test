@@ -77,6 +77,7 @@ namespace Game2Test
         bool drawParticles;
         int movingDelayCounter;
         public GameState gameState = (GameState)2;
+        public GameState oldGameState;
         Sprite aimSprite, energyBarSprite;
         Camera2D camera;
         string xPosString, yPosString;
@@ -609,6 +610,7 @@ namespace Game2Test
 
         public void ChangeState(GameState tempGameState)
         {
+            oldGameState = gameState;
             _gameUserInterface.GenerateUserInterface(tempGameState);
             _gameUserInterface.RemoveInterface(gameState, this);
             gameState = tempGameState;
@@ -695,7 +697,7 @@ namespace Game2Test
 
             spriteBatch.Draw(energyIconTexture, energyUIPos);
 
-            spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(energyIconTexture.Width, halfScreen.Y * 2 - energyIconTexture.Height)), Color.White);
+            spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(energyIconTexture.Width, halfScreen.Y * 2 - energyIconTexture.Height) + new Vector2(0, 307)), Color.White);
 
             if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
 

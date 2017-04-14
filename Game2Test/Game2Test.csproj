@@ -61,6 +61,7 @@
     <Compile Include="Sprites\Entities\Ship.cs" />
     <Compile Include="Sprites\Entities\Shot.cs" />
     <Compile Include="Sprites\Helpers\ITargetable.cs" />
+    <Compile Include="Sprites\Helpers\Line.cs" />
     <Compile Include="Sprites\Helpers\RotatedRectangle.cs" />
     <Compile Include="Sprites\Helpers\TurretType.cs" />
     <Compile Include="Sprites\Helpers\Upgrade.cs" />

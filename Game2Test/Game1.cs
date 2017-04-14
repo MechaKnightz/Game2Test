@@ -57,7 +57,7 @@ namespace Game2Test
         Vector2 defaultShipPos, tempPos, halfScreen, halfScreenPos;
 
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, energyIconTexture,
-            redPixel, greenPixel, turretStationTexture;
+            redPixel, greenPixel, turretStationTexture, whitePixel;
 
         public Texture2D transparent;
 
@@ -77,7 +77,7 @@ namespace Game2Test
         bool drawParticles;
         int movingDelayCounter;
         public GameState gameState = (GameState)2;
-        Sprite aimSprite;
+        Sprite aimSprite, energyBarSprite;
         Camera2D camera;
         string xPosString, yPosString;
         Vector2 viewXPos, viewYPos, viewLivesPos, viewScorePos;
@@ -209,6 +209,7 @@ namespace Game2Test
             }
 
             redPixel = Content.Load<Texture2D>("redPixel");
+            whitePixel = Content.Load<Texture2D>("whitePixel");
             greenPixel = Content.Load<Texture2D>("greenPixel");
             redHealth = new Sprite(redPixel);
             greenHealth = new Sprite(greenPixel);
@@ -220,9 +221,10 @@ namespace Game2Test
 
             //first sector end
 
-            energyIconTexture = Content.Load<Texture2D>("batteryIcon");
+            energyIconTexture = Content.Load<Texture2D>("battery2");
             aimTexture = Content.Load<Texture2D>("aimWhite");
             aimSprite = new Sprite(aimTexture, new Vector2(halfScreen.X, halfScreen.Y), new Rectangle(0, 0, aimTexture.Width, aimTexture.Height));
+            energyBarSprite = new Sprite(whitePixel, new Vector2(0,0), new Rectangle(0, 0, 18, 292));
             font = Content.Load<SpriteFont>("font");
             speed = defaultSpeed;
             halfScreenPos = new Vector2(halfScreen.X, halfScreen.Y);
@@ -680,7 +682,19 @@ namespace Game2Test
             spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
             spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
 
-            spriteBatch.Draw(energyIconTexture, camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height)));
+            var energyUIPos = camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height));
+            var energyBarPos = energyUIPos + new Vector2(5, 297);
+
+            energyBarSprite.Rectangle.Height = (int)((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
+            var rest = new Vector2(0, -energyBarSprite.Rectangle.Height);
+
+            energyBarSprite.Rectangle.X = (int)(energyBarPos + rest).X;
+            energyBarSprite.Rectangle.Y = (int)(energyBarPos + rest).Y;
+
+            spriteBatch.Draw(energyBarSprite.Texture, destinationRectangle: energyBarSprite.Rectangle);
+
+            spriteBatch.Draw(energyIconTexture, energyUIPos);
+
             spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(energyIconTexture.Width, halfScreen.Y * 2 - energyIconTexture.Height)), Color.White);
 
             if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);

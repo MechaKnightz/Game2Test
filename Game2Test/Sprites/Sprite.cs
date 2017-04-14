@@ -114,9 +114,7 @@ namespace Game2Test.Sprites
         }
         public void DrawRectangle(SpriteBatch spriteBatch)
         {
-            Rectangle.X = (int)_position.X;
-            Rectangle.Y = (int) _position.Y;
-            spriteBatch.Draw(Texture, Rectangle, Color.White);
+            spriteBatch.Draw(Texture, destinationRectangle: Rectangle, origin: Origin, rotation: Rotation);
         }
         public void Draw(SpriteBatch spriteBatch, Camera2D camera)
         {

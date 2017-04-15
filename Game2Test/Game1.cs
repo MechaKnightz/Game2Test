@@ -177,6 +177,7 @@ namespace Game2Test
 
             turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
             turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));

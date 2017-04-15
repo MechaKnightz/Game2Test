@@ -372,7 +372,10 @@ namespace Game2Test
 
             _game1.shopButtons[i].Identifier = i.ToString();
             _game1.shopButtons[i].OnClick =
-                (Entity btn) => { BuyShip(_game1.availableShips[Convert.ToUInt16(btn.Identifier)]); };
+                (Entity btn) =>
+                {
+                    if(_game1.currentSector.CurrentShip.Money - _game1.availableShips[Convert.ToUInt16(btn.Identifier)].Cost > 0 ) BuyShip(_game1.availableShips[Convert.ToUInt16(btn.Identifier)]);
+                };
         }
         private void CreateUpgradeShopSection(PanelTabs.TabData tab, int height, int i)
         {

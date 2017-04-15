@@ -280,9 +280,9 @@ namespace Game2Test
             var turret3Collection = InitialiseTurretCollection(turrets3);
 
             var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, turret0Collection, 0.05f, 1000, 5, 5);
-            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, turret1Collection, 0.05f, 1000, 5, 5);
-            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, turret2Collection, 0.05f, 1000, 5, 5);
-            var ship3 = InitialiseShip("ship3", "Himan ship 3 description", 0f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10, 10);
+            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 10f, 10f, 1.5f, turret1Collection, 0.05f, 1000, 5, 5);
+            var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 20f, 10f, 1.5f, turret2Collection, 0.05f, 1000, 5, 5);
+            var ship3 = InitialiseShip("ship3", "Himan ship 3 description", 50f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10, 10);
 
             var initiatedShips = new List<Ship> { ship0, ship1, ship2, ship3 };
 

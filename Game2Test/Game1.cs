@@ -13,6 +13,7 @@ using Game2Test.Input;
 using Game2Test.Sprites;
 using Game2Test.Sprites.Entities;
 using Game2Test.Sprites.Helpers;
+using MonoGame.Extended.Particles.Modifiers;
 
 namespace Game2Test
 {
@@ -181,7 +182,7 @@ namespace Game2Test
             turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
 
             var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
-            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 30);
+            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 20);
             LoadShips(); //LOADS SHIPS
 
             availableUpgrades.Add(new Upgrade(0, 0, 15, 10));
@@ -355,7 +356,7 @@ namespace Game2Test
                     MenuLogic(gameTime);
                     break;
                 case GameState.SettingsMenu: //settings
-                    //SettingsLogic();
+                    SettingsLogic();
                     break;
                 case GameState.ShopMenu:
                     GameLogic(gameTime);
@@ -638,7 +639,14 @@ namespace Game2Test
         }
         private void SettingsLogic()
         {
+            keyState = Keyboard.GetState();
 
+            if (KeyInput.IsKeyClicked(Keys.Escape))
+            {
+                ChangeState(oldGameState);
+            }
+
+            oldState = Keyboard.GetState();
         }
         private void DrawEndScreen()
         {
@@ -687,11 +695,11 @@ namespace Game2Test
             var energyUIPos = camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height));
             var energyBarPos = energyUIPos + new Vector2(5, 297);
 
-            energyBarSprite.Rectangle.Height = (int)((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
+            energyBarSprite.Rectangle.Height = Convert.ToInt16((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
             var rest = new Vector2(0, -energyBarSprite.Rectangle.Height);
 
-            energyBarSprite.Rectangle.X = (int)(energyBarPos + rest).X;
-            energyBarSprite.Rectangle.Y = (int)(energyBarPos + rest).Y;
+            energyBarSprite.Rectangle.X = Convert.ToInt16((energyBarPos + rest).X);
+            energyBarSprite.Rectangle.Y = Convert.ToInt16((energyBarPos + rest).Y);
 
             spriteBatch.Draw(energyBarSprite.Texture, destinationRectangle: energyBarSprite.Rectangle);
 

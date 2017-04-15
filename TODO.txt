@@ -10,6 +10,7 @@ rebind keys
 refactor intersect method
 fix the description bug
 looped sound
+seperate turret classes for different kinds of turrets
 
 DONE:
 

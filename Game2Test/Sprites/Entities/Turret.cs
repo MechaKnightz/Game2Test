@@ -9,8 +9,8 @@ namespace Game2Test.Sprites.Entities
 {
     public class Turret : Sprite
     {
-        public Dictionary<string, List<Shot>> ShotDictionary { get; set; } = new Dictionary<string, List<Shot>>();
-        public Dictionary<string, Shot> Shots { get; set; } = new Dictionary<string, Shot>();
+        public List<Shot> ShotList { get; set; } = new List<Shot>();
+        public Shot Shot = new Shot();
 
         //Offset == turret position compared to ship position
         public Vector2 Offset { get; }
@@ -36,25 +36,16 @@ namespace Game2Test.Sprites.Entities
             Origin = turret.Origin;
             Texture = turret.Texture;
             //End
-            foreach (var shot in turret.Shots)
-            {
-                Shots.Add(shot.Key,new Shot(shot.Value));
-                ShotDictionary.Add(shot.Key, new List<Shot>());
-            }
+            Shot = new Shot(turret.Shot);
         }
-        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Dictionary<string, Shot> shots, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, rotation)
+        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, rotation)
         {
             Offset = offset;
             EnergyCost = energyCost;
             TurnRate = turnRate;
             Type = type;
             Cooldown = cooldown;
-            foreach(var shot in shots)
-            {
-                Shots.Add(shot.Key, shot.Value);
-                ShotDictionary.Add(shot.Key, new List<Shot>());
-            }
-
+            Shot = shot;
         }
 
         public void SetRotation(float rotation)
@@ -72,61 +63,48 @@ namespace Game2Test.Sprites.Entities
 
         public void UpdateShots()
         {
-            foreach (var t in ShotDictionary)
+            for(int i = 0; i < ShotList.Count; i++)
             {
-                for (var i = 0; i < t.Value.Count; i++)
-                {
-                    t.Value[i].Duration--;
-                    var temp = t.Value[i].Position;
-                    temp.X += (float)Math.Cos(t.Value[i].Rotation) * t.Value[i].Speed;
-                    temp.Y += (float)Math.Sin(t.Value[i].Rotation) * t.Value[i].Speed;
-                    t.Value[i].Position = temp;
+                ShotList[i].Duration--;
 
-                    if (t.Value[i].Duration > 00) continue;
-                    t.Value.RemoveAt(i);
-                    i--;
-                }
+                var temp = ShotList[i].Position;
+                temp.X += (float)Math.Cos(ShotList[i].Rotation) * ShotList[i].Speed;
+                temp.Y += (float)Math.Sin(ShotList[i].Rotation) * ShotList[i].Speed;
+                ShotList[i].Position = temp;
+
+                if (ShotList[i].Duration > 00) continue;
+                ShotList.RemoveAt(i);
+                i--;
             }
         }
 
         public new void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
-            foreach (var t in ShotDictionary)
+            foreach (var shot in ShotList)
             {
-                foreach (var e in t.Value)
-                {
-                    e.Draw(spriteBatch);
-                }
+                shot.Draw(spriteBatch);
             }
         }
 
         public bool ShotCollision(Rectangle rectangle, out Shot tempShot)
         {
-            foreach (var t in ShotDictionary)
+            for (int i = 0; i < ShotList.Count; i++) 
             {
-                for (var i = 0; i < t.Value.Count; i++)
-                {
-                    if (!t.Value[i].RotatedRectangle.Intersects(rectangle)) continue;
-                    tempShot = t.Value[i];
-                    t.Value.RemoveAt(i);
-                    return true;
-                }
+                if (!ShotList[i].RotatedRectangle.Intersects(rectangle)) continue;
+                tempShot = ShotList[i];
+                ShotList.RemoveAt(i);
+                return true;
             }
             tempShot = null;
             return false;
         }
 
-        public float Fire() //fire the default shot
-        {
-            return Fire("default");
-        }
-        public float Fire(string name) //fire shot by Name
+        public float Fire()
         {
             if (_cooldownCounter != Cooldown) return 0f;
 
-            Shot shot = Shots.FirstOrDefault(x => x.Value.Name == name).Value;
-            ShotDictionary[name].Add(new Shot(shot.Texture, Position, Rotation, shot.Duration, shot.Speed, shot.Damage));
+            ShotList.Add(new Shot(Shot.Texture, Position, Rotation, Shot.Duration, Shot.Speed, Shot.Damage));
             _cooldownCounter = 0f;
 
             return EnergyCost;

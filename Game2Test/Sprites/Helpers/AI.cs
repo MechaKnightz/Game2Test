@@ -15,8 +15,8 @@ namespace Game2Test.Sprites.Helpers
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    if (tur.Shots["default"].Speed * tur.Shots["default"].Duration < shortestRange)
-                        shortestRange = tur.Shots["default"].Speed * tur.Shots["default"].Duration;
+                    if (tur.Shot.Speed * tur.Shot.Duration < shortestRange)
+                        shortestRange = tur.Shot.Speed * tur.Shot.Duration;
                 }
             }
             var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);
@@ -51,7 +51,7 @@ namespace Game2Test.Sprites.Helpers
                 {
                     var angleToTargetShip = Game1.AngleToOther(tur.Position, target);
                     float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
-                    if (diff < 0.05f) ship.Fire(turGroup.Key, "default"); //TODO fix default
+                    if (diff < 0.05f) ship.Fire(turGroup.Key); //TODO fix default
                 }
             }
         }

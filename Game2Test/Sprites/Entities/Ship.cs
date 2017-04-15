@@ -439,18 +439,18 @@ namespace Game2Test.Sprites.Entities
             return turrets;
         } //TODO: make dictionary with list of turrets, each list for each group so that you can shuffle them easier
 
-        public void Fire(string nameOfGunGroup, string nameOfShot)
+        public void Fire(string nameOfTurretGroup)
         {
             foreach (var t in Turrets)
             {
-                if(t.Key == nameOfGunGroup)
+                if(t.Key == nameOfTurretGroup)
                 {
                     foreach(var tur in t.Value)
                     {
                         //TODO fix energy cost
                         if(Energy - tur.EnergyCost > 0)
                         {
-                            Energy -= tur.Fire(nameOfShot);
+                            Energy -= tur.Fire();
                         }
                     }
                 }

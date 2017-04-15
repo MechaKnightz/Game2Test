@@ -61,8 +61,8 @@ namespace Game2Test.Sprites.Entities
             var angleFromCrystalToShip = Game1.AngleToOther(closestCrystal.Position, Position);
 
             var temp = closestCrystal.Position;
-            temp.X += (float)Math.Cos(angleFromCrystalToShip) * DragSpeed;
-            temp.Y += (float)Math.Sin(angleFromCrystalToShip) * DragSpeed;
+            temp.X += (float)Math.Cos(angleFromCrystalToShip) * DragSpeed * (1 / closestCrystal.Size);
+            temp.Y += (float)Math.Sin(angleFromCrystalToShip) * DragSpeed * (1 / closestCrystal.Size);
             closestCrystal.Position = temp;
 
             closestCrystal.BeingBeamed = true;

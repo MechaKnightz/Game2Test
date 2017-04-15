@@ -45,8 +45,8 @@ namespace Game2Test
 
         Dictionary<string, Texture2D> stationDictionary = new Dictionary<string, Texture2D>();
 
-        Dictionary<string, Shot> shot0Dictionary = new Dictionary<string, Shot>();
-        Dictionary<string, Shot> shot1Dictionary = new Dictionary<string, Shot>();
+        Dictionary<string, Shot> shot0List = new Dictionary<string, Shot>();
+        Dictionary<string, Shot> shot1List = new Dictionary<string, Shot>();
 
         public List<Ship> ships = new List<Ship>();
         public Ship  testShip;
@@ -159,31 +159,27 @@ namespace Game2Test
 
             shot0Texture = Content.Load<Texture2D>("shot0");
             shot0 = new Shot(shot0Texture, 60, "default", 15, 2);
-            shot0Dictionary = new Dictionary<string, Shot>();
-            shot0Dictionary.Add(shot0.Name, shot0);
 
             shot1Texture = Content.Load<Texture2D>("shot1");
             shot1 = new Shot(shot1Texture, 60, "default", 15, 1);
-            shot1Dictionary = new Dictionary<string, Shot>();
-            shot1Dictionary.Add(shot1.Name, shot1);
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1Dictionary, 100, 0.05f, TurretType.Rotating, 30f));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1Dictionary, 100, 0.05f, TurretType.Rotating, 30f));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
+            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
 
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0Dictionary, 150, 0.05f, TurretType.Static, 30f));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0Dictionary, 150, 0.05f, TurretType.Static, 30f));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
+            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
 
-            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new Turret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0Dictionary, 150, 0.05f, TurretType.Rotating, 30f));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
             var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
-            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 20);
+            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 60); // speed is speed/asteroid size
             LoadShips(); //LOADS SHIPS
 
             availableUpgrades.Add(new Upgrade(0, 0, 15, 10));
@@ -536,7 +532,7 @@ namespace Game2Test
                             asteroid.Rotation = currentSector.Asteroids[i].Rotation;
                             asteroid.Speed = currentSector.Asteroids[i].Speed;
                             asteroid.Acceleration = currentSector.Asteroids[i].Acceleration;
-                            var tempTime = tempDistance / tur.Shots["default"].Speed;
+                            var tempTime = tempDistance / tur.Shot.Speed;
                             for (var j = 0; j < tempTime; j++)
                             {
                                 asteroid.MoveTowardsPosition(currentSector.CurrentShip.Position);
@@ -551,14 +547,14 @@ namespace Game2Test
                         if (tur.Rotation < rot) tur.Rotation += rotConst;
                         //t.Value.Rotation = AngleToOther(t.Value.position, asteroid.position));
                         float diff = Math.Abs(MathHelper.WrapAngle(rot - tur.Rotation));
-                        if (diff < 0.05) currentSector.CurrentStation.Fire("primary", "default");
+                        if (diff < 0.05) currentSector.CurrentStation.Fire("primary");
                     }
                 }
             }
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
-                currentSector.CurrentShip.Fire("primary", "default");
+                currentSector.CurrentShip.Fire("primary");
             }
 
             if (distanceToStation < shopRadius)

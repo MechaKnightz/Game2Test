@@ -12,8 +12,8 @@ using System.Text;
 using Game2Test.Input;
 using Game2Test.Sprites;
 using Game2Test.Sprites.Entities;
+using Game2Test.Sprites.Entities.Turrets;
 using Game2Test.Sprites.Helpers;
-using MonoGame.Extended.Particles.Modifiers;
 
 namespace Game2Test
 {
@@ -34,11 +34,11 @@ namespace Game2Test
 
         private List<string> nameArray;
 
-        List<Turret> turrets0 = new List<Turret>();
-        List<Turret> turrets1 = new List<Turret>();
-        List<Turret> turrets2 = new List<Turret>();
-        List<Turret> turrets3 = new List<Turret>();
-        List<Turret> turretsStation = new List<Turret>();
+        List<ITurret> turrets0 = new List<ITurret>();
+        List<ITurret> turrets1 = new List<ITurret>();
+        List<ITurret> turrets2 = new List<ITurret>();
+        List<ITurret> turrets3 = new List<ITurret>();
+        List<ITurret> turretsStation = new List<ITurret>();
         private TractorBeam testTractorBeam;
 
         public List<Sector> sectors = new List<Sector>();
@@ -163,30 +163,30 @@ namespace Game2Test
             shot1Texture = Content.Load<Texture2D>("shot1");
             shot1 = new Shot(shot1Texture, 60, "default", 15, 1);
 
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
-            turrets0.Add(new Turret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
+            turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
+            turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
 
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
-            turrets1.Add(new Turret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
+            turrets1.Add(new BasicTurret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
+            turrets1.Add(new BasicTurret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
 
-            turrets2.Add(new Turret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets2.Add(new BasicTurret(turret0Texture, new Vector2(5, 0), new Vector2(5, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
-            turrets3.Add(new Turret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
-            turretsStation.Add(new Turret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+            turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
             var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
-            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 5, 60); // speed is speed/asteroid size
+            testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 15, 20); // speed is speed/asteroid size
             LoadShips(); //LOADS SHIPS
 
             availableUpgrades.Add(new Upgrade(0, 0, 15, 10));
             availableUpgrades.Add(new Upgrade(0, 400, 0, 15));
             availableUpgrades.Add(new Upgrade(10, 0, 10, 25));
 
-            var turretStationCollection = new Dictionary<string, List<Turret>>();
+            var turretStationCollection = new Dictionary<string, List<ITurret>>();
             turretStationCollection.Add("primary", turretsStation);
 
             //stationShip
@@ -291,9 +291,9 @@ namespace Game2Test
             availableShips.AddRange(initiatedShips);
         }
 
-        private Dictionary<string, List<Turret>> InitialiseTurretCollection(List<Turret> turretList)
+        private Dictionary<string, List<ITurret>> InitialiseTurretCollection(List<ITurret> turretList)
         {
-            return new Dictionary<string, List<Turret>>
+            return new Dictionary<string, List<ITurret>>
             {
                 {"primary", turretList }
             };
@@ -305,7 +305,7 @@ namespace Game2Test
             float shipCost,
             float shipSpeed,
             float shipBoost,
-            Dictionary<string, List<Turret>> turretCollection,
+            Dictionary<string, List<ITurret>> turretCollection,
             float turnRate,
             float energyMax,
             float energyRegen,
@@ -409,9 +409,8 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]) && !currentSector.Asteroids[i].Destroyed)
                 {
-                    var tempTurret = new Turret();
                     var tempShot = new Shot();
-                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempTurret, out tempShot))
+                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempShot))
                     {
                         currentSector.Asteroids[i].Health -= tempShot.Damage;
                         if (currentSector.Asteroids[i].Health <= 0)
@@ -420,9 +419,8 @@ namespace Game2Test
                             i--;
                         }
                     }
-                    var tempTurret2 = new Turret();
                     var tempShot2 = new Shot();
-                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempTurret2, out tempShot2))
+                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempShot2))
                     {
                         currentSector.Asteroids[i].Health -= tempShot2.Damage;
                         if (currentSector.Asteroids[i].Health <= 0)
@@ -692,11 +690,14 @@ namespace Game2Test
             var energyUIPos = camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height));
             var energyBarPos = energyUIPos + new Vector2(5, 297);
 
-            energyBarSprite.Rectangle.Height = Convert.ToInt16((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
+            var tempRect = energyBarSprite.Rectangle;
+            tempRect.Height = Convert.ToInt16((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
             var rest = new Vector2(0, -energyBarSprite.Rectangle.Height);
 
-            energyBarSprite.Rectangle.X = Convert.ToInt16((energyBarPos + rest).X);
-            energyBarSprite.Rectangle.Y = Convert.ToInt16((energyBarPos + rest).Y);
+            tempRect.X = Convert.ToInt16((energyBarPos + rest).X);
+            tempRect.Y = Convert.ToInt16((energyBarPos + rest).Y);
+
+            energyBarSprite.Rectangle = tempRect;
 
             spriteBatch.Draw(energyBarSprite.Texture, destinationRectangle: energyBarSprite.Rectangle);
 

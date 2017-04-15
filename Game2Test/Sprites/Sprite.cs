@@ -10,7 +10,7 @@ namespace Game2Test.Sprites
     public class Sprite
     {
         public Vector2 Origin { get; set; }
-        public Rectangle Rectangle;
+        public Rectangle Rectangle { get; set; }
         public RotatedRectangle RotatedRectangle { get; set; }
 
         private float _rotation;
@@ -35,8 +35,10 @@ namespace Game2Test.Sprites
             {
                 _position = value;
 
-                Rectangle.X = (int)_position.X;
-                Rectangle.Y = (int)_position.Y;
+                var tempRect = Rectangle;
+                tempRect.X = (int)_position.X;
+                tempRect.Y = (int)_position.Y;
+                Rectangle = tempRect;
 
                 if (RotatedRectangle != null) RotatedRectangle.SetPosition((int)_position.X, (int)_position.Y);
             }
@@ -67,10 +69,13 @@ namespace Game2Test.Sprites
 
         public Sprite(Texture2D texture, Vector2 position)
         {
-            Rectangle.X = (int) position.X;
-            Rectangle.Y = (int) position.Y;
-            Rectangle.Width = texture.Width;
-            Rectangle.Height = texture.Height;
+            var tempRect = new Rectangle();
+            tempRect.X = (int) position.X;
+            tempRect.Y = (int) position.Y;
+            tempRect.Width = texture.Width;
+            tempRect.Height = texture.Height;
+            Rectangle = tempRect;
+
             RotatedRectangle = new RotatedRectangle(Rectangle, Rotation);
             Position = position;
             Texture = texture;
@@ -79,10 +84,14 @@ namespace Game2Test.Sprites
         public Sprite(Texture2D texture, Vector2 position, float rotation)
         {
             Rotation = rotation;
-            Rectangle.X = (int) position.X;
-            Rectangle.Y = (int) position.Y;
-            Rectangle.Width = texture.Width;
-            Rectangle.Height = texture.Height;
+
+            var tempRect = new Rectangle();
+            tempRect.X = (int) position.X;
+            tempRect.Y = (int) position.Y;
+            tempRect.Width = texture.Width;
+            tempRect.Height = texture.Height;
+            Rectangle = tempRect;
+
             RotatedRectangle = new RotatedRectangle(Rectangle, Rotation);
             Position = position;
             Texture = texture;
@@ -90,10 +99,13 @@ namespace Game2Test.Sprites
         }
         public Sprite(Texture2D texture, float rotation)
         {
-            Rectangle.X = (int) _position.X;
-            Rectangle.Y = (int) _position.Y;
-            Rectangle.Width = texture.Width;
-            Rectangle.Height = texture.Height;
+            var tempRect = new Rectangle();
+            tempRect.X = (int) _position.X;
+            tempRect.Y = (int) _position.Y;
+            tempRect.Width = texture.Width;
+            tempRect.Height = texture.Height;
+            Rectangle = tempRect;
+
             Texture = texture;
             Rotation = rotation;
             Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
@@ -102,8 +114,12 @@ namespace Game2Test.Sprites
         public Sprite(Texture2D texture)
         {
             Texture = texture;
-            Rectangle.Width = texture.Width;
-            Rectangle.Height = texture.Height;
+
+            var tempRect = new Rectangle();
+            tempRect.Width = texture.Width;
+            tempRect.Height = texture.Height;
+            Rectangle = tempRect;
+
             RotatedRectangle = new RotatedRectangle(Rectangle, Rotation);
             Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
         }

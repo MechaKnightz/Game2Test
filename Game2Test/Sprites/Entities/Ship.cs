@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game2Test.Sprites.Entities.Turrets;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ namespace Game2Test.Sprites.Entities
 {
     public class Ship : Sprite, ITargetable
     {
-        public Dictionary<string, List<Turret>> Turrets { get; set; } = new Dictionary<string, List<Turret>>();
+        public Dictionary<string, List<ITurret>> Turrets { get; set; } = new Dictionary<string, List<ITurret>>();
 
         [JsonIgnore]
         public Dictionary<string, Texture2D> TextureDictionary { get; set; } = new Dictionary<string, Texture2D>();
@@ -95,7 +96,7 @@ namespace Game2Test.Sprites.Entities
 
             foreach (var turretGroup in ship.Turrets)
             {
-                Turrets.Add(turretGroup.Key, new List<Turret>());
+                Turrets.Add(turretGroup.Key, new List<ITurret>());
             }
             foreach (var turretList in Turrets.Values)
             {
@@ -103,7 +104,7 @@ namespace Game2Test.Sprites.Entities
                 {
                     foreach (var turret in turretGroup.Value)
                     {
-                        turretList.Add(new Turret(turret));
+                        turretList.Add(turret.CloneTurret(turret)); //TODO fix
                     }
                 }
             }
@@ -119,7 +120,7 @@ namespace Game2Test.Sprites.Entities
         /// <param name="energyMax">max energy</param>
         /// <param name="energyRegen">energy regen per frame</param>
         /// <param name="turnRate">how fast the ship turns</param>
-        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<Turret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed, TractorBeam tractorBeam, int upgradeCount) : base(textureDictionary["Default"], position)
+        public Ship(IReadOnlyDictionary<string, Texture2D> textureDictionary, Vector2 position, Dictionary<string, List<ITurret>> turrets, float healthMax, float energyMax, float energyRegen, float turnRate, float speed, TractorBeam tractorBeam, int upgradeCount) : base(textureDictionary["Default"], position)
         {
             foreach (var t in turrets)
             {
@@ -412,22 +413,20 @@ namespace Game2Test.Sprites.Entities
 
             return position;
         }
-        public bool TurretCollision(Rectangle rectangle, out Turret turret, out Shot tempShot)
+        public bool TurretCollision(Rectangle rectangle, out Shot tempShot)
         {
             foreach (var t in Turrets)
             {
                 foreach(var tur in t.Value)
                 {
                     if (!tur.ShotCollision(rectangle, out tempShot)) continue;
-                    turret = tur;
                     return true;
                 }
             }
-            turret = null;
             tempShot = null;
             return false;
         }
-        public List<Turret> ShuffleTurrets(List<Turret> turrets)
+        public List<BaseTurret> ShuffleTurrets(List<BaseTurret> turrets)
         {
             var tempTurret = turrets[0];
             for (int i = 0; i < turrets.Count; i++)

@@ -69,7 +69,9 @@ namespace Game2Test.Sprites.Entities
 
             LockedOnCrystal = closestCrystal;
             Rotation = Game1.AngleToOther(Position, closestCrystal.Position);
-            Rectangle.Width = (int)shortestDist;
+            var tempRect = Rectangle;
+            tempRect.Width = (int)shortestDist;
+            Rectangle = tempRect;
         }
 
         public new void Draw(SpriteBatch spriteBatch)

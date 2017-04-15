@@ -7,22 +7,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Game2Test.Sprites.Entities
 {
-    public class Turret : Sprite
+    public class BaseTurret : Sprite
     {
         public List<Shot> ShotList { get; set; } = new List<Shot>();
-        public Shot Shot = new Shot();
+        public Shot Shot { get; set; } = new Shot();
 
         //Offset == turret position compared to ship position
-        public Vector2 Offset { get; }
-        public float EnergyCost { get; }
+        public Vector2 Offset { get; set; }
+        public float EnergyCost { get; set; }
         public float TurnRate { get; set; }
         public TurretType Type { get; set; }
         public float Cooldown { get; set; }
-        private float _cooldownCounter;
+        public float CooldownCounter { get; set; }
 
-        public Turret() { }
+        public BaseTurret() { }
 
-        public Turret(Turret turret)
+        public BaseTurret(BaseTurret turret)
         {
             Offset = turret.Offset;
             EnergyCost = turret.EnergyCost;
@@ -38,7 +38,7 @@ namespace Game2Test.Sprites.Entities
             //End
             Shot = new Shot(turret.Shot);
         }
-        public Turret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, rotation)
+        public BaseTurret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, rotation)
         {
             Offset = offset;
             EnergyCost = energyCost;
@@ -57,7 +57,7 @@ namespace Game2Test.Sprites.Entities
 
         public void Update()
         {
-            if(_cooldownCounter != Cooldown) _cooldownCounter++;;
+            if(CooldownCounter != Cooldown) CooldownCounter++;;
             UpdateShots();
         }
 
@@ -102,10 +102,10 @@ namespace Game2Test.Sprites.Entities
 
         public float Fire()
         {
-            if (_cooldownCounter != Cooldown) return 0f;
+            if (CooldownCounter != Cooldown) return 0f;
 
             ShotList.Add(new Shot(Shot.Texture, Position, Rotation, Shot.Duration, Shot.Speed, Shot.Damage));
-            _cooldownCounter = 0f;
+            CooldownCounter = 0f;
 
             return EnergyCost;
         }

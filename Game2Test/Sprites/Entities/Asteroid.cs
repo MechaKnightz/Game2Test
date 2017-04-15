@@ -67,8 +67,10 @@ namespace Game2Test.Sprites.Entities
 
             Acceleration += 0.005f;
 
-            Rectangle.X = (int)Position.X;
-            Rectangle.Y = (int)Position.Y;
+            var tempRect = Rectangle;
+            tempRect.X = (int)Position.X;
+            tempRect.Y = (int)Position.Y;
+            Rectangle = tempRect;
         }
 
         public void Destroy()

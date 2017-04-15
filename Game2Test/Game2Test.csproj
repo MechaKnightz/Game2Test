@@ -52,6 +52,7 @@
     <Compile Include="GameState.cs" />
     <Compile Include="Sprites\Entities\Crystal.cs" />
     <Compile Include="Sprites\Entities\TractorBeam.cs" />
+    <Compile Include="Sprites\Entities\Turrets\BasicTurret.cs" />
     <Compile Include="Sprites\Helpers\AI.cs" />
     <Compile Include="Sprites\Helpers\Bar.cs" />
     <Compile Include="Particles\Particle.cs" />
@@ -61,13 +62,14 @@
     <Compile Include="Sprites\Entities\Ship.cs" />
     <Compile Include="Sprites\Entities\Shot.cs" />
     <Compile Include="Sprites\Helpers\ITargetable.cs" />
+    <Compile Include="Sprites\Helpers\ITurret.cs" />
     <Compile Include="Sprites\Helpers\Line.cs" />
     <Compile Include="Sprites\Helpers\RotatedRectangle.cs" />
     <Compile Include="Sprites\Helpers\TurretType.cs" />
     <Compile Include="Sprites\Helpers\Upgrade.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\Entities\Station.cs" />
-    <Compile Include="Sprites\Entities\Turret.cs" />
+    <Compile Include="Sprites\Entities\BaseTurret.cs" />
     <Compile Include="Sectors\Sector.cs" />
   </ItemGroup>
   <ItemGroup>

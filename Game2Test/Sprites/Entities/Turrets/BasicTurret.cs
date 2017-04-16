@@ -13,7 +13,8 @@ namespace Game2Test.Sprites.Entities.Turrets
         }
         public ITurret CloneTurret(ITurret turret)
         {
-            var tempTurret = (BasicTurret)turret;
+            var tempTurret = new BasicTurret();
+            tempTurret = (BasicTurret) turret;
             return tempTurret;
         }
     }

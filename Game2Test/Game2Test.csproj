@@ -53,6 +53,7 @@
     <Compile Include="Sprites\Entities\Crystal.cs" />
     <Compile Include="Sprites\Entities\TractorBeam.cs" />
     <Compile Include="Sprites\Entities\Turrets\BasicTurret.cs" />
+    <Compile Include="Sprites\Entities\Turrets\LaserTurret.cs" />
     <Compile Include="Sprites\Helpers\AI.cs" />
     <Compile Include="Sprites\Helpers\Bar.cs" />
     <Compile Include="Particles\Particle.cs" />

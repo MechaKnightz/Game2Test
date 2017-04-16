@@ -70,7 +70,7 @@
     <Compile Include="Sprites\Helpers\Upgrade.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\Entities\Station.cs" />
-    <Compile Include="Sprites\Entities\BaseTurret.cs" />
+    <Compile Include="Sprites\Entities\Turrets\BaseTurret.cs" />
     <Compile Include="Sectors\Sector.cs" />
   </ItemGroup>
   <ItemGroup>

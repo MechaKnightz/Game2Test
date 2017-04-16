@@ -17,6 +17,7 @@ namespace Game2Test.Sprites.Entities
         TurretType Type { get; set; }
         float Cooldown { get; set; }
         float CooldownCounter { get; set; }
+        bool IsFiring { get; set; }
 
         //sprite
         Vector2 Origin { get; set; }
@@ -31,7 +32,7 @@ namespace Game2Test.Sprites.Entities
 
         void SetRotation(float rotation);
 
-        void Update();
+        float Update(float energy);
 
         void UpdateShots();
 

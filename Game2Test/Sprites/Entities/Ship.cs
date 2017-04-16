@@ -104,7 +104,7 @@ namespace Game2Test.Sprites.Entities
                 {
                     foreach (var turret in turretGroup.Value)
                     {
-                        turretList.Add(turret.CloneTurret(turret)); //TODO fix
+                        turretList.Add(turret.CloneTurret(turret)); //TODO see if this can be don easier instead of implementing CloneTurret in every turret
                     }
                 }
             }
@@ -210,7 +210,9 @@ namespace Game2Test.Sprites.Entities
                         case TurretType.Rotating:
                             var angleToOther = Game1.AngleToOther(tur.Position, target);
 
-                            var direction = WayToTurn(tur.Rotation, angleToOther);
+                            if(angleToOther < tur.Rotation + tur.TurnRate && angleToOther > tur.Rotation - tur.TurnRate) continue;
+
+                            var direction = WayToTurn(tur.Rotation, angleToOther); //TODO fix turning
 
                             tur.Turn(direction);
                             break;
@@ -297,7 +299,7 @@ namespace Game2Test.Sprites.Entities
             {
                 foreach(var tur in t.Value)
                 {
-                    tur.Update();
+                    Energy -= tur.Update(Energy);
                 }
             }
         }

@@ -38,6 +38,7 @@ namespace Game2Test
         List<ITurret> turrets1 = new List<ITurret>();
         List<ITurret> turrets2 = new List<ITurret>();
         List<ITurret> turrets3 = new List<ITurret>();
+        List<ITurret> turrets3Secondary = new List<ITurret>();
         List<ITurret> turretsStation = new List<ITurret>();
         private TractorBeam testTractorBeam;
 
@@ -153,6 +154,8 @@ namespace Game2Test
 
             defaultShipPos = Vector2.Zero;
 
+            var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
+
             turret0Texture = Content.Load<Texture2D>("turret0");
             turret1Texture = Content.Load<Texture2D>("turret1");
             turretStationTexture = Content.Load<Texture2D>("turretStationTexture");
@@ -162,6 +165,8 @@ namespace Game2Test
 
             shot1Texture = Content.Load<Texture2D>("shot1");
             shot1 = new Shot(shot1Texture, 60, "default", 15, 1);
+
+            var shot2 = new Shot(tractorBeamTexture, 60, "default", 15, 1);
 
             turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
             turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
@@ -173,12 +178,14 @@ namespace Game2Test
 
             turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
             turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
-            turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
+
+            turrets3Secondary.Add(new LaserTurret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0,
+                shot2, 20, 0.05f, TurretType.Rotating, 180f, 800f));
 
             turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
             turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            var tractorBeamTexture = Content.Load<Texture2D>("tractorBeam");
+
             testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 15, 20); // speed is speed/asteroid size
             LoadShips(); //LOADS SHIPS
 
@@ -262,8 +269,8 @@ namespace Game2Test
 
             //test ships
 
-            testShip = new Ship(ships[2]);
-            testShip.SetPosition(new Vector2(-500, -500));
+            //testShip = new Ship(ships[2]);
+            //testShip.SetPosition(new Vector2(-500, -500));
 
             //bind default keys
 
@@ -278,11 +285,12 @@ namespace Game2Test
             var turret1Collection = InitialiseTurretCollection(turrets1);
             var turret2Collection = InitialiseTurretCollection(turrets2);
             var turret3Collection = InitialiseTurretCollection(turrets3);
+            turret3Collection.Add("secondary", turrets3Secondary);
 
             var ship0 = InitialiseShip("ship0", "Human ship 1 description", 0f, 10f, 1.5f, turret0Collection, 0.05f, 1000, 5, 5);
-            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 20f, 10f, 1.5f, turret1Collection, 0.05f, 1000, 5, 5);
+            var ship1 = InitialiseShip("ship1", "Human ship 2 description", 0f, 10f, 1.5f, turret1Collection, 0.05f, 1000, 5, 5);
             var ship2 = InitialiseShip("ship2", "Alien ship 1 description", 0f, 10f, 1.5f, turret2Collection, 0.05f, 1000, 5, 5);
-            var ship3 = InitialiseShip("ship3", "Himan ship 3 description", 50f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10, 10);
+            var ship3 = InitialiseShip("ship3", "Himan ship 3 description", 0f, 5f, 1.5f, turret3Collection, 0.02f, 2000, 10, 10);
 
             var initiatedShips = new List<Ship> { ship0, ship1, ship2, ship3 };
 
@@ -554,6 +562,10 @@ namespace Game2Test
             {
                 currentSector.CurrentShip.Fire("primary");
             }
+            if (mouseState.RightButton == ButtonState.Pressed && oldMouseState.RightButton != ButtonState.Pressed && gameState == GameState.MainGame)
+            {
+                currentSector.CurrentShip.Fire("secondary");
+            }
 
             if (distanceToStation < shopRadius)
             {
@@ -574,8 +586,8 @@ namespace Game2Test
 
             //testing
 
-            AI.MoveTowardsGoal(testShip, currentSector.CurrentShip);
-            testShip.Update();
+            //AI.MoveTowardsGoal(testShip, currentSector.CurrentShip);
+            //testShip.Update();
 
             //determines if should draw particles, must be after move/turn ship but before update
             if (currentSector.CurrentShip.Moving) movingDelayCounter = 5;
@@ -665,7 +677,7 @@ namespace Game2Test
             currentSector.CurrentStation.Draw(spriteBatch);
             currentSector.CurrentShip.DrawTractorBeam(spriteBatch);
             currentSector.CurrentShip.Draw(spriteBatch);
-            testShip.Draw(spriteBatch);
+            //testShip.Draw(spriteBatch);
 
             currentSector.CurrentShip.DrawTurrets(spriteBatch);
 

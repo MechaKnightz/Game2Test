@@ -436,7 +436,7 @@ namespace Game2Test
                 tempUpgrades.Add(upgrade);
             }
 
-            _game1.currentSector.CurrentShip = ship;
+            _game1.currentSector.CurrentShip = ship; //fix
 
             _game1.currentSector.CurrentShip.ShipCurrentIndex = tempIndex;
             _game1.currentSector.CurrentShip.Position = tempPos;

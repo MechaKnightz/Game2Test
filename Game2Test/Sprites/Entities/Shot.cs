@@ -39,5 +39,13 @@ namespace Game2Test.Sprites.Entities
             Damage = damage;
             Name = name;
         }
+
+        public Shot(Texture2D texture, Vector2 position, float rotation, int duration, float damage, Rectangle rectangle, Vector2 origin) : base(texture, position, rotation)
+        {
+            Duration = duration;
+            Damage = damage;
+            Rectangle = rectangle;
+            Origin = origin;
+        }
     }
 }

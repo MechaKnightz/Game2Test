@@ -5,7 +5,7 @@ using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game2Test.Sprites.Entities
+namespace Game2Test.Sprites.Entities.Turrets
 {
     public class BaseTurret : Sprite
     {
@@ -19,6 +19,7 @@ namespace Game2Test.Sprites.Entities
         public TurretType Type { get; set; }
         public float Cooldown { get; set; }
         public float CooldownCounter { get; set; }
+        public bool IsFiring { get; set; }
 
         public BaseTurret() { }
 
@@ -55,10 +56,11 @@ namespace Game2Test.Sprites.Entities
             else if (Rotation < 0) Rotation += Game1.DoublePI;
         }
 
-        public void Update()
+        public float Update(float energy)
         {
-            if(CooldownCounter != Cooldown) CooldownCounter++;;
+            if(CooldownCounter != Cooldown) CooldownCounter++;
             UpdateShots();
+            return 0f;
         }
 
         public void UpdateShots()
@@ -122,7 +124,6 @@ namespace Game2Test.Sprites.Entities
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-            Update();
         }
     }
 }

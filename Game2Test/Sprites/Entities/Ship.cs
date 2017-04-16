@@ -210,7 +210,11 @@ namespace Game2Test.Sprites.Entities
                         case TurretType.Rotating:
                             var angleToOther = Game1.AngleToOther(tur.Position, target);
 
-                            if(angleToOther < tur.Rotation + tur.TurnRate && angleToOther > tur.Rotation - tur.TurnRate) continue;
+                            if (angleToOther < tur.Rotation + tur.TurnRate && angleToOther > tur.Rotation - tur.TurnRate)
+                            {
+                                tur.Rotation = angleToOther;
+                                continue;
+                            }
 
                             var direction = WayToTurn(tur.Rotation, angleToOther); //TODO fix turning
 

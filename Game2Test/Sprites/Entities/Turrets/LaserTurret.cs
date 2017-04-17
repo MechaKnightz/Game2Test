@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,17 +10,30 @@ namespace Game2Test.Sprites.Entities.Turrets
     {
         private float Length { get; set; }
         private float BaseTurnrate { get; set; }
+        private float Duration { get; set; }
+        private float _durationCounter;
+
+        private List<Sprite> SpriteList { get; set; } = new List<Sprite>();
+        private Sprite Start { get; set; }
+        private Sprite Middle { get; set; }
+        private Sprite End { get; set; }
 
         public LaserTurret() { }
-        public LaserTurret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot, float energyCost, float turnRate, TurretType type, float cooldown, float length) : base(texture, position, offset, rotation, shot, energyCost, turnRate, type, cooldown)
+        public LaserTurret(Texture2D texture, Sprite start, Sprite middle, Sprite end, Vector2 position, Vector2 offset, float rotation, float energyCost, float turnRate, TurretType type, float cooldown, float length, float duration) : base(texture, position, offset, rotation, energyCost, turnRate, type, cooldown)
         {
             Length = length;
             Cooldown = cooldown;
             CooldownCounter = cooldown;
-            Shot.Origin = new Vector2(0, shot.Texture.Height / 2f);
+            Start = start;
+            Middle = middle;
+            End = end;
+            Start.Origin = new Vector2(0, start.Texture.Height / 2f);
+            Middle.Origin = new Vector2(0, middle.Texture.Height / 2f);
+            End.Origin = new Vector2(0, end.Texture.Height / 2f);
             BaseTurnrate = turnRate;
             Speed = float.MaxValue;
             Range = length;
+            Duration = duration;
         }
         public LaserTurret(LaserTurret turret)
         {
@@ -27,11 +41,15 @@ namespace Game2Test.Sprites.Entities.Turrets
             EnergyCost = turret.EnergyCost;
             TurnRate = turret.TurnRate;
             Type = turret.Type;
-            Cooldown = turret.Cooldown + turret.Shot.Duration;
+            Cooldown = turret.Cooldown + turret.Duration;
             Length = turret.Length;
             BaseTurnrate = turret.BaseTurnrate;
             Speed = turret.Speed;
             Range = turret.Range;
+            Duration = turret.Duration;
+            Start = turret.Start;
+            Middle = turret.Middle;
+            End = turret.End;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;
@@ -39,11 +57,9 @@ namespace Game2Test.Sprites.Entities.Turrets
             Origin = turret.Origin;
             Texture = turret.Texture;
             //End
-            Shot = new Shot(turret.Shot);
-            var tempRect = Shot.Rectangle;
-            tempRect.Y = turret.Shot.Texture.Height;
-            Shot.Rectangle = tempRect;
-            Shot.Origin = new Vector2(0, Shot.Texture.Height / 2f);
+            Start = new Sprite(turret.Start);
+            Middle = new Sprite(turret.Middle);
+            End = new Sprite(turret.End);
         }
 
         public ITurret CloneTurret(ITurret turret)
@@ -55,55 +71,93 @@ namespace Game2Test.Sprites.Entities.Turrets
 
         public float Update(float energy)
         {
-            UpdateShots();
-            TurnRate = BaseTurnrate;
-
             if (energy - EnergyCost <= 0)
             {
-                for (int i = 0; i < ShotList.Count; i++)
-                {
-                    ShotList.RemoveAt(i);
-                    IsFiring = false;
-                }
+                SpriteList.Clear();
+                IsFiring = false;
             }
 
             if (IsFiring)
             {
+                UpdateShots();
                 TurnRate = BaseTurnrate * 0.1f;
                 return EnergyCost;
             }
+            TurnRate = BaseTurnrate;
             if (CooldownCounter != Cooldown) CooldownCounter++;
             return 0f;
         }
 
-        public new void UpdateShots()
+        public void UpdateShots()
         {
-            for (int i = 0; i < ShotList.Count; i++)
-            {
-                ShotList[i].Duration--;
-                ShotList[i].Position = Position;
-                ShotList[i].Rotation = Rotation;
+            _durationCounter--;
 
-                if (ShotList[i].Duration > 00)
-                {
-                    IsFiring = true;
-                    continue;
-                }
-                ShotList.RemoveAt(i);
-                IsFiring = false;
+            Start.Position = Position;
+            Start.Rotation = Rotation;
+
+            var tempPos = Middle.Position;
+            tempPos.X = (float)Math.Cos(Rotation) * Start.Rectangle.Width + Position.X;
+            tempPos.Y = (float)Math.Sin(Rotation) * Start.Rectangle.Width + Position.Y;
+            Middle.Position = tempPos;
+            Middle.Rotation = Rotation;
+
+            var tempPos2 = End.Position;
+            tempPos2.X = (float)Math.Cos(Rotation) * Middle.Rectangle.Width + Middle.Position.X;
+            tempPos2.Y = (float)Math.Sin(Rotation) * Middle.Rectangle.Width + Middle.Position.Y;
+            End.Position = tempPos2;
+            End.Rotation = Rotation;
+
+            if (_durationCounter > 00)
+            {
+                IsFiring = true;
+                return;
             }
+            SpriteList.Clear();
+            IsFiring = false;
         }
 
-        public new float Fire()
+        public float Fire()
         {
             if (CooldownCounter != Cooldown) return 0f;
 
-            var tempRect = Shot.Rectangle;
-            tempRect.Width = Convert.ToInt16(Length);
-            Shot.Rectangle = tempRect;
+            var middleLength = Length - Start.Texture.Width - End.Texture.Width;
 
-            ShotList.Add(new Shot(Shot.Texture, Position, Rotation, Shot.Duration, Shot.Damage, Shot.Rectangle, Shot.Origin));
+            var tempRect = Start.Rectangle;
+            tempRect.Width = Start.Texture.Width;
+            tempRect.Height = Start.Texture.Height;
+            Start.Rectangle = tempRect;
+
+            var tempRect2 = Middle.Rectangle;
+            tempRect2.Width = Convert.ToInt16(middleLength);
+            Middle.Rectangle = tempRect2;
+
+            var tempRect3 = End.Rectangle;
+            tempRect3.Width = End.Texture.Width;
+            tempRect3.Height = End.Texture.Height;
+            End.Rectangle = tempRect3;
+
+            Start.Position = Position;
+            Start.Rotation = Rotation;
+
+            var tempPos = Middle.Position;
+            tempPos.X = (int) Math.Cos(Rotation) * Start.Texture.Width + Position.X;
+            tempPos.Y = (int) Math.Sin(Rotation) * Start.Texture.Width + Position.Y;
+            Middle.Position = tempPos;
+            
+            Middle.Rotation = Rotation;
+
+            var tempPos2 = End.Position;
+            tempPos.X = (int) Math.Cos(Rotation) * Middle.Rectangle.Width + Middle.Position.X;
+            tempPos.Y = (int) Math.Sin(Rotation) * Middle.Rectangle.Width + Middle.Position.Y;
+            End.Position = tempPos2;
+            End.Rotation = Rotation;
+
+            SpriteList.Add(Start);
+            SpriteList.Add(Middle);
+            SpriteList.Add(End);
+
             CooldownCounter = 0f;
+            _durationCounter = Duration;
             IsFiring = true;
             TurnRate = BaseTurnrate * 0.1f;
 
@@ -113,10 +167,18 @@ namespace Game2Test.Sprites.Entities.Turrets
         public new void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, origin: Origin, rotation: Rotation);
-            foreach (var shot in ShotList)
+
+            foreach (var sprite in SpriteList)
             {
-                spriteBatch.Draw(shot.Texture, destinationRectangle: shot.Rectangle, rotation: Rotation, origin: shot.Origin);
+                spriteBatch.Draw(sprite.Texture, destinationRectangle: sprite.Rectangle, rotation: sprite.Rotation, origin: sprite.Origin);
             }
+        }
+
+        public bool Collision(Rectangle rectangle, out Shot tempShot)
+        {
+            //todo
+            tempShot = new Shot();
+            return false;
         }
     }
 }

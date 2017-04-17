@@ -166,7 +166,9 @@ namespace Game2Test
             shot1Texture = Content.Load<Texture2D>("shot1");
             shot1 = new Shot(shot1Texture, 60, "default", 15, 1);
 
-            var shot2 = new Shot(tractorBeamTexture, 60, "default", 15, 1);
+            var laserStart = new Sprite(Content.Load<Texture2D>("laserStart"));
+            var laserMiddle = new Sprite(Content.Load<Texture2D>("laserMiddle"));
+            var laserEnd = new Sprite(Content.Load<Texture2D>("laserEnd"));
 
             turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
             turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
@@ -179,8 +181,7 @@ namespace Game2Test
             turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
             turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turrets3Secondary.Add(new LaserTurret(turret1Texture, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0,
-                shot2, 20, 0.05f, TurretType.Rotating, 180f, 800f));
+            turrets3Secondary.Add(new LaserTurret(turret1Texture, laserStart, laserMiddle, laserEnd, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, 20, 0.05f, TurretType.Rotating, 180f, 800f, 120f));
 
             turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
             turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));

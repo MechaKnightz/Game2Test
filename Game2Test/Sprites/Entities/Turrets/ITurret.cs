@@ -7,8 +7,6 @@ namespace Game2Test.Sprites.Entities.Turrets
 {
     public interface ITurret
     {
-        List<Shot> ShotList { get; set; }
-
         //Offset == turret position compared to ship position
         Vector2 Offset { get; }
         float EnergyCost { get; }
@@ -39,7 +37,7 @@ namespace Game2Test.Sprites.Entities.Turrets
 
         void Draw(SpriteBatch spriteBatch);
 
-        bool ShotCollision(Rectangle rectangle, out Shot tempShot);
+        bool Collision(Rectangle rectangle, out Shot tempShot);
 
         float Fire();
         void Turn(Direction direction);

@@ -36,8 +36,8 @@ namespace Game2Test.Sprites
                 _position = value;
 
                 var tempRect = Rectangle;
-                tempRect.X = (int)_position.X;
-                tempRect.Y = (int)_position.Y;
+                tempRect.X = (int)Math.Round(_position.X, 0);
+                tempRect.Y = (int)Math.Round(_position.Y, 0);
                 Rectangle = tempRect;
 
                 if (RotatedRectangle != null) RotatedRectangle.SetPosition((int)_position.X, (int)_position.Y);
@@ -54,6 +54,16 @@ namespace Game2Test.Sprites
             Rectangle = rectangle;
             Origin = origin;
             Rotation = rotation;
+        }
+
+        public Sprite(Sprite sprite)
+        {
+            Origin = sprite.Origin;
+            Rectangle = new Rectangle(sprite.Rectangle.X, sprite.Rectangle.Y, sprite.Rectangle.Width, sprite.Rectangle.Height);
+            RotatedRectangle = new RotatedRectangle(sprite.RotatedRectangle);
+            Rotation = sprite.Rotation;
+            Texture = sprite.Texture;
+            Position = sprite.Position;
         }
 
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle)

@@ -425,7 +425,7 @@ namespace Game2Test.Sprites.Entities
             {
                 foreach(var tur in t.Value)
                 {
-                    if (!tur.ShotCollision(rectangle, out tempShot)) continue;
+                    if (!tur.Collision(rectangle, out tempShot)) continue;
                     return true;
                 }
             }

@@ -3,12 +3,11 @@ using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game2Test.Sprites.Entities
+namespace Game2Test.Sprites.Entities.Turrets
 {
     public interface ITurret
     {
         List<Shot> ShotList { get; set; }
-        Shot Shot { get; set; }
 
         //Offset == turret position compared to ship position
         Vector2 Offset { get; }
@@ -18,6 +17,8 @@ namespace Game2Test.Sprites.Entities
         float Cooldown { get; set; }
         float CooldownCounter { get; set; }
         bool IsFiring { get; set; }
+        float Speed { get; set; }
+        float Range { get; set; }
 
         //sprite
         Vector2 Origin { get; set; }

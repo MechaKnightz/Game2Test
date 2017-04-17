@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Game2Test.Sprites.Entities;
+using Game2Test.Sprites.Entities.Turrets;
 
 namespace Game2Test
 {

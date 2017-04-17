@@ -15,8 +15,8 @@ namespace Game2Test.Sprites.Helpers
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    if (tur.Shot.Speed * tur.Shot.Duration < shortestRange)
-                        shortestRange = tur.Shot.Speed * tur.Shot.Duration;
+                    if (tur.Range < shortestRange)
+                        shortestRange = tur.Range;
                 }
             }
             var distanceToGoal = Vector2.Distance(ship.Position, goal.Position);

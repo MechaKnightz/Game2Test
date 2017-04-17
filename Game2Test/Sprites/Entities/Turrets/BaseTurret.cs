@@ -20,6 +20,8 @@ namespace Game2Test.Sprites.Entities.Turrets
         public float Cooldown { get; set; }
         public float CooldownCounter { get; set; }
         public bool IsFiring { get; set; }
+        public float Speed { get; set; }
+        public float Range { get; set; }
 
         public BaseTurret() { }
 

@@ -538,7 +538,7 @@ namespace Game2Test
                             asteroid.Rotation = currentSector.Asteroids[i].Rotation;
                             asteroid.Speed = currentSector.Asteroids[i].Speed;
                             asteroid.Acceleration = currentSector.Asteroids[i].Acceleration;
-                            var tempTime = tempDistance / tur.Shot.Speed;
+                            var tempTime = tempDistance / tur.Speed;
                             for (var j = 0; j < tempTime; j++)
                             {
                                 asteroid.MoveTowardsPosition(currentSector.CurrentShip.Position);

@@ -18,6 +18,8 @@ namespace Game2Test.Sprites.Entities.Turrets
             CooldownCounter = cooldown;
             Shot.Origin = new Vector2(0, shot.Texture.Height / 2f);
             BaseTurnrate = turnRate;
+            Speed = float.MaxValue;
+            Range = length;
         }
         public LaserTurret(LaserTurret turret)
         {
@@ -28,6 +30,8 @@ namespace Game2Test.Sprites.Entities.Turrets
             Cooldown = turret.Cooldown + turret.Shot.Duration;
             Length = turret.Length;
             BaseTurnrate = turret.BaseTurnrate;
+            Speed = turret.Speed;
+            Range = turret.Range;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;

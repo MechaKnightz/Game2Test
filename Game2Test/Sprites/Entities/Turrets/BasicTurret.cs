@@ -10,6 +10,8 @@ namespace Game2Test.Sprites.Entities.Turrets
         public BasicTurret() { }
         public BasicTurret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, offset, rotation, shot, energyCost, turnRate, type, cooldown)
         {
+            Range = shot.Duration * shot.Speed;
+            Speed = shot.Speed;
         }
         public BasicTurret(BaseTurret turret)
         {
@@ -18,6 +20,8 @@ namespace Game2Test.Sprites.Entities.Turrets
             TurnRate = turret.TurnRate;
             Type = turret.Type;
             Cooldown = turret.Cooldown;
+            Speed = turret.Speed;
+            Range = turret.Range;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;

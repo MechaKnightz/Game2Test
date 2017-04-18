@@ -37,7 +37,7 @@ namespace Game2Test.Sprites.Entities.Turrets
 
         void Draw(SpriteBatch spriteBatch);
 
-        bool Collision(Rectangle rectangle, out Shot tempShot);
+        bool Collision(Rectangle rectangle, out float damage);
 
         float Fire();
         void Turn(Direction direction);

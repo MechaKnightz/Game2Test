@@ -419,17 +419,17 @@ namespace Game2Test.Sprites.Entities
 
             return position;
         }
-        public bool TurretCollision(Rectangle rectangle, out Shot tempShot)
+        public bool TurretCollision(Rectangle rectangle, out float damage)
         {
             foreach (var t in Turrets)
             {
                 foreach(var tur in t.Value)
                 {
-                    if (!tur.Collision(rectangle, out tempShot)) continue;
+                    if (!tur.Collision(rectangle, out damage)) continue;
                     return true;
                 }
             }
-            tempShot = null;
+            damage = 0;
             return false;
         }
         public List<BaseTurret> ShuffleTurrets(List<BaseTurret> turrets)

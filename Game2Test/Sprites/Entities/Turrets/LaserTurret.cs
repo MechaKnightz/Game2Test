@@ -12,6 +12,7 @@ namespace Game2Test.Sprites.Entities.Turrets
         private float BaseTurnrate { get; set; }
         private float Duration { get; set; }
         private float _durationCounter;
+        private float Damage { get; set; }
 
         private List<Sprite> SpriteList { get; set; } = new List<Sprite>();
         private Sprite Start { get; set; }
@@ -19,7 +20,7 @@ namespace Game2Test.Sprites.Entities.Turrets
         private Sprite End { get; set; }
 
         public LaserTurret() { }
-        public LaserTurret(Texture2D texture, Sprite start, Sprite middle, Sprite end, Vector2 position, Vector2 offset, float rotation, float energyCost, float turnRate, TurretType type, float cooldown, float length, float duration) : base(texture, position, offset, rotation, energyCost, turnRate, type, cooldown)
+        public LaserTurret(Texture2D texture, Sprite start, Sprite middle, Sprite end, Vector2 position, Vector2 offset, float rotation, float energyCost, float turnRate, TurretType type, float cooldown, float length, float duration, float damage) : base(texture, position, offset, rotation, energyCost, turnRate, type, cooldown)
         {
             Length = length;
             Cooldown = cooldown;
@@ -34,6 +35,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             Speed = float.MaxValue;
             Range = length;
             Duration = duration;
+            Damage = damage;
         }
         public LaserTurret(LaserTurret turret)
         {
@@ -50,6 +52,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             Start = turret.Start;
             Middle = turret.Middle;
             End = turret.End;
+            Damage = turret.Damage;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;
@@ -174,10 +177,23 @@ namespace Game2Test.Sprites.Entities.Turrets
             }
         }
 
-        public bool Collision(Rectangle rectangle, out Shot tempShot)
+        public bool Collision(Rectangle rectangle, out float damage)
         {
-            //todo
-            tempShot = new Shot();
+            foreach (var laserSegment in SpriteList)
+            {
+                if (laserSegment.RotatedRectangle.Intersects(rectangle))
+                {
+                    var tempRect = Middle.Rectangle;
+                    tempRect.Width = Convert.ToInt16(Vector2.Distance(Position, rectangle.Location.ToVector2()) - (rectangle.Width + rectangle.Height)/2f);
+                    Middle.Rectangle = tempRect;
+                    damage = Damage;
+                    return true;
+                }
+            }
+            //var tempRect2 = Middle.Rectangle;
+            //tempRect2.Width = Convert.ToInt16(Length);
+            //Middle.Rectangle = tempRect2;
+            damage = 0;
             return false;
         }
     }

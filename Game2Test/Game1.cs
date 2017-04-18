@@ -56,7 +56,8 @@ namespace Game2Test
         public List<Upgrade> availableUpgrades = new List<Upgrade>();
         public List<Ship> ownedShips = new List<Ship>();
 
-        Vector2 defaultShipPos, tempPos, halfScreen, halfScreenPos;
+        Vector2 defaultShipPos, tempPos, halfScreenPos;
+        public Vector2 halfScreen;
 
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, energyIconTexture,
             redPixel, greenPixel, turretStationTexture, whitePixel;
@@ -143,6 +144,7 @@ namespace Game2Test
             graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // window width 801
             graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;   // window height 701
             graphics.IsFullScreen = false;
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             //graphics.PreferredBackBufferWidth = 801;  // window width 801
             //graphics.PreferredBackBufferHeight = 701;   // window height 701
@@ -181,7 +183,7 @@ namespace Game2Test
             turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, -28.5f), new Vector2(-5.5f, -28.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
             turrets3.Add(new BasicTurret(turret1Texture, new Vector2(-5.5f, 27.5f), new Vector2(-5.5f, 27.5f), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
 
-            turrets3Secondary.Add(new LaserTurret(turret1Texture, laserStart, laserMiddle, laserEnd, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, 20, 0.05f, TurretType.Rotating, 180f, 800f, 120f));
+            turrets3Secondary.Add(new LaserTurret(turret1Texture, laserStart, laserMiddle, laserEnd, new Vector2(-4.5f, 0f), new Vector2(-4.5f, 0), 0, 20, 0.05f, TurretType.Rotating, 180f, 800f, 120f, 0.5f));
 
             turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, 27), new Vector2(0, 27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
             turretsStation.Add(new BasicTurret(turretStationTexture, new Vector2(5, -27), new Vector2(5, -27), 0, shot0, 150, 0.05f, TurretType.Rotating, 30f));
@@ -418,20 +420,20 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]) && !currentSector.Asteroids[i].Destroyed)
                 {
-                    var tempShot = new Shot();
-                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempShot))
+                    float damage;
+                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out damage))
                     {
-                        currentSector.Asteroids[i].Health -= tempShot.Damage;
+                        currentSector.Asteroids[i].Health -= damage;
                         if (currentSector.Asteroids[i].Health <= 0)
                         {
                             currentSector.Asteroids[i].Destroy();
                             i--;
                         }
                     }
-                    var tempShot2 = new Shot();
-                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].Rectangle, out tempShot2))
+                    float damage2;
+                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].Rectangle, out damage2))
                     {
-                        currentSector.Asteroids[i].Health -= tempShot2.Damage;
+                        currentSector.Asteroids[i].Health -= damage2;
                         if (currentSector.Asteroids[i].Health <= 0)
                         {
                             currentSector.Asteroids[i].Destroy();
@@ -658,7 +660,7 @@ namespace Game2Test
         }
         private void DrawEndScreen()
         {
-            spriteBatch.DrawString(font, "Final Money: " + currentSector.CurrentShip.Money, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2) - (font.MeasureString("Final Score: " + currentSector.CurrentShip.Money) / 2), Color.Black);
+            spriteBatch.DrawString(font, "Final Money: " + currentSector.CurrentShip.Money, new Vector2(graphics.PreferredBackBufferWidth / 2f, graphics.PreferredBackBufferHeight / 2f) - (font.MeasureString("Final Score: " + currentSector.CurrentShip.Money) / 2), Color.Black);
             spriteBatch.DrawString(font, "Press R to reset.", new Vector2(10, 10), Color.Black);
         }
         void DrawGame()

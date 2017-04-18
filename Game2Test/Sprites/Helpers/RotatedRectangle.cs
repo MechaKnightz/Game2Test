@@ -19,7 +19,7 @@ namespace Game2Test.Sprites.Helpers
         
             //Calculate the Rectangles origin. We assume the center of the Rectangle will
             //be the point that we will be rotating around and we use that for the origin
-            Origin = new Vector2((int)theRectangle.Width / 2, (int)theRectangle.Height / 2);
+            Origin = new Vector2((int)theRectangle.Width / 2f, (int)theRectangle.Height / 2f);
         }
 
         public RotatedRectangle(RotatedRectangle rotatedRectangle)

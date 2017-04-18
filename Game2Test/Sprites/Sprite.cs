@@ -9,9 +9,29 @@ namespace Game2Test.Sprites
 {
     public class Sprite
     {
-        public Vector2 Origin { get; set; }
-        public Rectangle Rectangle { get; set; }
         public RotatedRectangle RotatedRectangle { get; set; }
+
+        private Vector2 _origin;
+        public Vector2 Origin
+        {
+            get { return _origin; }
+            set
+            {
+                _origin = value;
+                if (RotatedRectangle != null) RotatedRectangle.Origin = value;
+            }
+        }
+
+        private Rectangle _rectangle;
+        public Rectangle Rectangle
+        {
+            get { return _rectangle; }
+            set
+            {
+                _rectangle = value;
+                if (RotatedRectangle != null) RotatedRectangle.CollisionRectangle = value;
+            }
+        }
 
         private float _rotation;
         public float Rotation

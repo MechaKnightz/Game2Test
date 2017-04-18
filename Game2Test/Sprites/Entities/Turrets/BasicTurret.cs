@@ -67,16 +67,16 @@ namespace Game2Test.Sprites.Entities.Turrets
                 i--;
             }
         }
-        public bool Collision(Rectangle rectangle, out Shot tempShot)
+        public bool Collision(Rectangle rectangle, out float damage)
         {
             for (int i = 0; i < ShotList.Count; i++)
             {
                 if (!ShotList[i].RotatedRectangle.Intersects(rectangle)) continue;
-                tempShot = ShotList[i];
+                damage = ShotList[i].Damage;
                 ShotList.RemoveAt(i);
                 return true;
             }
-            tempShot = null;
+            damage = 0;
             return false;
         }
         public float Update(float energy)

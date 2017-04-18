@@ -179,6 +179,7 @@ namespace Game2Test
 
                         CurrentScreenWidth = Convert.ToInt16(widthRes);
                         CurrentScreenHeight = Convert.ToInt16(heightRes);
+                        _game1.halfScreen = new Vector2(CurrentScreenWidth / 2f, CurrentScreenHeight / 2f);
                         _game1.graphics.ApplyChanges();
                     };
 

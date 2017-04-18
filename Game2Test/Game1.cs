@@ -73,10 +73,8 @@ namespace Game2Test
         private static Random _rnd;
         int speed;
         Color[] menuColor = new Color[3];
-        int selected = 0;
         int defaultScore = 0;
         int defaultSpeed = 10;
-        int settingsMenuLength = 2;
         ParticleEngine particleEngine;
         bool drawParticles;
         int movingDelayCounter;

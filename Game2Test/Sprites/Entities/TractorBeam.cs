@@ -2,6 +2,7 @@
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static ClassLibary.Angle;
 
 namespace Game2Test.Sprites.Entities
 {
@@ -59,7 +60,7 @@ namespace Game2Test.Sprites.Entities
                 }
             }
 
-            var angleFromCrystalToShip = Game1.AngleToOther(closestCrystal.Position, Position);
+            var angleFromCrystalToShip = AngleToOther(closestCrystal.Position, Position);
 
             var temp = closestCrystal.Position;
             temp.X += (float)Math.Cos(angleFromCrystalToShip) * DragSpeed * (1 / closestCrystal.Size);
@@ -69,7 +70,7 @@ namespace Game2Test.Sprites.Entities
             closestCrystal.BeingBeamed = true;
 
             LockedOnCrystal = closestCrystal;
-            Rotation = Game1.AngleToOther(Position, closestCrystal.Position);
+            Rotation = AngleToOther(Position, closestCrystal.Position);
             var tempRect = Rectangle;
             tempRect.Width = (int)shortestDist;
             Rectangle = tempRect;

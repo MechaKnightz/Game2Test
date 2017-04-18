@@ -1,6 +1,7 @@
 ﻿using System;
 using Game2Test.Sprites.Entities;
 using Microsoft.Xna.Framework;
+using static ClassLibary.Angle;
 
 namespace Game2Test.Sprites.Helpers
 {
@@ -38,10 +39,6 @@ namespace Game2Test.Sprites.Helpers
             }
             if(distanceToGoal < shortestRange+10) ShootAtShip(ship, goal);
         }
-        public static float AngleToOther(Vector2 main, Vector2 other)
-        {
-            return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
-        }
 
         public static void ShootIfInAim(Ship ship, Vector2 target)
         {
@@ -49,7 +46,7 @@ namespace Game2Test.Sprites.Helpers
             {
                 foreach (var tur in turGroup.Value)
                 {
-                    var angleToTargetShip = Game1.AngleToOther(tur.Position, target);
+                    var angleToTargetShip = AngleToOther(tur.Position, target);
                     float diff = Math.Abs(MathHelper.WrapAngle(tur.Rotation - angleToTargetShip));
                     if (diff < 0.05f) ship.Fire(turGroup.Key); //TODO fix default
                 }

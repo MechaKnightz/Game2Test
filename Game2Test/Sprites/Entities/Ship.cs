@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Game2Test.Sprites.Entities.Turrets;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using static ClassLibary.Angle;
 
 namespace Game2Test.Sprites.Entities
 {
@@ -208,7 +208,7 @@ namespace Game2Test.Sprites.Entities
                     switch (tur.Type)
                     {
                         case TurretType.Rotating:
-                            var angleToOther = Game1.AngleToOther(tur.Position, target);
+                            var angleToOther = AngleToOther(tur.Position, target);
 
                             if (angleToOther < tur.Rotation + tur.TurnRate && angleToOther > tur.Rotation - tur.TurnRate)
                             {

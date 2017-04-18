@@ -14,6 +14,7 @@ using Game2Test.Sprites;
 using Game2Test.Sprites.Entities;
 using Game2Test.Sprites.Entities.Turrets;
 using Game2Test.Sprites.Helpers;
+using static ClassLibary.Angle;
 
 namespace Game2Test
 {
@@ -835,10 +836,7 @@ namespace Game2Test
         {
             return AngleToOther(position, aimSprite.Position);
         }
-        public static float AngleToOther(Vector2 main, Vector2 other)
-        {
-            return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
-        }
+
         //public string FindIndex(string queryString, Dictionary<string, Texture2D> list)
         //{
         //    return list.FindIndex(x => x == queryString);

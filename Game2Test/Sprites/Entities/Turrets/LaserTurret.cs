@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Shapes;
 
 namespace Game2Test.Sprites.Entities.Turrets
 {
@@ -181,14 +182,12 @@ namespace Game2Test.Sprites.Entities.Turrets
         {
             foreach (var laserSegment in SpriteList)
             {
-                if (laserSegment.RotatedRectangle.Intersects(rectangle))
-                {
-                    var tempRect = Middle.Rectangle;
-                    tempRect.Width = Convert.ToInt16(Vector2.Distance(Position, rectangle.Location.ToVector2()) - (rectangle.Width + rectangle.Height)/2f);
-                    Middle.Rectangle = tempRect;
-                    damage = Damage;
-                    return true;
-                }
+                if (!laserSegment.RotatedRectangle.Intersects(rectangle)) continue;
+                var tempRect = Middle.Rectangle;
+                tempRect.Width = Convert.ToInt16(Vector2.Distance(Position, rectangle.Location.ToVector2()) - (rectangle.Width + rectangle.Height)/2f);
+                Middle.Rectangle = tempRect;
+                damage = Damage;
+                return true;
             }
             var tempRect2 = Middle.Rectangle;
             tempRect2.Width = Convert.ToInt16(Length);

@@ -39,10 +39,10 @@ namespace Game2Test.Sprites.Helpers
             CollisionRectangle.X += theXPositionAdjustment;
             CollisionRectangle.Y += theYPositionAdjustment;
         }
-        public void SetPosition(int theXPositionAdjustment, int theYPositionAdjustment)
+        public void SetPosition(int XPosition, int YPosition)
         {
-            CollisionRectangle.X = theXPositionAdjustment;
-            CollisionRectangle.Y = theYPositionAdjustment;
+            CollisionRectangle.X = XPosition;
+            CollisionRectangle.Y = YPosition;
         }
 
         /// <summary>

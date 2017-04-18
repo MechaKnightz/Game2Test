@@ -40,7 +40,7 @@ namespace Game2Test.Sprites
             set
             {
                 _rotation = value;
-                if(RotatedRectangle != null) RotatedRectangle.Rotation = value;
+                if (RotatedRectangle != null) RotatedRectangle.Rotation = value;
             }
         }
 

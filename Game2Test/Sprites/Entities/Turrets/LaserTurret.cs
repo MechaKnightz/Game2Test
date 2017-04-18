@@ -190,9 +190,9 @@ namespace Game2Test.Sprites.Entities.Turrets
                     return true;
                 }
             }
-            //var tempRect2 = Middle.Rectangle;
-            //tempRect2.Width = Convert.ToInt16(Length);
-            //Middle.Rectangle = tempRect2;
+            var tempRect2 = Middle.Rectangle;
+            tempRect2.Width = Convert.ToInt16(Length);
+            Middle.Rectangle = tempRect2;
             damage = 0;
             return false;
         }

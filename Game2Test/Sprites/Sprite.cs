@@ -162,6 +162,10 @@ namespace Game2Test.Sprites
         {
             spriteBatch.Draw(Texture, destinationRectangle: Rectangle, origin: Origin, rotation: Rotation);
         }
+        public void DrawRotatedRectangle(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, destinationRectangle: RotatedRectangle.CollisionRectangle, origin: RotatedRectangle.Origin, rotation: RotatedRectangle.Rotation);
+        }
         public void Draw(SpriteBatch spriteBatch, Camera2D camera)
         {
             spriteBatch.Draw(Texture, _position + camera.Position, origin: Origin, rotation: Rotation);

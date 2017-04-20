@@ -10,6 +10,7 @@ namespace Game2Test.Sprites.Entities.Turrets
     class LaserTurret : BaseTurret, ITurret
     {
         private float Length { get; set; }
+        private float MiddleLength { get; set; }
         private float BaseTurnrate { get; set; }
         private float Duration { get; set; }
         private float _durationCounter;
@@ -24,6 +25,7 @@ namespace Game2Test.Sprites.Entities.Turrets
         public LaserTurret(Texture2D texture, Sprite start, Sprite middle, Sprite end, Vector2 position, Vector2 offset, float rotation, float energyCost, float turnRate, TurretType type, float cooldown, float length, float duration, float damage) : base(texture, position, offset, rotation, energyCost, turnRate, type, cooldown)
         {
             Length = length;
+            MiddleLength = length;
             Cooldown = cooldown;
             CooldownCounter = cooldown;
             Start = start;
@@ -46,6 +48,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             Type = turret.Type;
             Cooldown = turret.Cooldown + turret.Duration;
             Length = turret.Length;
+            MiddleLength = turret.MiddleLength;
             BaseTurnrate = turret.BaseTurnrate;
             Speed = turret.Speed;
             Range = turret.Range;
@@ -125,6 +128,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             if (CooldownCounter != Cooldown) return 0f;
 
             var middleLength = Length - Start.Texture.Width - End.Texture.Width;
+            MiddleLength = middleLength;
 
             var tempRect = Start.Rectangle;
             tempRect.Width = Start.Texture.Width;
@@ -189,8 +193,9 @@ namespace Game2Test.Sprites.Entities.Turrets
                 damage = Damage;
                 return true;
             }
+
             var tempRect2 = Middle.Rectangle;
-            tempRect2.Width = Convert.ToInt16(Length);
+            tempRect2.Width = Convert.ToInt16(MiddleLength);
             Middle.Rectangle = tempRect2;
             damage = 0;
             return false;

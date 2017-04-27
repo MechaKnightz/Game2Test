@@ -11,15 +11,7 @@ namespace Game2Test.Sprites
 {
     public class Sprite
     {
-        private Vector2 _origin;
-        public Vector2 Origin
-        {
-            get { return _origin; }
-            set
-            {
-                _origin = value;
-            }
-        }
+        public Vector2 Origin { get; set; }
 
         public Rectangle Rectangle { get; set; }
 
@@ -240,6 +232,19 @@ namespace Game2Test.Sprites
         {
             //Project the corners of the Rectangle we are checking on to the Axis and
             //get a scalar value of that project we can then use for comparison
+
+            var list1 = new List<Vector2>();
+
+            list1.Add(UpperLeftCorner());
+            list1.Add(UpperRightCorner());
+            list1.Add(LowerRightCorner());
+            list1.Add(LowerLeftCorner());
+
+            list1.Add(sprite.UpperLeftCorner());
+            list1.Add(sprite.UpperRightCorner());
+            list1.Add(sprite.LowerRightCorner());
+            list1.Add(sprite.LowerLeftCorner());
+
             List<int> aRectangleAScalars = new List<int>();
             aRectangleAScalars.Add(GenerateScalar(sprite.UpperLeftCorner(), aAxis));
             aRectangleAScalars.Add(GenerateScalar(sprite.UpperRightCorner(), aAxis));

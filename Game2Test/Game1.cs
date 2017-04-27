@@ -335,7 +335,6 @@ namespace Game2Test
                 Name = shipName,
                 Boost = shipBoost
             };
-
             return ship;
         }
 

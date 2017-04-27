@@ -182,13 +182,13 @@ namespace Game2Test.Sprites.Entities.Turrets
             }
         }
 
-        public bool Collision(Rectangle rectangle, out float damage)
+        public bool Collision(Sprite sprite, out float damage)
         {
             foreach (var laserSegment in SpriteList)
             {
-                if (!laserSegment.RotatedRectangle.Intersects(rectangle)) continue;
+                if (!laserSegment.Intersects(sprite)) continue;
                 var tempRect = Middle.Rectangle;
-                tempRect.Width = Convert.ToInt16(Vector2.Distance(Position, rectangle.Location.ToVector2()) - (rectangle.Width + rectangle.Height)/2f);
+                tempRect.Width = Convert.ToInt16(Vector2.Distance(Position, sprite.Position));
                 Middle.Rectangle = tempRect;
                 damage = Damage;
                 return true;

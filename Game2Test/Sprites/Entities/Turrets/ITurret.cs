@@ -21,7 +21,6 @@ namespace Game2Test.Sprites.Entities.Turrets
         //sprite
         Vector2 Origin { get; set; }
         Rectangle Rectangle { get; set; }
-        RotatedRectangle RotatedRectangle { get; set; }
 
         float Rotation { get; set; }
         Texture2D Texture { get; set; }
@@ -37,7 +36,7 @@ namespace Game2Test.Sprites.Entities.Turrets
 
         void Draw(SpriteBatch spriteBatch);
 
-        bool Collision(Rectangle rectangle, out float damage);
+        bool Collision(Sprite sprite, out float damage);
 
         float Fire();
         void Turn(Direction direction);

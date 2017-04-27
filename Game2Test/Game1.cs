@@ -420,7 +420,7 @@ namespace Game2Test
                 if (IsInView(currentSector.Asteroids[i]) && !currentSector.Asteroids[i].Destroyed)
                 {
                     float damage;
-                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i].Rectangle, out damage))
+                    if (currentSector.CurrentShip.TurretCollision(currentSector.Asteroids[i] as Sprite, out damage))
                     {
                         currentSector.Asteroids[i].Health -= damage;
                         if (currentSector.Asteroids[i].Health <= 0)
@@ -430,7 +430,7 @@ namespace Game2Test
                         }
                     }
                     float damage2;
-                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i].Rectangle, out damage2))
+                    if (currentSector.CurrentStation.TurretCollision(currentSector.Asteroids[i], out damage2))
                     {
                         currentSector.Asteroids[i].Health -= damage2;
                         if (currentSector.Asteroids[i].Health <= 0)
@@ -448,7 +448,7 @@ namespace Game2Test
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    if (currentSector.Asteroids[i].RotatedRectangle.Intersects(currentSector.CurrentShip.RotatedRectangle) && !currentSector.Asteroids[i].Destroyed)
+                    if (currentSector.Asteroids[i].Intersects(currentSector.CurrentShip) && !currentSector.Asteroids[i].Destroyed)
                     {
                         currentSector.CurrentShip.Health--;
                         currentSector.Asteroids.RemoveAt(i);

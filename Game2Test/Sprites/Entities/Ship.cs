@@ -419,13 +419,13 @@ namespace Game2Test.Sprites.Entities
 
             return position;
         }
-        public bool TurretCollision(Rectangle rectangle, out float damage)
+        public bool TurretCollision(Sprite sprite, out float damage)
         {
             foreach (var t in Turrets)
             {
                 foreach(var tur in t.Value)
                 {
-                    if (!tur.Collision(rectangle, out damage)) continue;
+                    if (!tur.Collision(sprite, out damage)) continue;
                     return true;
                 }
             }

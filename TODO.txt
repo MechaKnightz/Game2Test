@@ -10,10 +10,10 @@ rebind keys
 refactor intersect method
 fix the description bug
 looped sound
-seperate turret classes for different kinds of turrets
 
 DONE:
 
+seperate turret classes for different kinds of turrets
 upgrades in shop
 add upgrades
 asteroid explosion dropping minerals with own class

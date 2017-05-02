@@ -56,9 +56,10 @@ namespace Game2Test
         public List<Ship> availableShips = new List<Ship>();
         public List<Upgrade> availableUpgrades = new List<Upgrade>();
         public List<Ship> ownedShips = new List<Ship>();
-
+        List<Texture2D> upgradeTextures = new List<Texture2D>();
         Vector2 defaultShipPos, tempPos, halfScreenPos;
         public Vector2 halfScreen;
+        private int upgradesAmount = 3;
 
         Texture2D shot0Texture, shot1Texture, aimTexture, turret0Texture, turret1Texture, energyIconTexture,
             redPixel, greenPixel, turretStationTexture, whitePixel;
@@ -107,6 +108,9 @@ namespace Game2Test
         public const float DoublePI = (float)Math.PI * 2;
         public Keys forwardKey;
         public Keys forwardKey2;
+
+        public int updateInterval = 5; //TODO
+        public TimeSpan timeSpan; //TODO
 
 
         private readonly GameUserInterface _gameUserInterface;
@@ -191,9 +195,11 @@ namespace Game2Test
             testTractorBeam = new TractorBeam(tractorBeamTexture, 300, 15, 20); // speed is speed/asteroid size
             LoadShips(); //LOADS SHIPS
 
-            availableUpgrades.Add(new Upgrade(0, 0, 15, 10));
-            availableUpgrades.Add(new Upgrade(0, 400, 0, 15));
-            availableUpgrades.Add(new Upgrade(10, 0, 10, 25));
+            upgradeTextures.Add(Content.Load<Texture2D>("Energybooster"));
+            upgradeTextures.Add(Content.Load<Texture2D>("EnergyRegenbooster"));
+            upgradeTextures.Add(Content.Load<Texture2D>("Healthbooster"));
+
+            GenerateUpgrades();
 
             var turretStationCollection = new Dictionary<string, List<ITurret>>();
             turretStationCollection.Add("primary", turretsStation);
@@ -338,6 +344,36 @@ namespace Game2Test
             return ship;
         }
 
+        void GenerateUpgrades()
+        {
+            availableUpgrades.Clear();
+            for (int i = 0; i < upgradesAmount; i++)
+            {
+                var rndInt =_rnd.Next(0, upgradesAmount);
+                var tempTexture = upgradeTextures[rndInt];
+
+                var upgradeType = (UpgradeType) rndInt;
+                switch (upgradeType)
+                {
+                        case UpgradeType.Energybooster:
+                        var rndValue = _rnd.Next(100, 801);
+                        var rndCost = _rnd.Next(5, 40);
+                        availableUpgrades.Add(new Upgrade(0, rndValue, 0, rndCost, upgradeType, tempTexture));
+                        break;
+                    case UpgradeType.EnergyRegenbooster:
+                        var rndValue2 = _rnd.Next(5, 30);
+                        var rndCost2 = _rnd.Next(5, 40);
+                        availableUpgrades.Add(new Upgrade(0, 0, rndValue2, rndCost2, upgradeType, tempTexture));
+                        break;
+                    case UpgradeType.Healthbooster:
+                        var rndValue3 = _rnd.Next(5, 20);
+                        var rndCost3 = _rnd.Next(5, 40);
+                        availableUpgrades.Add(new Upgrade(rndValue3, 0, 0, rndCost3, upgradeType, tempTexture));
+                        break;
+                }
+
+            }
+        }
         protected override void UnloadContent()
         {
         }

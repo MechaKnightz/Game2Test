@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using Newtonsoft.Json;
 
 namespace Game2Test.Sprites
 {
@@ -17,7 +14,6 @@ namespace Game2Test.Sprites
 
         public float Rotation { get; set; }
 
-        [JsonIgnore]
         public Texture2D Texture { get; set; }
 
         private Vector2 _position;
@@ -38,8 +34,8 @@ namespace Game2Test.Sprites
         public Sprite() { }
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle, float rotation, Vector2 origin)
         {
-            rectangle.X = (int) position.X;
-            rectangle.Y = (int) position.Y;
+            rectangle.X = (int)position.X;
+            rectangle.Y = (int)position.Y;
             Texture = texture;
             _position = position;
             Rectangle = rectangle;
@@ -58,8 +54,8 @@ namespace Game2Test.Sprites
 
         public Sprite(Texture2D texture, Vector2 position, Rectangle rectangle)
         {
-            rectangle.X = (int) position.X;
-            rectangle.Y = (int) position.Y;
+            rectangle.X = (int)position.X;
+            rectangle.Y = (int)position.Y;
             _position = position;
             Rectangle = rectangle;
             Texture = texture;
@@ -67,11 +63,20 @@ namespace Game2Test.Sprites
             Origin = new Vector2(rectangle.Width / 2f, rectangle.Height / 2f);
         }
 
+        public Sprite(Texture2D texture, Rectangle rectangle, float rotation)
+        {
+            Texture = texture;
+            Rectangle = rectangle;
+            Rotation = rotation;
+            Origin = new Vector2(Rectangle.Width / 2f, Rectangle.Height / 2f);
+            Position = new Vector2(Rectangle.X, Rectangle.Y);
+        }
+
         public Sprite(Texture2D texture, Vector2 position)
         {
             var tempRect = new Rectangle();
-            tempRect.X = (int) position.X;
-            tempRect.Y = (int) position.Y;
+            tempRect.X = (int)position.X;
+            tempRect.Y = (int)position.Y;
             tempRect.Width = texture.Width;
             tempRect.Height = texture.Height;
             Rectangle = tempRect;
@@ -85,8 +90,8 @@ namespace Game2Test.Sprites
             Rotation = rotation;
 
             var tempRect = new Rectangle();
-            tempRect.X = (int) position.X;
-            tempRect.Y = (int) position.Y;
+            tempRect.X = (int)position.X;
+            tempRect.Y = (int)position.Y;
             tempRect.Width = texture.Width;
             tempRect.Height = texture.Height;
             Rectangle = tempRect;
@@ -98,8 +103,8 @@ namespace Game2Test.Sprites
         public Sprite(Texture2D texture, float rotation)
         {
             var tempRect = new Rectangle();
-            tempRect.X = (int) _position.X;
-            tempRect.Y = (int) _position.Y;
+            tempRect.X = (int)_position.X;
+            tempRect.Y = (int)_position.Y;
             tempRect.Width = texture.Width;
             tempRect.Height = texture.Height;
             Rectangle = tempRect;
@@ -129,10 +134,6 @@ namespace Game2Test.Sprites
         {
             spriteBatch.Draw(Texture, destinationRectangle: Rectangle, origin: Origin, rotation: Rotation);
         }
-        public void Draw(SpriteBatch spriteBatch, Camera2D camera)
-        {
-            spriteBatch.Draw(Texture, _position + camera.Position, origin: Origin, rotation: Rotation);
-        }
 
         //not mine
         public bool CollidesWith(Sprite other)
@@ -151,10 +152,10 @@ namespace Game2Test.Sprites
 
             if (calcPerPixel &&                                // if we need per pixel
                 ((Math.Min(widthOther, heightOther) > 10) ||  // at least avoid doing it
-                (Math.Min(widthMe, heightMe) > 10)))          // for small sizes (nobody will notice :P)
+                 (Math.Min(widthMe, heightMe) > 10)))          // for small sizes (nobody will notice :P)
             {
                 return Rectangle.Intersects(other.Rectangle) // If simple intersection fails, don't even bother with per-pixel
-                    && PerPixelCollision(this, other);
+                       && PerPixelCollision(this, other);
             }
 
             return Rectangle.Intersects(other.Rectangle);
@@ -365,6 +366,15 @@ namespace Game2Test.Sprites
         public int Height
         {
             get { return Rectangle.Height; }
+        }
+
+        public void ChangePosition(int theXPositionAdjustment, int theYPositionAdjustment)
+        {
+            Position += new Vector2(theXPositionAdjustment, theYPositionAdjustment);
+        }
+        public void SetPosition(int theXPositionAdjustment, int theYPositionAdjustment)
+        {
+            Position = new Vector2(theXPositionAdjustment, theYPositionAdjustment);
         }
         //not mine end
     }

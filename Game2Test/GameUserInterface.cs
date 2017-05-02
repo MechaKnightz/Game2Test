@@ -381,7 +381,7 @@ namespace Game2Test
         private void CreateUpgradeShopSection(PanelTabs.TabData tab, int height, int i)
         {
             var offset = new Vector2(0, (height + 20) * i);
-            var img = new Image(_game1.ships[3].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
+            var img = new Image(_game1.availableUpgrades[i].Texture, new Vector2(150, 100), anchor: Anchor.TopLeft);
             img.SetOffset(offset);
 
             _game1.shopDescriptions2.Add(new Paragraph(_game1.availableUpgrades[i].Description));

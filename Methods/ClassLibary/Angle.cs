@@ -13,5 +13,13 @@ namespace ClassLibary
         {
             return (float)Math.Atan2(other.Y - main.Y, other.X - main.X);
         }
+
+        public static Vector2 MoveAngle(Vector2 position, float angle, float length)
+        {
+            position.X += (float)Math.Cos(angle) * length;
+            position.Y += (float)Math.Sin(angle) * length;
+
+            return position;
+        }
     }
 }

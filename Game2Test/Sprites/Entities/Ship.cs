@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ClassLibary;
 using Game2Test.Sprites.Entities.Turrets;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
@@ -492,24 +493,15 @@ namespace Game2Test.Sprites.Entities
                 case MoveDirection.Forward:
                     if (BoostBool)
                     {
-                        var tempPos = Position;
-                        tempPos.X += (float)Math.Cos(Rotation) * Speed * Boost;
-                        tempPos.Y += (float)Math.Sin(Rotation) * Speed * Boost;
-                        SetPosition(tempPos);
+                        Position = MoveAngle(Position, Rotation, Speed * Boost);
                     }
                     else 
                     {
-                        var tempPos = Position;
-                        tempPos.X += (float)Math.Cos(Rotation) * Speed;
-                        tempPos.Y += (float)Math.Sin(Rotation) * Speed;
-                        SetPosition(tempPos);
+                        Position = MoveAngle(Position, Rotation, Speed);
                     }
                     break;
                 case MoveDirection.Backward:
-                    var tempPos2 = Position;
-                    tempPos2.X += (float)Math.Cos(Rotation + Math.PI) * BackwardsSpeed;
-                    tempPos2.Y += (float)Math.Sin(Rotation + Math.PI) * BackwardsSpeed;
-                    SetPosition(tempPos2);
+                    Position = MoveAngle(Position, Rotation + (float)Math.PI, Speed);
                     break;
                 case MoveDirection.Left:
                     var tempPos3 = Position;

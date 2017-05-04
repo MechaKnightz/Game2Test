@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ClassLibary;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -61,10 +62,9 @@ namespace Game2Test.Sprites.Entities.Turrets
             {
                 ShotList[i].Duration--;
 
-                var temp = ShotList[i].Position;
-                temp.X += (float)Math.Cos(ShotList[i].Rotation) * ShotList[i].Speed;
-                temp.Y += (float)Math.Sin(ShotList[i].Rotation) * ShotList[i].Speed;
-                ShotList[i].Position = temp;
+                ShotList[i].Position = Angle.MoveAngle(ShotList[i].Position, ShotList[i].Rotation, ShotList[i].Speed);
+
+
 
                 if (ShotList[i].Duration > 00) continue;
                 ShotList.RemoveAt(i);

@@ -493,15 +493,15 @@ namespace Game2Test.Sprites.Entities
                 case MoveDirection.Forward:
                     if (BoostBool)
                     {
-                        Position = MoveAngle(Position, Rotation, Speed * Boost);
+                        SetPosition(MoveAngle(Position, Rotation, Speed * Boost));
                     }
                     else 
                     {
-                        Position = MoveAngle(Position, Rotation, Speed);
+                        SetPosition(MoveAngle(Position, Rotation, Speed));
                     }
                     break;
                 case MoveDirection.Backward:
-                    Position = MoveAngle(Position, Rotation + (float)Math.PI, Speed);
+                    SetPosition(MoveAngle(Position, Rotation + (float)Math.PI, Speed));
                     break;
                 case MoveDirection.Left:
                     var tempPos3 = Position;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ClassLibary;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +18,7 @@ namespace Game2Test.Sprites.Entities
         public int Size { get; set; }
         public Bar Bar1 { get; set; }
 
-        public bool Destroyed { get; set; } = false;
+        public bool Destroyed { get; set; } 
 
         public List<Crystal> Crystals { get; set; } = new List<Crystal>();
 
@@ -42,10 +43,7 @@ namespace Game2Test.Sprites.Entities
                     if (!Crystals[i].BeingBeamed)
                     {
                         Crystals[i].Duration--;
-                        var temp = Crystals[i].Position;
-                        temp.X += (float)Math.Cos(Crystals[i].Rotation) * Crystals[i].Speed;
-                        temp.Y += (float)Math.Sin(Crystals[i].Rotation) * Crystals[i].Speed;
-                        Crystals[i].Position = temp;
+                        Crystals[i].Position = Angle.MoveAngle(Crystals[i].Position, Crystals[i].Rotation, Crystals[i].Speed);
 
                         if (Crystals[i].Duration > 00) continue;
                         Crystals.RemoveAt(i);
@@ -60,10 +58,7 @@ namespace Game2Test.Sprites.Entities
         {
             var angle = (float)Math.Atan2(towardsPosition.Y - Position.Y, towardsPosition.X - Position.X);
 
-            var temp = Position;
-            temp.X += (float)Math.Cos(angle) * Speed * Acceleration;
-            temp.Y += (float)Math.Sin(angle) * Speed * Acceleration;
-            Position = temp;
+            Position = Angle.MoveAngle(Position, angle, Speed * Acceleration);
 
             Acceleration += 0.005f;
 

@@ -20,11 +20,11 @@ namespace Game2Test
 {
     public class Game1 : Game
     {
-        public GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public GraphicsDeviceManager Graphics;
+        private SpriteBatch _spriteBatch;
 
-        MouseState mouseState, oldMouseState;
-        KeyboardState keyState, oldState;
+        private MouseState _mouseState, _oldMouseState;
+        private KeyboardState _keyState, _oldState;
 
         //lists
         List<Texture2D> asteroidTextures = new List<Texture2D>();
@@ -109,8 +109,8 @@ namespace Game2Test
         public Keys forwardKey;
         public Keys forwardKey2;
 
-        public int updateInterval = 5; //TODO
-        public TimeSpan timeSpan; //TODO
+        private float timerCounter;
+        private float timer = 5;
 
 
         private readonly GameUserInterface _gameUserInterface;
@@ -118,20 +118,20 @@ namespace Game2Test
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "..\\Content";
             _gameUserInterface = new GameUserInterface(this);
         }
 
         protected override void Initialize()
         {
-
+            timerCounter = timer;
             UserInterface.Initialize(Content, "custom");
             UserInterface.UseRenderTarget = true;
             Paragraph.BaseSize = 1.0f;
             UserInterface.GlobalScale = 1.0f;
             UserInterface.CursorScale = 0.7f;
-            var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);
+            var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.Location = new System.Drawing.Point(0, 0);
 
             base.Initialize();
@@ -140,22 +140,22 @@ namespace Game2Test
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             _rnd = new Random();
             camera = new Camera2D(GraphicsDevice);
 
-            graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // window width 801
-            graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;   // window height 701
-            graphics.IsFullScreen = false;
+            Graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // window width 801
+            Graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;   // window height 701
+            Graphics.IsFullScreen = false;
             GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             //graphics.PreferredBackBufferWidth = 801;  // window width 801
             //graphics.PreferredBackBufferHeight = 701;   // window height 701
             //graphics.IsFullScreen = false;
 
-            graphics.ApplyChanges();
+            Graphics.ApplyChanges();
 
-            halfScreen = new Vector2(graphics.PreferredBackBufferWidth / 2f, graphics.PreferredBackBufferHeight / 2f);
+            halfScreen = new Vector2(Graphics.PreferredBackBufferWidth / 2f, Graphics.PreferredBackBufferHeight / 2f);
 
             defaultShipPos = Vector2.Zero;
 
@@ -383,6 +383,14 @@ namespace Game2Test
             if (!IsActive)
                 return;
 
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalMinutes;
+            timerCounter -= elapsed;
+            if (timerCounter < 0)
+            {
+                GenerateUpgrades();
+                timerCounter = timer;
+            }
+
             KeyInput.Update(gameTime);
             UserInterface.Update(gameTime);
 
@@ -395,7 +403,7 @@ namespace Game2Test
                     EndScreenLogic();
                     break;
                 case GameState.MainMenu: //main menu
-                    MenuLogic(gameTime);
+                    MenuLogic();
                     break;
                 case GameState.SettingsMenu: //settings
                     SettingsLogic();
@@ -404,7 +412,7 @@ namespace Game2Test
                     GameLogic(gameTime);
                     break;
                 case GameState.PauseMenu:
-                    PauseMenuLogic(gameTime);
+                    PauseMenuLogic();
                     break;
             }
 
@@ -413,11 +421,11 @@ namespace Game2Test
 
         protected override void Draw(GameTime gameTime)
         {
-            UserInterface.Draw(spriteBatch);
+            UserInterface.Draw(_spriteBatch);
 
             GraphicsDevice.Clear(clearColor);
 
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
 
             switch (gameState)
             {
@@ -440,11 +448,11 @@ namespace Game2Test
                     break;
             }
 
-            spriteBatch.End();
+            _spriteBatch.End();
 
-            UserInterface.DrawMainRenderTarget(spriteBatch);
+            UserInterface.DrawMainRenderTarget(_spriteBatch);
 
-            oldState = Keyboard.GetState();
+            _oldState = Keyboard.GetState();
             base.Draw(gameTime);
         }
 
@@ -498,8 +506,8 @@ namespace Game2Test
         }
         void GameLogic(GameTime gameTime)
         {
-            keyState = Keyboard.GetState();
-            mouseState = Mouse.GetState();
+            _keyState = Keyboard.GetState();
+            _mouseState = Mouse.GetState();
 
             distanceToStation = Vector2.Distance(currentSector.CurrentShip.Position, currentSector.CurrentStation.Position);
 
@@ -509,7 +517,7 @@ namespace Game2Test
                 ChangeState(GameState.PauseMenu);
             }
             //moving forward
-            if (keyState.IsKeyDown(Keys.LeftShift))
+            if (_keyState.IsKeyDown(Keys.LeftShift))
             {
                 currentSector.CurrentShip.BoostBool = true;
             }
@@ -531,16 +539,16 @@ namespace Game2Test
                 currentSector.CurrentShip.Turn(Direction.Right);
             }
 
-            if (keyState.IsKeyDown(Keys.E))
+            if (_keyState.IsKeyDown(Keys.E))
             {
                 currentSector.CurrentShip.Move(MoveDirection.Right);
             }
-            else if (keyState.IsKeyDown(Keys.Q))
+            else if (_keyState.IsKeyDown(Keys.Q))
             {
                 currentSector.CurrentShip.Move(MoveDirection.Left);
             }
 
-            if (gameState == GameState.ShopMenu && keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
+            if (gameState == GameState.ShopMenu && _keyState.IsKeyDown(Keys.Escape)) ChangeState(GameState.MainGame);
             if (KeyInput.IsKeyClicked(Keys.G) && distanceToStation < shopRadius)
             {
                 switch (gameState)
@@ -558,7 +566,7 @@ namespace Game2Test
             tempPos = currentSector.CurrentShip.Position - halfScreen;
             camera.Position = tempPos;
 
-            aimSprite.Position = camera.ScreenToWorld(mouseState.Position.ToVector2());
+            aimSprite.Position = camera.ScreenToWorld(_mouseState.Position.ToVector2());
 
             foreach (var t in currentSector.CurrentStation.Turrets)
             {
@@ -595,11 +603,11 @@ namespace Game2Test
                 }
             }
 
-            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
+            if (_mouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
                 currentSector.CurrentShip.Fire("primary");
             }
-            if (mouseState.RightButton == ButtonState.Pressed && oldMouseState.RightButton != ButtonState.Pressed && gameState == GameState.MainGame)
+            if (_mouseState.RightButton == ButtonState.Pressed && _oldMouseState.RightButton != ButtonState.Pressed && gameState == GameState.MainGame)
             {
                 currentSector.CurrentShip.Fire("secondary");
             }
@@ -645,10 +653,10 @@ namespace Game2Test
             CollisionTest();
             CollisionTest2();
 
-            oldState = Keyboard.GetState();
-            oldMouseState = Mouse.GetState();
+            _oldState = Keyboard.GetState();
+            _oldMouseState = Mouse.GetState();
         }
-        void MenuLogic(GameTime gameTime)
+        void MenuLogic()
         {
 
         }
@@ -661,80 +669,80 @@ namespace Game2Test
             gameState = tempGameState;
         }
 
-        private void PauseMenuLogic(GameTime gameTime)
+        private void PauseMenuLogic()
         {
-            keyState = Keyboard.GetState();
+            _keyState = Keyboard.GetState();
 
             if (KeyInput.IsKeyClicked(Keys.Escape))
             {
                 if (gameState == GameState.PauseMenu) ChangeState(GameState.MainGame);
             }
 
-            oldState = Keyboard.GetState();
+            _oldState = Keyboard.GetState();
         }
 
         private void EndScreenLogic()
         {
-            keyState = Keyboard.GetState();
+            _keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.R) && !oldState.IsKeyDown(Keys.R)) ChangeState(GameState.MainMenu);
+            if (_keyState.IsKeyDown(Keys.R) && !_oldState.IsKeyDown(Keys.R)) ChangeState(GameState.MainMenu);
 
-            oldState = Keyboard.GetState();
+            _oldState = Keyboard.GetState();
         }
         private void SettingsLogic()
         {
-            keyState = Keyboard.GetState();
+            _keyState = Keyboard.GetState();
 
             if (KeyInput.IsKeyClicked(Keys.Escape))
             {
                 ChangeState(oldGameState);
             }
 
-            oldState = Keyboard.GetState();
+            _oldState = Keyboard.GetState();
         }
         private void DrawEndScreen()
         {
-            spriteBatch.DrawString(font, "Final Money: " + currentSector.CurrentShip.Money, new Vector2(graphics.PreferredBackBufferWidth / 2f, graphics.PreferredBackBufferHeight / 2f) - (font.MeasureString("Final Score: " + currentSector.CurrentShip.Money) / 2), Color.Black);
-            spriteBatch.DrawString(font, "Press R to reset.", new Vector2(10, 10), Color.Black);
+            _spriteBatch.DrawString(font, "Final Money: " + currentSector.CurrentShip.Money, new Vector2(Graphics.PreferredBackBufferWidth / 2f, Graphics.PreferredBackBufferHeight / 2f) - (font.MeasureString("Final Score: " + currentSector.CurrentShip.Money) / 2), Color.Black);
+            _spriteBatch.DrawString(font, "Press R to reset.", new Vector2(10, 10), Color.Black);
         }
         void DrawGame()
         {
 
-            spriteBatch.End();
+            _spriteBatch.End();
 
             DrawBackground();
 
-            if (drawParticles) particleEngine.Draw(spriteBatch, camera.GetViewMatrix());
+            if (drawParticles) particleEngine.Draw(_spriteBatch, camera.GetViewMatrix());
 
-            BeginSpriteBatchCamera(spriteBatch);
+            BeginSpriteBatchCamera(_spriteBatch);
 
             //ship.rotationRender = (float)(Math.Round(ship.Rotation / (Math.PI / 4)) * (Math.PI / 4));
             //spriteBatch.Draw(ship.texture, new Vector2(ship.rectangle.X, ship.rectangle.Y), Rotation: ship.Rotation, origin: ship.Origin);
 
-            currentSector.CurrentStation.Draw(spriteBatch);
-            currentSector.CurrentShip.DrawTractorBeam(spriteBatch);
-            currentSector.CurrentShip.Draw(spriteBatch);
+            currentSector.CurrentStation.Draw(_spriteBatch);
+            currentSector.CurrentShip.DrawTractorBeam(_spriteBatch);
+            currentSector.CurrentShip.Draw(_spriteBatch);
             //testShip.Draw(spriteBatch);
 
-            currentSector.CurrentShip.DrawTurrets(spriteBatch);
+            currentSector.CurrentShip.DrawTurrets(_spriteBatch);
 
             for (int i = 0; i < currentSector.Asteroids.Count; i++)
             {
                 if (IsInView(currentSector.Asteroids[i]))
                 {
-                    currentSector.Asteroids[i].Draw(spriteBatch);
+                    currentSector.Asteroids[i].Draw(_spriteBatch);
                 }
             }
 
-            spriteBatch.DrawString(font, "Money: " + currentSector.CurrentShip.Money + "k $", camera.ScreenToWorld(viewScorePos), Color.White);
-            spriteBatch.DrawString(font, "Lives: " + currentSector.CurrentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
+            _spriteBatch.DrawString(font, "Money: " + currentSector.CurrentShip.Money + "k $", camera.ScreenToWorld(viewScorePos), Color.White);
+            _spriteBatch.DrawString(font, "Lives: " + currentSector.CurrentShip.Health, camera.ScreenToWorld(viewLivesPos), Color.White);
 
             xPosString = "Xpos: " + currentSector.CurrentShip.Position.X.ToString("F0");
             yPosString = "Ypos: " + currentSector.CurrentShip.Position.Y.ToString("F0");
             viewXPos.X = (halfScreen.X * 2) - font.MeasureString(xPosString).X;
             viewYPos.X = (halfScreen.X * 2) - font.MeasureString(yPosString).X;
-            spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
-            spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
+            _spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
+            _spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
 
             var energyUIPos = camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height));
             var energyBarPos = energyUIPos + new Vector2(5, 297);
@@ -748,13 +756,13 @@ namespace Game2Test
 
             energyBarSprite.Rectangle = tempRect;
 
-            spriteBatch.Draw(energyBarSprite.Texture, destinationRectangle: energyBarSprite.Rectangle);
+            _spriteBatch.Draw(energyBarSprite.Texture, destinationRectangle: energyBarSprite.Rectangle);
 
-            spriteBatch.Draw(energyIconTexture, energyUIPos);
+            _spriteBatch.Draw(energyIconTexture, energyUIPos);
 
-            spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(energyIconTexture.Width, halfScreen.Y * 2 - energyIconTexture.Height) + new Vector2(0, 307)), Color.White);
+            _spriteBatch.DrawString(font, currentSector.CurrentShip.Energy.ToString(), camera.ScreenToWorld(new Vector2(energyIconTexture.Width, halfScreen.Y * 2 - energyIconTexture.Height) + new Vector2(0, 307)), Color.White);
 
-            if (gameState == GameState.MainGame) aimSprite.Draw(spriteBatch);
+            if (gameState == GameState.MainGame) aimSprite.Draw(_spriteBatch);
 
         }
         void DrawMenu()
@@ -833,7 +841,7 @@ namespace Game2Test
             {
                 var parallaxFactor = Vector2.One * (0.25f * layerIndex);
                 viewMatrix = camera.GetViewMatrix(parallaxFactor);
-                spriteBatch.Begin(transformMatrix: viewMatrix);
+                _spriteBatch.Begin(transformMatrix: viewMatrix);
 
                 for (var repeatIndex2 = -mapSize * 3; repeatIndex2 <= mapSize * 3; repeatIndex2++)
                 {
@@ -841,17 +849,13 @@ namespace Game2Test
                     {
                         var texture = currentSector.Backgrounds[layerIndex];
                         var position = new Vector2(repeatIndex * texture.Width, repeatIndex2 * texture.Height);
-                        spriteBatch.Draw(texture, position, Color.White);
+                        _spriteBatch.Draw(texture, position, Color.White);
                     }
                 }
-                spriteBatch.End();
+                _spriteBatch.End();
             }
         }
-        /// <summary>
-        /// is the parameterrectangle in the screen, if so return true, otherwise false
-        /// </summary>
-        /// <param Name="sprite"> the sprite you want to check</param>
-        /// <returns></returns>
+
         public bool IsInView(Sprite sprite)
         {
             // if not within the horizontal bounds of the screen

@@ -32,14 +32,14 @@ namespace Game2Test
 
         private int CurrentScreenHeight
         {
-            get { return _game1.graphics.PreferredBackBufferHeight; }
-            set { _game1.graphics.PreferredBackBufferHeight = value; }
+            get { return _game1.Graphics.PreferredBackBufferHeight; }
+            set { _game1.Graphics.PreferredBackBufferHeight = value; }
         }
 
         private int CurrentScreenWidth
         {
-            get { return _game1.graphics.PreferredBackBufferWidth; }
-            set { _game1.graphics.PreferredBackBufferWidth = value; }
+            get { return _game1.Graphics.PreferredBackBufferWidth; }
+            set { _game1.Graphics.PreferredBackBufferWidth = value; }
         }
 
 
@@ -150,12 +150,12 @@ namespace Game2Test
                     _game1.settingsMenuPanel.AddChild(backButton);
 
                     var fullscreenCheckbox = new CheckBox("Fullscreen");
-                    fullscreenCheckbox.Checked = _game1.graphics.IsFullScreen;
+                    fullscreenCheckbox.Checked = _game1.Graphics.IsFullScreen;
                     fullscreenCheckbox.TextParagraph.Scale = 0.5f;
                     fullscreenCheckbox.OnValueChange = box =>
                     {
-                        _game1.graphics.IsFullScreen = fullscreenCheckbox.Checked;
-                        _game1.graphics.ApplyChanges();
+                        _game1.Graphics.IsFullScreen = fullscreenCheckbox.Checked;
+                        _game1.Graphics.ApplyChanges();
                     };
                     _game1.settingsMenuPanel.AddChild(fullscreenCheckbox);
 
@@ -180,7 +180,7 @@ namespace Game2Test
                         CurrentScreenWidth = Convert.ToInt16(widthRes);
                         CurrentScreenHeight = Convert.ToInt16(heightRes);
                         _game1.halfScreen = new Vector2(CurrentScreenWidth / 2f, CurrentScreenHeight / 2f);
-                        _game1.graphics.ApplyChanges();
+                        _game1.Graphics.ApplyChanges();
                     };
 
                     _game1.settingsMenuPanel.AddChild(dropDown2);

@@ -51,7 +51,7 @@ namespace Game2Test
         Dictionary<string, Shot> shot1List = new Dictionary<string, Shot>();
 
         public List<Ship> ships = new List<Ship>();
-        public Ship  testShip;
+        //public Ship  testShip;
         public Station currentStation;
         public List<Ship> availableShips = new List<Ship>();
         public List<Upgrade> availableUpgrades = new List<Upgrade>();
@@ -722,7 +722,7 @@ namespace Game2Test
             currentSector.CurrentStation.Draw(_spriteBatch);
             currentSector.CurrentShip.DrawTractorBeam(_spriteBatch);
             currentSector.CurrentShip.Draw(_spriteBatch);
-            //testShip.Draw(spriteBatch);
+            //testShip.Draw(_spriteBatch);
 
             currentSector.CurrentShip.DrawTurrets(_spriteBatch);
 

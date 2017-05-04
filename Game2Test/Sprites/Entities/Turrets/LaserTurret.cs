@@ -105,6 +105,7 @@ namespace Game2Test.Sprites.Entities.Turrets
                 TurnRate = BaseTurnrate * 0.1f;
                 return EnergyCost;
             }
+            // VVV is not firing VVV
             TurnRate = BaseTurnrate;
             if (CooldownCounter != Cooldown) CooldownCounter++;
             SoundEffectInstance?.Stop();

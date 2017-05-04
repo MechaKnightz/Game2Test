@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Shapes;
 
@@ -15,6 +16,18 @@ namespace Game2Test.Sprites.Entities.Turrets
         private float Duration { get; set; }
         private float _durationCounter;
         private float Damage { get; set; }
+
+        SoundEffect _soundEffect;
+        public SoundEffect SoundEffect
+        {
+            get { return _soundEffect; }
+            set
+            {
+                _soundEffect = value;
+                SoundEffectInstance = _soundEffect.CreateInstance();
+            }
+        }
+        private SoundEffectInstance SoundEffectInstance;
 
         private List<Sprite> SpriteList { get; set; } = new List<Sprite>();
         private Sprite Start { get; set; }
@@ -57,6 +70,8 @@ namespace Game2Test.Sprites.Entities.Turrets
             Middle = turret.Middle;
             End = turret.End;
             Damage = turret.Damage;
+            SoundEffect = turret.SoundEffect;
+            SoundEffectInstance = turret.SoundEffectInstance;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;
@@ -92,6 +107,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             }
             TurnRate = BaseTurnrate;
             if (CooldownCounter != Cooldown) CooldownCounter++;
+            SoundEffectInstance?.Stop();
             return 0f;
         }
 
@@ -126,6 +142,8 @@ namespace Game2Test.Sprites.Entities.Turrets
         public float Fire()
         {
             if (CooldownCounter != Cooldown) return 0f;
+
+            SoundEffectInstance?.Play();
 
             var middleLength = Length - Start.Texture.Width - End.Texture.Width;
             MiddleLength = middleLength;

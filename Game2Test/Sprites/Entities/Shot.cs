@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace Game2Test.Sprites.Entities
 {
@@ -7,8 +9,8 @@ namespace Game2Test.Sprites.Entities
     {
         public string Name { get; set; } = "default";
         public int Duration { get; set; }
-        public float Speed { get; }
-        public float Damage;
+        public float Speed { get; set; }
+        public float Damage { get; set; }
 
         public Shot() { }
 

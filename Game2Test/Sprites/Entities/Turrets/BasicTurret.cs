@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game2Test.Sprites.Entities.Turrets
@@ -10,6 +11,7 @@ namespace Game2Test.Sprites.Entities.Turrets
     {
         public List<Shot> ShotList { get; set; } = new List<Shot>();
         public Shot Shot { get; set; } = new Shot();
+        public SoundEffect SoundEffect { get; set; }
 
         public BasicTurret() { }
         public BasicTurret(Texture2D texture, Vector2 position, Vector2 offset, float rotation, Shot shot, float energyCost, float turnRate, TurretType type, float cooldown) : base(texture, position, offset, rotation, energyCost, turnRate, type, cooldown)
@@ -27,6 +29,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             Cooldown = turret.Cooldown;
             Speed = turret.Speed;
             Range = turret.Range;
+            SoundEffect = turret.SoundEffect;
             //Sprite
             Rotation = turret.Rotation;
             Position = turret.Position;
@@ -46,6 +49,7 @@ namespace Game2Test.Sprites.Entities.Turrets
         {
             if (CooldownCounter != Cooldown) return 0f;
 
+            SoundEffect?.Play();
             ShotList.Add(new Shot(Shot.Texture, Position, Rotation, Shot.Duration, Shot.Speed, Shot.Damage));
             CooldownCounter = 0f;
 

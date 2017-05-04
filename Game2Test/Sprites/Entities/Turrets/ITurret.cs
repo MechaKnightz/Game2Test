@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game2Test.Sprites.Helpers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game2Test.Sprites.Entities.Turrets
@@ -17,6 +18,7 @@ namespace Game2Test.Sprites.Entities.Turrets
         bool IsFiring { get; set; }
         float Speed { get; set; }
         float Range { get; set; }
+        SoundEffect SoundEffect { get; set; }
 
         //sprite
         Vector2 Origin { get; set; }

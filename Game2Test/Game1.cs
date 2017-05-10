@@ -14,6 +14,7 @@ using Game2Test.Sprites;
 using Game2Test.Sprites.Entities;
 using Game2Test.Sprites.Entities.Turrets;
 using Game2Test.Sprites.Helpers;
+using Microsoft.Xna.Framework.Audio;
 using static ClassLibary.Angle;
 
 namespace Game2Test
@@ -175,8 +176,13 @@ namespace Game2Test
             var laserMiddle = new Sprite(Content.Load<Texture2D>("laserMiddle"));
             var laserEnd = new Sprite(Content.Load<Texture2D>("laserEnd"));
 
+            var soundTest = Content.Load<SoundEffect>("Sounds\\Item_75");
+
             turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, -10), new Vector2(-7, -10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
             turrets0.Add(new BasicTurret(turret1Texture, new Vector2(-7, 10), new Vector2(-7, 10), 0, shot1, 100, 0.05f, TurretType.Rotating, 30f));
+
+            turrets0[0].SoundEffect = soundTest;
+            turrets0[1].SoundEffect = soundTest;
 
             turrets1.Add(new BasicTurret(turret1Texture, new Vector2(-10, -10), new Vector2(-10, -10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));
             turrets1.Add(new BasicTurret(turret1Texture, new Vector2(-10, 10), new Vector2(-10, 10), 0, shot0, 150, 0.05f, TurretType.Static, 30f));

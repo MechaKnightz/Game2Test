@@ -25,6 +25,7 @@ namespace Game2Test.Sprites.Entities.Turrets
             {
                 _soundEffect = value;
                 SoundEffectInstance = _soundEffect.CreateInstance();
+                SoundEffectInstance.IsLooped = true;
             }
         }
         private SoundEffectInstance SoundEffectInstance;

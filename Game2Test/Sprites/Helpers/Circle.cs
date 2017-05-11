@@ -22,9 +22,10 @@ namespace Game2Test.Sprites.Helpers
         }
 
         public Vector2 Position { get; set; }
-        public float Radius { get; set; }
+        public float Radius;
 
-        //public bool IsEmpty { get; set; }
+        public static Circle Empty { get; set; } = new Circle(0, new Vector2(0, 0));
+        public static Circle UnitCircle { get; set; } = new Circle(1, new Vector2(0, 0));
 
         public Circle(float radius, Vector2 position)
         {

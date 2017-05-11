@@ -34,7 +34,7 @@ namespace Game2Test
         List<int> highscores = new List<int>();
         private List<Name> names = new List<Name>();
 
-        private List<string> nameArray;
+        private List<string> _nameArray;
 
         List<ITurret> turrets0 = new List<ITurret>();
         List<ITurret> turrets1 = new List<ITurret>();
@@ -109,6 +109,7 @@ namespace Game2Test
         public const float DoublePI = (float)Math.PI * 2;
         public Keys forwardKey;
         public Keys forwardKey2;
+        private Vector2 energyUIPos;
 
         private float timerCounter;
         private float timer = 5;
@@ -633,6 +634,19 @@ namespace Game2Test
 
             //VVV - UPDATE BELOW -  VVV
 
+
+            energyUIPos = camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height));
+            var energyBarPos = energyUIPos + new Vector2(5, 297);
+
+            var tempRect = energyBarSprite.Rectangle;
+            tempRect.Height = Convert.ToInt16((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
+            var rest = new Vector2(0, -energyBarSprite.Rectangle.Height);
+
+            tempRect.X = Convert.ToInt16((energyBarPos + rest).X);
+            tempRect.Y = Convert.ToInt16((energyBarPos + rest).Y);
+
+            energyBarSprite.Rectangle = tempRect;
+
             currentSector.CurrentShip.AimTurrets(aimSprite.Position);
 
             //testing
@@ -750,17 +764,6 @@ namespace Game2Test
             _spriteBatch.DrawString(font, xPosString, camera.ScreenToWorld(viewXPos), Color.White);
             _spriteBatch.DrawString(font, yPosString, camera.ScreenToWorld(viewYPos), Color.White);
 
-            var energyUIPos = camera.ScreenToWorld(new Vector2(0, halfScreen.Y * 2 - energyIconTexture.Height));
-            var energyBarPos = energyUIPos + new Vector2(5, 297);
-
-            var tempRect = energyBarSprite.Rectangle;
-            tempRect.Height = Convert.ToInt16((currentSector.CurrentShip.Energy / currentSector.CurrentShip.EnergyMax) * 292);
-            var rest = new Vector2(0, -energyBarSprite.Rectangle.Height);
-
-            tempRect.X = Convert.ToInt16((energyBarPos + rest).X);
-            tempRect.Y = Convert.ToInt16((energyBarPos + rest).Y);
-
-            energyBarSprite.Rectangle = tempRect;
 
             _spriteBatch.Draw(energyBarSprite.Texture, destinationRectangle: energyBarSprite.Rectangle);
 
@@ -959,7 +962,7 @@ namespace Game2Test
 
         public void LoadNames()
         {
-            nameArray = new List<string>();
+            _nameArray = new List<string>();
             const Int32 bufferSize = 128;
             using (var fileStream = File.OpenRead("Names.txt"))
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, bufferSize))
@@ -967,7 +970,7 @@ namespace Game2Test
                 String line;
                 while ((line = streamReader.ReadLine()) != null)
                 {
-                    nameArray.Add(line);
+                    _nameArray.Add(line);
                 }
             }
         }
@@ -978,8 +981,8 @@ namespace Game2Test
             Name name = new Name();
             while (true)
             {
-                name.FirstName = nameArray[_rnd.Next(0, names.Count)];
-                name.LastName = nameArray[_rnd.Next(0, names.Count)];
+                name.FirstName = _nameArray[_rnd.Next(0, names.Count)];
+                name.LastName = _nameArray[_rnd.Next(0, names.Count)];
                 name.FullName = name.FirstName + " " + name.LastName;
 
                 if (names.All(x => x.FullName != name.FullName)) break;

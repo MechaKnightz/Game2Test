@@ -11,6 +11,8 @@ refactor intersect method
 fix the description bug
 looped sound
 make proper background scrolling
+add sounds 
+add refitting tab to shop
 
 DONE:
 

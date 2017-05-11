@@ -23,6 +23,7 @@ namespace Game2Test
         private PanelTabs.TabData tab0;
         private PanelTabs.TabData tab1;
         private PanelTabs.TabData tab2;
+        private PanelTabs.TabData tab3;
         private Data data;
 
         public GameUserInterface(Game1 game1)
@@ -193,11 +194,17 @@ namespace Game2Test
                     tabs = new PanelTabs();
                     tab0 = tabs.AddTab("Warp");
                     tab0.button.ButtonParagraph.Scale = 0.5f;
+
                     tab1 = tabs.AddTab("Shop");
                     tab1.button.ButtonParagraph.Scale = 0.5f;
+
                     tab2 = tabs.AddTab("Upgrades");
                     tab2.button.ButtonParagraph.Scale = 0.5f;
                     tab2.button.ButtonParagraph.WrapWords = false;
+
+                    tab3 = tabs.AddTab("Refitting");
+                    tab3.button.ButtonParagraph.Scale = 0.5f;
+                    tab3.button.ButtonParagraph.WrapWords = false;
 
                     //first tab
 
@@ -273,7 +280,11 @@ namespace Game2Test
                     tab2.panel.Scrollbar.Max = Convert.ToUInt16((int)((_game1.availableShips.Count * (height + 20)) - _game1.shopPanel.Size.Y));
                     tab2.panel.Scrollbar.StepsCount = (uint)_game1.availableShips.Count * 5;
 
-                    //third tab end
+                    //fourth tab
+
+
+
+                    //last tab end
 
                     _game1.shopPanel.AddChild(tabs);
                     break;

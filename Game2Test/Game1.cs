@@ -121,6 +121,7 @@ namespace Game2Test
         public Game1()
         {
             Graphics = new GraphicsDeviceManager(this);
+            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "..\\Content";
             _gameUserInterface = new GameUserInterface(this);
         }
